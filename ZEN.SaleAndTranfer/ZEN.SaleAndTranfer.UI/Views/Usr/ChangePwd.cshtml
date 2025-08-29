@@ -1,0 +1,104 @@
+﻿@using ZEN.SaleAndTranfer.UI.Util
+@model ZEN.SaleAndTranfer.UI.VM2.Usr.ChangePwdVM2
+
+
+@{
+    ViewBag.Title = "Change Password";
+    Layout = "~/Views/Shared/_Layout_ChangePwd.cshtml";
+}
+
+<div class="page-header">
+    <h2>@ViewBag.Title <small></small></h2>
+</div>
+
+<form id="formChangePwd" class="form-horizontal">
+    @Html.AntiForgeryToken()
+
+    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">*Username</label>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.Pet.Username, new { @class = "form-control", @placeholder = "Username", @readonly = "readonly" })
+            @Html.ValidationMessageFor(m => m.Pet.Username, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">*New Password</label>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.Pet.NewPassword, new { @class = "form-control", @placeholder = "New Password" })
+            @Html.ValidationMessageFor(m => m.Pet.NewPassword, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">*Confirm New Password</label>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.Pet.ConfirmNewPassword, new { @class = "form-control", @placeholder = "Confirm New Password" })
+            @Html.ValidationMessageFor(m => m.Pet.ConfirmNewPassword, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    @*Button*@
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="button" id="btnSave" class="btn btn-primary" onclick="return btnSave_onclick('#formChangePwd');">บันทึก</button>
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+<script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+
+        function btnSave_onclick(formId) {
+            if (!$(formId).valid()) {
+                return false;
+            }
+
+            var dataForm = $(formId).serialize();
+
+            var url1 = '@Url.Action("ChangePwd", "Usr", new { Area = "" })';
+
+            $(document.body).css({ 'cursor': 'wait' });
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                data: dataForm, //data: JSON.stringify(obj),
+                //processData: false,
+                //contentType: false,
+                dataType: "json", //dataType: "html",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //debugger;
+                    if (response.SuccessFlag) {
+                        alert("บันทึกเรียบร้อย");
+                        if ('@RoleIDConst.Order' == response.Data) {
+                            window.location = '@Url.Action("Index","Prq", new { Area=""})';
+                        }
+                        else if (response.Data == 'SALEADMIN') {
+                             window.location = '@Url.Action("SearchCus", "Prq", new { Area=""})';
+                        }
+                        else {
+                            window.location = '@Url.Action("Search","Prq", new { Area=""})';
+                        }
+                    }
+                    else {
+                        alert(response.Msg);
+                    }
+                    $(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error occured!!")
+                    alert(response.responseText);
+
+                    $(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+</script>
+}

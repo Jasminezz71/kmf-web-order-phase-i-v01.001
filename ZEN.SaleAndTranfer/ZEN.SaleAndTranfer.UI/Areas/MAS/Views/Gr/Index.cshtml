@@ -1,0 +1,366 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.GrVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>
+        หน้าจอใบรับสินค้า (GR) : <small>ค้นหาใบรับสินค้า</small>
+    </h2>
+
+    <hr />
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+
+    <form class="form-horizontal" id="form1">
+        @Html.HiddenFor(m => m.grVM_MA.ST_GR_CODE)
+        <div class="panel panel-primary">
+            <div class="panel-heading">ระบุเงื่อนไขการค้นหา</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">เลขที่ใบตลาด (PR)</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.grSearchCriteriaVM.ST_PR_CODE, new { @maxlength = "20", @class = "form-control" })
+                        </div>
+                        <label class="col-md-2 control-label">เลขที่ใบเตรียมรับสินค้า (DO)</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.grSearchCriteriaVM.ST_DO_CODE, new { @maxlength = "20", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">เลขที่ใบรับสินค้า (GR)</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.grSearchCriteriaVM.ST_GR_CODE, new { @maxlength = "20", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">วันกำหนดส่งสินค้า จาก</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.grSearchCriteriaVM.PLAN_DELIVERY_DATE_FROM, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;"
+                            })
+                        </div>
+                        <label class="col-md-2 control-label">ถึง</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.grSearchCriteriaVM.PLAN_DELIVERY_DATE_TO, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;"
+                            })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-primary" value="ค้นหา" onclick="gotoSearch();" />
+                            <input type="button" class="btn btn-primary hide" id="hidbtnSearch" value="ค้นหา" onclick="gotoSearch();" />
+                            &nbsp;
+                            <input type="button" class="btn btn-default" value="ล้างหน้าจอ" onclick="gotoClear();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.grSearchResultVM != null)
+        {
+            if (Model.grSearchResultVM.resultList != null)
+            {
+                <div class="panel panel-default" id="divResult">
+                    <div class="panel-heading">
+                        ผลการค้นหา
+                        <span class="pull-right">ผลการค้นหา : @Model.grSearchResultVM.countAll.ToString("#,###") รายการ</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table table-responsive">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th class="text-right">ลำดับ.</th>
+                                    <th><a onclick="gotoOrderMenu('ST_PR_CODE');">เลขที่ใบตลาด</a></th>
+                                    <th><a onclick="gotoOrderMenu('ST_DO_CODE');">เลขที่ใบเตรียมรับสินค้า</a></th>
+                                    <th><a onclick="gotoOrderMenu('ST_GR_CODE');">เลขที่ทำรับ</a></th>
+                                    <th><a onclick="gotoOrderMenu('PLAN_DELIVERY_DATE');">วันกำหนดส่งสินค้า</a></th>
+                                    <th><a onclick="gotoOrderMenu('LOCATION_CODE');">Location</a></th>
+                                    @*
+                                        <th>วันกำหนดส่งสินค้า</th>*@
+                                    <th></th>
+                                </tr>
+                                @for (int i = 0; i < Model.grSearchResultVM.resultList.Count; i++)
+                                {
+                                    var item = Model.grSearchResultVM.resultList[i];
+                                    <tr>
+                                        <td class="text-right" style="width: 20px; vertical-align: middle;">@item.ROW_NO.ToString("#,##0")</td>
+                                        <td style="vertical-align: middle;"><a style="cursor:pointer;" onclick="gotoPrDetail('@item.ST_PR_CODE');">@item.ST_PR_CODE</a></td>
+                                        <td style="vertical-align: middle;">@item.ST_DO_CODE</td>
+                                        <td style="vertical-align: middle;">@item.ST_GR_CODE</td>
+                                        @if (item.PLAN_DELIVERY_DATE.HasValue)
+                                        {
+                                            <td style="vertical-align: middle;">@item.PLAN_DELIVERY_DATE.Value.ToShortDateString()</td>
+                                        }
+                                        else
+                                        {
+                                            <td style="vertical-align: middle;">@item.PLAN_DELIVERY_DATE</td>
+                                        }
+                                        <td style="vertical-align: middle;">@item.LOCATION_CODE</td>
+                                        <td style="width:230px;">
+                                            @if (!item.SEND_FLAG)
+                                            {
+                                                string strSpacer = "&nbsp;|&nbsp;";
+                                                <a onclick="gotoDelete('@item.ST_GR_CODE');" style="cursor: pointer;">ลบ</a>
+                                                @Html.Raw(strSpacer);
+                                                <a onclick="gotoUpdate('@item.ST_GR_CODE');">แก้ไข</a>
+                                                @Html.Raw(strSpacer)
+                                            }
+                                            @*<a onclick="gotoDelete('@item.ST_GR_CODE');">ลบ</a>
+                                                |*@
+                                            <a onclick="gotoDetail('@item.ST_GR_CODE');">รายละเอียด</a>
+                                            |
+                                            @Html.ActionLink("พิมพ์", "RPT_ST_REPORT_EQ", "/RPT/Report"
+                                            , new
+                                            {
+                                                //@P_USER_NAME = Model.USER_NAME,
+                                                @P_ST_GR_CODE = item.ST_GR_CODE
+                                            }
+                                            , new { @class = "reportGrDialog" })
+
+                                            @if (Model.SessionLogin.ROLE_NAME.ToLower().Contains("admin") || Model.SessionLogin.ROLE_NAME.ToLower().Contains("warehouse"))
+                                            {
+                                                if (item.SEND_FLAG)
+                                                {
+                                                    string strSpacer = "&nbsp;|&nbsp;";
+                                                    @Html.Raw(strSpacer);
+                                                <a onclick="gotoRenewGR('@item.ST_GR_CODE');" style="cursor: pointer;" class="btn btn-success">ทำรับใหม่</a>
+                                                }
+                                            }
+
+                                            <div id="dialog-report-gr" style="display: none">
+                                                <input class="hide" id="btnClosePopupGr" type="button" />
+                                            </div>
+                                            @*<a onclick="gotoPrint('@item.ST_GR_CODE');">พิมพ์</a>*@
+                                        </td>
+                                    </tr>
+                                } 
+                            </table>
+                        </div>
+                        @Html.Partial("_PaginationSearchPartial", Model.ZenPagination)
+                    </div>
+                </div>
+            }
+        }
+    </form>
+</div>
+
+
+<style>
+    .normal-font {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    table tr th a {
+        cursor: pointer;
+    }
+
+    table tr td a {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+
+    //Search Criteria
+    function gotoClear() {
+        var url1 = '@Url.Action("Index")';
+        url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoSearch() {
+        var url1 = '@Url.Action("Search")';
+        url1 = url1.substring(0, url1.lastIndexOf("Search")).concat("Search");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoOrderMenu(id) {
+        var url1 = '@Url.Action("SearchOrderByMenu")';
+        url1 = url1.substring(0, url1.lastIndexOf("SearchOrderByMenu")).concat("SearchOrderByMenu/");
+
+        var vform = $('#form1');
+        vform.attr("action", url1.concat(id));
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+
+    //Search Result
+    function gotoUpdate(grCode) {
+        $('#grVM_MA_ST_GR_CODE').val(grCode);
+
+        var url1 = '@Url.Action("Update")';
+        url1 = url1.substring(0, url1.lastIndexOf("Update")).concat("Update/");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+
+        @*if (confirm('@ViewBag.msgConfirmGrUpdate')) {
+            var url1 = '@Url.Action("Update")';
+            url1 = url1.substring(0, url1.lastIndexOf("Update")).concat("Update/");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }*@
+    }
+    @*function gotoDelete(grCode) {
+        $('#grVM_MA_ST_GR_CODE').val(grCode);
+
+        if (confirm('@ViewBag.msgConfirmGrDelete')) {
+            var url1 = '@Url.Action("DeleteSave")';
+            url1 = url1.substring(0, url1.lastIndexOf("DeleteSave")).concat("DeleteSave/");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }*@
+
+    function gotoDetail(grCode) {
+        $('#grVM_MA_ST_GR_CODE').val(grCode);
+
+        var url1 = '@Url.Action("Detail")';
+        url1 = url1.substring(0, url1.lastIndexOf("Detail")).concat("Detail/");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+
+        @*if (confirm('@ViewBag.msgConfirmGrDetail')) {
+            var url1 = '@Url.Action("Detail")';
+            url1 = url1.substring(0, url1.lastIndexOf("Detail")).concat("Detail/");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }*@
+    }
+
+    function gotoPrDetail(prCode) {
+        var url1 = '/MAS/Pr/PrViewDetail/';
+        var vform = $('#form1');
+        vform.attr("action", url1.concat(prCode));
+        vform.attr("method", "post");
+        vform.submit();
+
+    }
+
+    function gotoDelete(grCode) {
+        if (confirm('@ViewBag.msgConfirmDelete')) {
+            var url1 = '/MAS/Gr/GrDelete/';
+            var vform = $('#form1');
+            vform.attr("action", url1.concat(grCode));
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+    function gotoRenewGR(grCode) {
+        if (confirm('@ViewBag.msgConfirmRenewGR')) {
+            var url1 = '/MAS/Gr/GrDelete/';
+            var vform = $('#form1');
+            vform.attr("action", url1.concat(grCode));
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+
+    // Start GR Dialog //
+    $(document).on("click", "#btnClosePopupGr", function (e) {
+
+        $("#dialog-report-gr").dialog('close');
+
+    });
+
+    $(document).on("click", ".reportGrDialog", function (e) {
+
+        var url = $(this).attr('href');
+        url = url.replace("/MAS", "");
+        url = url.replace("?P_ST_GR_CODE=", "/");
+        var url1 = url;
+
+        var weightDocument = ($(window).width() * 0.99);
+        var higghtDocument = ($(window).height() * 0.8);
+
+        var theDialog = $("#dialog-report-gr").dialog({
+            title: 'ตัวอย่างก่อนพิมพ์',
+            autoOpen: false,
+            resizable: false,
+            height: higghtDocument,
+            width: weightDocument,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            open: function (event, ui) {
+                $(this).load(url1);
+            },
+            close: function (event, ui) {
+                $('#ifrReport').remove();
+                $(this).dialog('close');
+            },
+            buttons: [
+                 {
+                     text: "ปิด",
+                     "class": 'ClossButtonClass',
+                     click: function () {
+                         $('#ifrReport').remove();
+                         $(this).dialog('close');
+                     }
+                 }
+            ]
+        });
+
+        theDialog.dialog("open");
+        return false;
+    });
+    // End GR Dialog //
+
+    /////////////////////////////////////////////////////////////////////////
+
+</script>

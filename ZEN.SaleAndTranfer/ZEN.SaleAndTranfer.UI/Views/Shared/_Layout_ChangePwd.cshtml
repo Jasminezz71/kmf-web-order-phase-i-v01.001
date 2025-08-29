@@ -1,0 +1,265 @@
+﻿@using ZEN.SaleAndTranfer.ET.AUT;
+
+@{
+    var appName = "KMF Order";
+    var year = DateTime.Now.Year.ToString();
+    var version = "V.02.000";
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@appName</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+        @{
+            string shortDate = "";
+            shortDate = System.Configuration.ConfigurationManager.AppSettings["CULTER_INFO_ShortDatePattern_Datepicker"];
+        }
+
+    $(document).ready(function ($) {
+        // Code using $ as usual goes here.
+        $(".datepicker").datepicker({
+            format: "@shortDate",
+            maxViewMode: 2,
+            orientation: "bottom auto",
+            todayBtn: "linked",
+            language: "th",
+            autoclose: true,
+            todayHighlight: true
+        })
+
+        $(".datepickerMonth").datepicker({
+            format: "mm/yyyy",
+            minViewMode: 1,
+            maxViewMode: 2,
+            orientation: "bottom auto",
+            language: "th",
+            autoclose: true
+        })
+
+        // ToolTip
+        $('[data-toggle="tooltip"]').tooltip();
+
+        //check brand branch in session
+        var needChooseBrand = '@ViewBag.needChooseBrand';
+        var InventoryStock = '@ViewBag.InventoryStock';
+            if (needChooseBrand == '1') {
+                if (InventoryStock == '1') {
+                    alert('@ViewBag.msgAlertNobranchStockInSession');
+                    window.location = '/Home/ChangeBranch/';
+            }
+            else {
+                    alert('@ViewBag.msgAlertNobranchInSession');
+                    window.location = '/Home/ChangeBranch/';
+            }
+        }
+
+        // Detect Ctrl+C and Ctrl+V
+        var ctrlDown = false,
+            ctrlKey = 17,
+            cmdKey = 91,
+            vKey = 86,
+            cKey = 67;
+
+        $(document).keydown(function (e) {
+            if (e.keyCode == ctrlKey || e.keyCode == cmdKey) ctrlDown = true;
+        }).keyup(function (e) {
+            if (e.keyCode == ctrlKey || e.keyCode == cmdKey) ctrlDown = false;
+        });
+
+        $(".no-copy-paste").keydown(function (e) {
+            if (ctrlDown && (e.keyCode == vKey || e.keyCode == cKey)) return false;
+        });
+
+        // Detact 0 - 9 , .
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            var keycode = String.fromCharCode(charCode);
+            if (keycode == ".") return true
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+        //NUMBER
+        $('body').on('keypress', '.numberOnly', function (event) {
+            return isNumberKey(event);
+        });
+        $('body').on('change', '.numberOnly', function (event) {
+            var temp = accounting.formatMoney($(this).val(), "", 2, "", ".");
+            if (parseFloat(temp) > 0) {
+                $(this).val(temp);
+            }
+            else {
+                $(this).val(temp);
+            }
+        });
+
+        //NUMBER
+        $('body').on('keypress', '.numberOnlyPr', function (event) {
+            return isNumberKey(event);
+        });
+        $('body').on('change', '.numberOnlyPr', function (event) {
+            var temp = accounting.formatMoney($(this).val(), "", 2, "", ".");
+            if (parseFloat(temp) > 0) {
+                $(this).val(temp);
+            }
+            else {
+                $(this).val('');
+            }
+        });
+
+        //NUMBER CAN ZERO
+        $('body').on('keypress', '.numberOnlyCanZero', function (event) {
+            return isNumberKey(event);
+        });
+        $('body').on('change', '.numberOnlyCanZero', function (event) {
+            if ($(this).val() == '') {
+                $(this).val('');
+                return;
+            }
+
+            var temp = accounting.formatMoney($(this).val(), "", 2, "", ".");
+            if (parseFloat(temp) >= 0) {
+                $(this).val(temp);
+            }
+            else {
+                $(this).val('');
+            }
+        });
+
+
+    });
+
+
+    </script>
+
+    <style type="text/css">
+        #divNavbarTop {
+            margin-left: 0px;
+            max-width: 1400px;
+        }
+
+        .img-loading {
+            opacity: 0.3;
+            background-image: url("/images/loading.gif");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            pointer-events: none;
+        }
+
+        .navbar-nav li a {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        @*Supaneej, 2018-10-11, Style for zoom item image*@
+        * {
+            box-sizing: border-box;
+        }
+
+        .zoom {
+            transition: transform .2s;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+            .zoom:hover {
+                -ms-transform: scale(1.5); /* IE 9 */
+                -webkit-transform: scale(1.5); /* Safari 3-8 */
+                transform: scale(8.0);
+        }
+    </style>
+
+    @{
+        UserLoginInfoET sessionLogin = new UserLoginInfoET();
+        sessionLogin = (UserLoginInfoET)Session[SessionConst.CURRENT_USER_LOGIN];
+    }
+
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container" id="divNavbarTop">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" style="padding: 10px;">
+                    <img src="~/images/kingmarine_logo.png" style="width: 25px; height: 25px;" />
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+               
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+
+    <div class="container body-content">
+        <hr />
+        <footer>
+            <p>&copy; @year King Marine Foods Co., Ltd. All Rights Reserved Version @version</p>
+        </footer>
+    </div>
+
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)*@
+
+    <!-- Modal : Basket -->
+    <div class="modal fade" id="basketModal" tabindex="-1" role="dialog" aria-labelledby="BasketModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="basketModalTiele"><span class="text-primary">ตะกร้า</span></h4>
+                </div>
+                <div class="modal-body" id="basketModelBody">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="return goToPrqSummary();">สรุปการสั่งซื้อ</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">ปิดหน้าต่าง</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal : Promotion -->
+    <div class="modal fade" id="modalPromotion" tabindex="-1" role="dialog" aria-labelledby="promotionModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-danger" id="promotionModalLabel">Promotion</h4>
+                </div>
+                <div class="modal-body" id="modalPromotionBody">
+                    
+                </div>
+                <div class="modal-footer hide">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

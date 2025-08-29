@@ -1,0 +1,75 @@
+﻿
+<ul class="nav navbar-nav">
+    <li><a href="/MAS/Dashboard/Index/">หน้าแรก</a></li>
+    <li><a href="/MAS/Pr/Index/">ใบตลาด</a></li>
+    <li><a href="/MAS/Do/Index/">ใบเตรียมรับสินค้า</a></li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">การทำรับ<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="/MAS/Gr/Index/">ใบรับสินค้า</a></li>
+            <li><a href="/MAS/RecTransfer/Index/">การทำรับ Tranfer</a></li>
+        </ul>
+    </li>
+    @*<li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">การนับสต๊อค<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="/MAS/ItemStock/InventoryStock">หน้าสาขานับสต๊อค</a></li>
+            <li><a href="/MAS/ItemStock/Index">รายงานการนับสต๊อค</a></li>
+        </ul>
+    </li>*@
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">ดาวน์โหลด <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="/MAS/Download/Index">ดาวน์โหลดเอกสาร</a></li>
+        </ul>
+    </li>
+
+    <li class="dropdown">
+        <a data-toggle="dropdown"
+           data-target="#"
+           href="#">
+            จัดการ Admin
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+            <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Download and Upload</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/IMPORTANDEXPORT/ItemCategory/Index">จัดการ ประเภทใบตลาด</a></li>
+                    <li><a href="/IMPORTANDEXPORT/Location/Index">จัดการ Location</a></li>
+                    <li><a href="/IMPORTANDEXPORT/Unit/Index">จัดการ หน่วยสินค้า</a></li>
+                    <li><a href="/IMPORTANDEXPORT/UnitConversion/Index">จัดการ การเปลี่ยนหน่วยสินค้า</a></li>
+                    <li><a href="/IMPORTANDEXPORT/ItemAndLocation/Index">จัดการ ความสัมพันธ์ของสินค้า Item mapping - WH</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/IMPORTANDEXPORT/PrCategory/Index">ประเภทสินค้า</a></li>
+                    <li><a href="/IMPORTANDEXPORT/ItemAndItemCategory/Index">ความสัมพันธ์ของประเภทสินค้า กับ สินค้า</a></li>
+                    <li><a href="/IMPORTANDEXPORT/ItemAndBrandCategory/Index">ความสัมพันธ์ของประเภทสินค้า กับ แบรนด์</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/IMPORTANDEXPORT/PrWhPickup/Index">รายงาน PR เพื่อหยิบของ</a></li>
+                    @*<li class="divider"></li>
+                    <li><a href="/IMPORTANDEXPORT/PrCategory/Index">ประเภทสินค้า</a></li>
+                    <li><a href="/IMPORTANDEXPORT/ItemAndItemCategory/Index">ความสัมพันธ์ของประเภทสินค้า กับ สินค้า</a></li>
+                    <li><a href="/IMPORTANDEXPORT/ItemAndBrandCategory/Index">ความสัมพันธ์ของประเภทสินค้า กับ แบรนด์</a></li>*@
+                </ul>
+            </li>
+
+            <li class="divider"></li>
+            <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">จัดการ Batch</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/ADMIN/Batch/Index">Batch ใบตลาด</a></li>
+                    <li><a href="/ADMIN/BatchHAVI/Index">Batch HAVI</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a tabindex="-1" href="/MAS/DeliverySchedule/Index">รอบรถตลาด</a>
+            </li>
+            <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">จัดการ User</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/ADMIN/User/BlockUser">Block User</a></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ul>

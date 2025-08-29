@@ -1,0 +1,94 @@
+﻿@model ZEN.SaleAndTranfer.VM.AUT.UserVM
+
+@{
+    ViewBag.Title = "BlockUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        var BlockUserFlag = '@ViewBag.BlockUserFlag';
+
+        if (BlockUserFlag == 1) {
+            alert('Block User สำเร็จ');
+        }
+        else if (BlockUserFlag == 2) {
+            alert('Unblock User สำเร็จ');
+        }
+        else if ((BlockUserFlag == 0 || runBatchPRFlag == "0") && runBatchPRFlag != "")
+            alert('run Batch PR not Success');
+    });
+
+    function gotoBlockUser() {
+        if (confirm('@ViewBag.msgConfirmBlockUser')) {
+            $('body').addClass('img-loading');
+
+            var url1 = '@Url.Action("BlockUserSave")';
+            url1 = url1.substring(0, url1.lastIndexOf("BlockUserSave")).concat("BlockUserSave");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+    function gotoUnblockUser() {
+        if (confirm('@ViewBag.msgConfirmUnblockUser')) {
+            $('body').addClass('img-loading');
+
+            var url1 = '@Url.Action("UnblockUserSave")';
+            url1 = url1.substring(0, url1.lastIndexOf("UnblockUserSave")).concat("UnblockUserSave");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+</script>
+
+<form class="form-horizontal" id="form1">
+    <div class="container">
+        <h2>หน้าจอจัดการ User : <small> Block User ใบตลาดออนไลน์</small></h2>
+        <hr />
+
+        @Html.Partial("_MessagePartial", Model.MessageList)
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">จัดการ User ใบตลาดออนไลน์</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-sm-3">*หมายเลขสาขา : </label>
+                        <div class="col-md-6">
+                            @Html.TextAreaFor(m => m.userVM_MA.BRANCH_CODE, new { @class = "form-control", @rows = "6", @col = "20" })
+                            <p class="help-block">1 หมายเลขสาขา ต่อ 1 บรรทัด.</p>
+                            <p style="color: #ff0000;">หมายเลขสาขาตามระบบ Navision เท่านั้น ตัวอย่าง TUM011501</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3">*หมายเหตุ : </label>
+                        <div class="col-md-6">
+                            @Html.TextAreaFor(m => m.userVM_MA.RESON, new { @class = "form-control", @rows = "2", @col = "20" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3 col-md-offset-3">
+                            <input type="button" class="btn btn-danger btn-sm btn-block" value="Block" onclick="gotoBlockUser();" />
+                        </div>
+                        <div class="col-md-3 ">
+                            <input type="button" class="btn btn-success btn-sm btn-block" value="Unblock" onclick="gotoUnblockUser();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

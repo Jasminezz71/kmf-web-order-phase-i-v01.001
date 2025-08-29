@@ -1,0 +1,261 @@
+﻿@model ZEN.SaleAndTranfer.VM.AUT.UserVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("_MessagePartial", Model.MessageList)
+
+<div class="container">
+    <h2>หน้าจอจัดการผู้ใช้งาน : <small>ค้นหาผู้ใช้งาน</small></h2>
+    <hr />
+    <form class="form-horizontal" id="form1">
+        @Html.HiddenFor(m => m.userVM_MA.USER_NAME)
+        <div class="panel panel-primary">
+            <div class="panel-heading">ระบุเงื่อนไขการค้นหา</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">ชื่อผู้ใช้งาน</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.userSearchCriteriaVM.USER_NAME, new { @maxlength = "20", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">ชื่อ</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.userSearchCriteriaVM.FIRST_NAME_TH, new { @maxlength = "50", @class = "form-control" })
+                        </div>
+                        <label class="col-md-2 control-label">นามสกุล</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.userSearchCriteriaVM.LAST_NAME_TH, new { @maxlength = "50", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">อีเมล</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.userSearchCriteriaVM.EMAIL, new { @maxlength = "250", @class = "form-control" })
+                        </div>
+                        <label class="col-md-2 control-label">สถานะการใช้งาน</label>
+                        <div class="col-md-4">
+                            @if (Model.userSearchCriteriaVM.activeFlagList != null)
+                            {
+                                @Html.DropDownListFor(m => m.userSearchCriteriaVM.ACTIVE_FLAG,
+                                    new SelectList(@Model.userSearchCriteriaVM.activeFlagList, "ITEM_VALUE", "ITEM_TEXT")
+                                    , new { @class = "form-control" }
+                                    )
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-primary" value="ค้นหา" onclick="gotoSearch();" />
+                            <input type="button" class="btn btn-primary hide" id="hidbtnSearch" value="ค้นหา" onclick="gotoSearch();" />
+                            &nbsp;
+                            <input type="button" class="btn btn-default" value="ล้างหน้าจอ" onclick="gotoClear();" />
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="form-group">
+                        <div class="col-md-12" style="text-align:right;">
+                            <input type="button" class="btn btn-primary" value="เพิ่มผู้ใช้งาน" onclick="gotoCreate();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.userSearchResultVM != null)
+        {
+            if (Model.userSearchResultVM.resultList != null)
+            {
+                <div class="panel panel-default" id="divResult">
+                    <div class="panel-heading">ผลการค้นหา</div>
+                    <div class="panel-body">
+                        <div class="table table-responsive">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th class="text-right">ลำดับ.</th>
+                                    <th><a onclick="gotoOrder('USER_NAME');" class="normal-font">ชื่อผู้ใช้งาน</a></th>
+                                    <th><a onclick="gotoOrder('FIRST_NAME_TH');" class="normal-font">ชื่อ</a></th>
+                                    <th><a onclick="gotoOrder('LAST_NAME_TH');" class="normal-font">นามสกุล</a></th>
+                                    <th><a onclick="gotoOrder('EMAIL');" class="normal-font">อีเมล</a></th>
+                                    <th><a onclick="gotoOrder('ACTIVE_FLAG');" class="normal-font">สถานะ</a></th>
+                                    @*<th>อีเมล</th>
+                                    <th>สถานะ</th>*@
+                                    <th></th>
+                                </tr>
+                                @for (int i = 0; i < Model.userSearchResultVM.resultList.Count; i++)
+                                {
+                                    @Html.HiddenFor(m => m.userSearchResultVM.resultList[i].USER_NAME)
+                                    var item = Model.userSearchResultVM.resultList[i];
+                                    <tr>
+                                        <td class="text-right" style="width:20px;">@item.ROW_NO.ToString("#,##0")</td>
+                                        <td>@item.USER_NAME</td>
+                                        <td>@item.FIRST_NAME_TH</td>
+                                        <td>@item.LAST_NAME_TH</td>
+                                        <td>@item.EMAIL</td>
+                                        <td>@item.ACTIVE_FLAG_DISPLAY</td>
+                                        <td style="width:250px;">
+                                            <a onclick="gotoEdit('@i');" style="cursor: pointer;">แก้ไข</a>
+                                            &nbsp;|&nbsp;
+                                            @if (item.ACTIVE_FLAG.ToLower() == "true")
+                                            {
+                                                <a onclick="gotoInActive('@i');" style="cursor: pointer;">ไม่ใช้งาน</a>
+                                            }
+                                            else
+                                            {
+                                                <a onclick="gotoActive('@i');" style="cursor: pointer;">ใช้งาน</a>
+                                            }
+                                            &nbsp;|&nbsp;
+                                            <a onclick="gotoResetPassword('@i');" style="cursor: pointer;">Reset Password</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                        @Html.Partial("_PaginationPartial", Model.ZenPagination)
+                    </div>
+                </div>
+            }
+        }
+    </form>
+</div>
+
+<style>
+    .normal-font {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+</style>
+
+<script>
+    function gotoClear() {
+        var url1 = '@Url.Action("Index")';
+        url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoSearch() {
+        var url1 = '@Url.Action("Search")';
+        url1 = url1.substring(0, url1.lastIndexOf("Search")).concat("Search");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoOrder(menu) {
+
+        var url1 = '@Url.Action("SearchOrderByMenu")';
+        url1 = url1.substring(0, url1.lastIndexOf("SearchOrderByMenu")).concat("SearchOrderByMenu/");
+
+        var vform = $('#form1');
+        vform.attr("action", url1.concat(menu));
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoEdit(row) {
+        var username = $('#userSearchResultVM_resultList_' + row + '__USER_NAME').val();
+        $('#userVM_MA_USER_NAME').val(username);
+
+        var url1 = '@Url.Action("Update")';
+        url1 = url1.substring(0, url1.lastIndexOf("Update")).concat("Update/");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+
+        @*if (confirm('@ViewBag.msgConfirmEdit')) {
+            var url1 = '@Url.Action("Update")';
+            url1 = url1.substring(0, url1.lastIndexOf("Update")).concat("Update/");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }*@
+    }
+
+    function gotoResetPassword(row) {
+        var username = $('#userSearchResultVM_resultList_' + row + '__USER_NAME').val();
+        $('#userVM_MA_USER_NAME').val(username);
+        if (confirm('@ViewBag.msgConfirmResetPassword')) {
+            var url1 = '@Url.Action("ResetPassword")';
+            url1 = url1.substring(0, url1.lastIndexOf("ResetPassword")).concat("ResetPassword/");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+    function gotoActive(row) {
+        var username = $('#userSearchResultVM_resultList_' + row + '__USER_NAME').val();
+        $('#userVM_MA_USER_NAME').val(username);
+        var message = '@ViewBag.msgConfirmActive';
+        message = message.replace('{0}', username);
+
+        if (confirm(message)) {
+            var url1 = '@Url.Action("ActiveUser")';
+            url1 = url1.substring(0, url1.lastIndexOf("ActiveUser")).concat("ActiveUser/");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+    function gotoInActive(row) {
+        var username = $('#userSearchResultVM_resultList_' + row + '__USER_NAME').val();
+        $('#userVM_MA_USER_NAME').val(username);
+        var message = '@ViewBag.msgConfirmInActive';
+        message = message.replace('{0}', username);
+
+        if (confirm(message)) {
+            var url1 = '@Url.Action("InActiveUser")';
+            url1 = url1.substring(0, url1.lastIndexOf("InActiveUser")).concat("InActiveUser/");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+    function gotoCreate() {
+        var url1 = '@Url.Action("Create")';
+        url1 = url1.substring(0, url1.lastIndexOf("Create")).concat("Create");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+</script>

@@ -1,0 +1,124 @@
+﻿
+@using ZEN.SaleAndTranfer.UI.Util
+@model ZEN.SaleAndTranfer.UI.VM2.Prq.DetailVM
+
+@{
+    ViewBag.Title = "ใบสั่งซื้อ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //var sumTotalDisp = Model.Het.SumTotalPrice != null && Model.Het.SumTotalPrice.HasValue ? Model.Het.SumTotalPrice.Value.ToString("N2") : null;
+    //sumTotalDisp = "1,000,000.00";
+}
+
+@{
+    decimal sumTotal = 0;
+
+    var col1 = string.Empty;
+
+    col1 = "col-xs-12 col-md-6";
+
+
+    decimal? sum2;
+    string sumTotalDisp = string.Empty;
+}
+
+@*if (Model.Het.Detail != null && Model.Het.Detail.Count > 0)
+{
+    sum1 = Model.Het.Detail.Sum(m => m.UnitPrice);
+    sum2 = Model.Het.Detail.Where(m => m.UnitPrice != null && m.UnitPrice.HasValue).Sum(m => m.OrderQty);
+    sumTotal = sum1.Value * Convert.ToDecimal(sum2);
+    sumTotalDisp = sumTotal != null && sumTotal.HasValue ? sumTotal.Value.ToString("N2") : string.Empty;
+}*@
+
+@if (Model.Het.Detail != null && Model.Het.Detail.Count > 0)
+{
+
+    foreach (var ret in Model.Het.Detail)
+    {
+        sumTotal = sumTotal + (Convert.ToDecimal(ret.UnitPrice) * Convert.ToDecimal(ret.OrderQty));
+    }
+
+    sumTotalDisp = sumTotal.ToString("N2");
+}
+
+
+    <div class="page-header">
+        <h2>@ViewBag.Title <small></small></h2>
+    </div>
+
+    <div class="col-xs-12 col-md-4">
+        <dl class="dl-horizontal">
+            <dt>เลขที่ใบสั่งซื้อ</dt>
+            <dd>@Model.Het.PrCode</dd>
+
+            <dt>ผู้สั่งซื้อ</dt>
+            <dd>@Model.Het.OrderBy</dd>
+
+            <dt>วันที่สั่งซื้อ</dt>
+            <dd>@Model.Het.OrderDate</dd>
+
+            <dt>วันกำหนดส่ง</dt>
+            <dd>@Model.Het.PlanDeliveryDate</dd>
+
+            <dt>PO</dt>
+            <dd>@Model.Het.PoCode</dd>
+
+            <dt>หมายเหตุ</dt>
+            <dd>@Model.Het.Remark</dd>
+        </dl>
+    </div>
+
+    <div class="col-xs-12 col-md-8">
+        <div class="table-responsive">
+            @if (Model.Het.Detail != null && Model.Het.Detail.Count > 0)
+            {
+                var index = 1;
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-right">#</th>
+                            <th>รหัสสินค้า</th>
+                            <th>ชื่อสินค้า</th>
+                            <th class="text-right">ราคา</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var det in Model.Het.Detail)
+                        {
+                            var sumPerLineDisp = "N/A";
+                            if (det.UnitPrice != null && det.UnitPrice.HasValue)
+                            {
+                                var sumPerLine = det.OrderQty.Value * det.UnitPrice.Value;
+                                sumPerLineDisp = sumPerLine.ToString("N2");
+                            }
+
+                            <tr>
+                                <th class="text-right">@index</th>
+                                <td>@det.ItemCode</td>
+                                <td>
+                                    @det.ItemName
+                                    <br /><span class="text-danger">@det.Remark</span>
+                                </td>
+                                <td class="text-right">@string.Format("{0:N2}", det.OrderQty) x @string.Format("{0:N2}", det.UnitPrice) = @sumPerLineDisp</td>
+                            </tr>
+
+                            index++;
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th class="text-right">&nbsp;</th>
+                            <td>&nbsp;</td>
+                            <td><span class="text-danger hide">* ราคาจะถูกจะแปรผันตามวันกำหนดส่ง</span></td>
+                            <td class="text-right"><span class="text-danger">@sumTotalDisp</span></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-warning" role="alert">ไม่พบข้อมูล</div>
+            }
+        </div>
+    </div>

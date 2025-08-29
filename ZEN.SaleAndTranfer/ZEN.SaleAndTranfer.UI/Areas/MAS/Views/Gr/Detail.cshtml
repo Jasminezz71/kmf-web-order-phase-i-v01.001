@@ -1,0 +1,243 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.GrVM
+
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var url1 = string.Empty;
+}
+
+<style>
+    .font-normal {
+        font-weight: normal;
+    }
+</style>
+
+<form class="form-horizontal" id="form1">
+    @Html.HiddenFor(m => m.grVM_MA.ST_GR_CODE)
+    <div class="container">
+        <h2>
+            หน้าจอใบรับสินค้า (GR) : <small>รายละเอียด GR</small>
+        </h2>
+
+        <hr />
+
+        @Html.Partial("_MessagePartial", Model.MessageList)
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">รายชื่อสินค้า</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-6 control-label">เลขที่ใบตลาด (PR) </label>
+                            <label class="col-md-6 control-label font-normal" style="text-align: left;">@Model.grVM_MA.ST_PR_CODE</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-6 control-label">เลขที่ใบเตรียมรับสินค้า (DO) </label>
+                            <label class="col-md-6 control-label font-normal" style="text-align: left;">@Model.grVM_MA.ST_DO_CODE</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-6 control-label">เลขที่ทำรับ (GR) </label>
+                            <label class="col-md-6 control-label font-normal" style="text-align: left;">@Model.grVM_MA.ST_GR_CODE</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-6 control-label">Location</label>
+                            <label class="col-md-6 control-label font-normal" style="text-align: left;">@Model.grVM_MA.resultList[0].LOCATION_CODE</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-6 control-label">วันกำหนดส่งสินค้า </label>
+                            <label class="col-md-6 control-label font-normal" style="text-align: left;">@Model.grVM_MA.PLAN_DELIVERY_DATE.Value.ToShortDateString()</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-6 control-label">วันที่ทำรับสินค้า </label>
+                            <label class="col-md-6 control-label font-normal" style="text-align: left;">@Model.grVM_MA.RECEIVE_DATE.Value.ToShortDateString()</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-6 control-label">หมายเลขอ้างอิง </label>
+                            <label class="col-md-6 control-label font-normal" style="text-align: left;">@Model.grVM_MA.REFERANCE_NO</label>
+                            @*<div class="col-sm-6">
+                                    <span class=" pull-right">
+                                        @Html.ActionLink("พิมพ์ใบรับสินค้า", "RPT_ST_REPORT", "/RPT/Report"
+                                                                                 , new
+                                                                                 {
+                                                                                     @P_ST_GR_CODE = Model.grVM_MA.ST_GR_CODE
+                                                                                 }
+                                                                                 , new { @class = "reportGrDialog btn btn-primary" })
+                                    </span>
+                                    <div id="dialog-report-gr" style="display: none">
+                                        <input class="hide" id="btnClosePopupGr" type="button" />
+                                    </div>
+                                </div>*@
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-6 control-label">ชื่อผู้รับของ </label>
+                            <label class="col-md-6 control-label font-normal" style="text-align: left;">@Model.grVM_MA.RECEIVE_BY</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-6 control-label">สถานะใบเตรียมรับสินค้า (DO) </label>
+                            <label class="col-md-6 control-label font-normal" style="text-align: left;">@Model.grVM_MA.DO_STATUS_NAME</label>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12" style="text-align:center; margin-top:10px">
+                                <span>
+                                    @Html.ActionLink("พิมพ์ใบรับสินค้า", "RPT_ST_REPORT_EQ", "/RPT/Report"
+                                                                         , new
+                                                                         {
+                                                                             @P_ST_GR_CODE = Model.grVM_MA.ST_GR_CODE
+                                                                         }
+                                                                         , new { @class = "reportGrDialog btn btn-primary" })
+                                </span>
+                                <div id="dialog-report-gr" style="display: none">
+                                    <input class="hide" id="btnClosePopupGr" type="button" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model != null && Model.complainRETs != null && Model.complainRETs.Count > 0)
+                    {
+                        @* จะเพิ่มหน้าจอ Complaint *@
+                        @Html.Partial("_GrComplainPartial", Model)
+                    }
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">รายชื่อสินค้า</div>
+                    <div class="panel-body">
+                        <div class="table table-responsive">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th class="text-right">ลำดับ</th>
+                                    <th>ประเภทสินค้า</th>
+                                    @*<th>สั่งจากแบรนด์</th>*@
+                                    <th>รหัสสินค้า</th>
+                                    <th>ชื่อสินค้า</th>
+                                    <th>รายละเอียดอื่นๆ</th>
+                                    @if (Model.showImageFlag)
+                                    {
+                                        <th>รูปภาพ</th>
+                                    }
+                                    <th>จำนวนที่สั่ง</th>
+                                    <th>หน่วยที่สั่ง</th>
+                                    <th>จำนวนที่ส่ง</th>
+                                    <th>หน่วยที่ส่ง</th>
+                                    <th>จำนวนที่รับแล้ว</th>
+                                    <th>จำนวนที่รับ</th>
+                                    <th>หน่วยที่รับ</th>
+                                    @*<th>ราคา (บาท)</th>*@
+                                </tr>
+                                @for (int i = 0; i < Model.grVM_MA.resultList.Count; i++)
+                                {
+                                    var item = Model.grVM_MA.resultList[i];
+                                    url1 = string.Format("{0}://{1}/{2}", this.Request.Url.Scheme, this.Request.Url.Authority, item.FILE_PATH);
+
+                                    <tr>
+                                        <td class="text-right" style="width:20px;">@item.ROW_NO.ToString("#,##0")</td>
+                                        <td>@item.ST_PR_CATEGORY_NAME</td>
+                                        @*<td>@item.REQUEST_TO_BRAND_CODE</td>*@
+                                        <td>@item.ITEM_CODE</td>
+                                        <td>@item.ITEM_NAME_TH</td>
+                                        <td>@item.ITEM_NAME_TH2</td>
+                                        @if (Model.showImageFlag)
+                                        {
+                                            <td><img class="zoom" src="@url1" onclick="window.open(src);" border="0" style="width:40px; height:40px;" alt=""></td>
+                                        } 
+                                        <td>@item.QTY_REQUEST</td>
+                                        <td>@item.REQUEST_UOM_CODE</td>
+                                        <td>@item.QTY_SEND</td>
+                                        <td>@item.SEND_UOM_CODE</td>
+                                        <td>@item.QTY_RECEIVED</td>
+                                        <td>@item.QTY_RECEIVE</td>
+                                        <td>@item.RECEIVE_UOM_CODE</td>
+                                        @*<td>@item.SalePrice</td>*@
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <a href="/MAS/Gr/Index">กลับไปยังหน้าค้นหา</a>
+    </div>
+</form>
+
+<script>
+    function gotoUpdate(prCode) {
+
+        var url1 = "/MAS/Do/ReceiveItem/|" + prCode;
+        window.location = url1;
+        @*if (confirm('@ViewBag.msgConfirmGrUpdate')) {
+
+
+            //var url1 = '@Url.Action("Update")';
+            //url1 = url1.substring(0, url1.lastIndexOf("Update")).concat("Update");
+
+            var url1 = "/MAS/Do/ReceiveItem/|" + prCode;
+            window.location = url1;
+
+            //var vform = $('#form1');
+            //vform.attr("action", url1);
+            //vform.attr("method", "post");
+            //vform.submit();
+        }
+        else {
+            return false;
+        }*@
+    }
+    /////////////////////////////////////////////////////////////////////////
+
+    // Start GR Dialog //
+    $(document).on("click", "#btnClosePopupGr", function (e) {
+
+        $("#dialog-report-gr").dialog('close');
+
+    });
+
+    $(document).on("click", ".reportGrDialog", function (e) {
+
+        var url = $(this).attr('href');
+        url = url.replace("/MAS", "");
+        url = url.replace("?P_ST_GR_CODE=", "/");
+        var url1 = url;
+
+        var weightDocument = ($(window).width() * 0.99);
+        var higghtDocument = ($(window).height() * 0.8);
+
+        var theDialog = $("#dialog-report-gr").dialog({
+            title: 'ตัวอย่างก่อนพิมพ์',
+            autoOpen: false,
+            resizable: false,
+            height: higghtDocument,
+            width: weightDocument,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            open: function (event, ui) {
+                $(this).load(url1);
+            },
+            close: function (event, ui) {
+                $('#ifrReport').remove();
+                $(this).dialog('close');
+            },
+            buttons: [
+                 {
+                     text: "ปิด",
+                     "class": 'ClossButtonClass',
+                     click: function () {
+                         $('#ifrReport').remove();
+                         $(this).dialog('close');
+                     }
+                 }
+            ]
+        });
+
+        theDialog.dialog("open");
+        return false;
+    });
+    // End GR Dialog //
+
+    /////////////////////////////////////////////////////////////////////////
+
+</script>

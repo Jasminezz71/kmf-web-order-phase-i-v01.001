@@ -1,0 +1,227 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.SignatureVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>
+        หน้าจอค้นหาลายเซ็นต์
+    </h2>
+
+    <hr />
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+
+    <form class="form-horizontal" id="form1">
+        @Html.HiddenFor(m => m.signatureVM_MA.IMAGE_ID)
+        <div class="panel panel-primary">
+            <div class="panel-heading">ระบุเงื่อนไขการค้นหา</div>
+            <div class="panel-body">
+                @*<div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">แบรนด์</label>
+                            <div class="col-md-4">
+                                @if (Model != null)
+                                {
+                                    if (Model.signatureSearchCriteriaVM.brandList != null)
+                                    {
+                                        @Html.DropDownListFor(m => m.signatureSearchCriteriaVM.BRAND_CODE,
+                                            new SelectList(@Model.signatureSearchCriteriaVM.brandList, "ITEM_VALUE", "ITEM_TEXT")
+                                            , new { @class = "form-control", @onchange = "gotoChangeBrand()" }
+                                            )
+                                    }
+                                }
+                            </div>
+                            <label class="col-md-2 control-label">สาขา</label>
+                            <div class="col-md-4">
+                                @if (Model != null)
+                                {
+                                    if (Model.signatureSearchCriteriaVM.branchList != null)
+                                    {
+                                        @Html.DropDownListFor(m => m.signatureSearchCriteriaVM.BRANCH_CODE,
+                                            new SelectList(@Model.signatureSearchCriteriaVM.branchList, "ITEM_VALUE", "ITEM_TEXT")
+                                            , new { @class = "form-control" }
+                                            )
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>*@
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">บริษัท</label>
+                        <div class="col-md-4">
+                            @if (Model != null)
+                            {
+                                if (Model.signatureSearchCriteriaVM.companyList != null)
+                                {
+                            @Html.DropDownListFor(m => m.signatureSearchCriteriaVM.COMPANY_CODE,
+                                        new SelectList(@Model.signatureSearchCriteriaVM.companyList, "ITEM_VALUE", "ITEM_TEXT")
+                                        , new { @class = "form-control" }
+                                        )
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-primary" value="ค้นหา" onclick="gotoSearch();" />
+                            <input type="button" class="btn btn-primary hide" id="hidbtnSearch" value="ค้นหา" onclick="gotoSearch();" />
+                            &nbsp;
+                            <input type="button" class="btn btn-default" value="ล้างการค้นหา" onclick="gotoClear();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-12" style="text-align: right;">
+                <input value="เพิ่มลายเซ็นต์" class="btn btn-success" onclick="gotoInsert();" />
+            </div>
+        </div>
+
+        @if (Model.signatureSearchResultVM != null)
+        {
+            if (Model.signatureSearchResultVM.resultList != null)
+            {
+                if (Model.signatureSearchResultVM.resultList.Count > 0)
+                {
+                    <div class="panel panel-default" id="divResult">
+                        <div class="panel-heading">
+                            ผลการค้นหา
+                            @*   <span class="pull-right">ผลการค้นหา : @Model.signatureSearchResultVM.countAll.ToString("#,###") รายการ</span>*@
+                        </div>
+                        <div class="panel-body">
+                            <div class="table table-responsive">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th class="text-right">ลำดับ</th>
+                                        @*<th>แบรนด์</th>
+                                            <th>สาขา</th>*@
+                                        <th>บริษัท</th>
+                                        <th>สถานะ</th>
+                                        <th>รูป</th>
+                                        <th>เปลี่ยนสถานะ</th>
+                                        @*<th>ระบบ</th>*@
+                                    </tr>
+                                    @for (int i = 0; i < Model.signatureSearchResultVM.resultList.Count; i++)
+                                    {
+                                        var item = Model.signatureSearchResultVM.resultList[i];
+                                        <tr>
+                                            <td class="text-right" style="width: 20px; vertical-align: middle;">@item.ROW_NO.ToString("#,##0")</td>
+                                            @*<td>@item.BRAND_NAME</td>
+                                                <td>@item.BRANCH_CODE : @item.BRANCH_NAME</td>*@
+                                            <td style=" vertical-align: middle; ">@item.COMPANY_NAME</td>
+                                            <td style=" vertical-align: middle; ">@item.DELETE_DISPLAY</td>
+                                            <td style=" vertical-align: middle; ">
+                                                <img src="data:image;base64,@System.Convert.ToBase64String(item.IMAGE_BITS)" />
+                                            </td>
+                                            <td style=" vertical-align: middle; ">
+                                                @*<a>แก้ไข</a>
+                                                    &nbsp;*@
+                                                @if (item.DELETE_FLAG == "0") // ใช้งาน
+                                                {
+                                                    <a onclick="gotoUpdateActiveDeactive('@item.IMAGE_ID')">ไม่ใช้งาน</a>
+                                                }
+                                                else // ไม่ใช้งาน
+                                                {
+                                                    <a onclick="gotoUpdateActiveDeactive('@item.IMAGE_ID')">ใช้งาน</a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            }
+        }
+    </form>
+</div>
+
+<style>
+    td a {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        var CanEditBrand = '@ViewBag.CanEditBrand';
+        var CanEditBranch = '@ViewBag.CanEditBranch';
+
+        if (CanEditBrand == '0') {
+            $('#signatureSearchCriteriaVM_BRAND_CODE').prop("disabled", "disabled");
+        }
+        else if (CanEditBrand == '1') {
+            $('#signatureSearchCriteriaVM_BRAND_CODE').prop("disabled", null);
+        }
+
+        if (CanEditBranch == '0') {
+            $('#signatureSearchCriteriaVM_BRANCH_CODE').prop("disabled", "disabled");
+        }
+        else if (CanEditBranch == '1') {
+            $('#signatureSearchCriteriaVM_BRANCH_CODE').prop("disabled", null);
+        }
+    });
+    
+    function gotoClear() {
+        var url1 = '@Url.Action("Index")';
+        url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoSearch() {
+        var url1 = '@Url.Action("Search")';
+        url1 = url1.substring(0, url1.lastIndexOf("Search")).concat("Search");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoInsert() {
+        var url1 = '@Url.Action("Insert")';
+        url1 = url1.substring(0, url1.lastIndexOf("Insert")).concat("Insert");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoUpdateActiveDeactive(imageID) {
+
+        var url1 = '@Url.Action("UpdateActiveDeactive")';
+        url1 = url1.substring(0, url1.lastIndexOf("UpdateActiveDeactive")).concat("UpdateActiveDeactive/");
+        url1 = url1.concat(imageID);
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoChangeBrand() {
+        var url1 = '@Url.Action("ChangeBrand")';
+        url1 = url1.substring(0, url1.lastIndexOf("ChangeBrand")).concat("ChangeBrand");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+</script>

@@ -1,0 +1,58 @@
+﻿@model ZEN.SaleAndTranfer.VM.ACC.UploadEndDayDocVM
+
+@{
+    ViewBag.Title = "Upload File";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <h2>@ViewBag.Title</h2>
+    <hr />
+    @Html.Partial("_MessagePartial", Model.MessageList)
+</div>
+
+<div class="container">
+    @using (Html.BeginForm("Upload", "SendEndDayDoc", new { area = "Acc" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.EndDayDate)
+            @Html.TextBoxFor(m => m.EndDayDate, new { @class = "form-control", @readonly = "readonly", style = "max-width:250px;", @type = "date" })
+        </div>
+        <div class="form-group">
+            @Html.HiddenFor(model => model.EndDayDocTypeID)
+            @Html.LabelFor(model => model.EndDayDocTypeID)
+            @Html.TextBoxFor(m => m.EndDayDocTypeDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width:250px;" })
+
+        </div>
+        <div class="form-group">
+            @Html.HiddenFor(model => model.SelectedFile)
+            @Html.LabelFor(model => model.SelectedFile)
+            @Html.TextBoxFor(model => model.SelectedFile, "", new { @type = "file", @name = "file" })
+            <p class="help-block">รองรับไฟล์ *.jpg *.png และ *.pdf ขนาดไฟล์ไม่เกิน 4 MB</p>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload File</button>
+    }
+</div>
+
+<script type="text/javascript">
+    function gotoUpload() {
+        var url1 = '/Acc/SendEndDayDoc/UploadFile/';
+        var vform = $('#form1');
+        vform.attr("action", url1.concat());
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    $(document).ready(function () {
+        @*if ('@Model.EndDayDocTypeID' == '1') {
+            $("#EndDayDocTypeDisplay").val("เอกสารปิดสิ้นวัน");
+        } else if ('@Model.EndDayDocTypeID' == '2') {
+            $("#EndDayDocTypeDisplay").val("เอกสาร SCB");
+        } else if ('@Model.EndDayDocTypeID' == '3') {
+            $("#EndDayDocTypeDisplay").val("เอกสาร KTC");
+        } else {
+            $("#EndDayDocTypeDisplay").val("N/A");
+        }*@
+
+        $("#EndDayDate").val('@Model.EndDayDate.Value.ToString("yyyy-MM-dd")');
+    });
+</script>

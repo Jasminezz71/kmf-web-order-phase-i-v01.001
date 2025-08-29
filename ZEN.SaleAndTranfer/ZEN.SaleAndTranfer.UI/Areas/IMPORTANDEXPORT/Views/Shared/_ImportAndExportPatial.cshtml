@@ -1,0 +1,74 @@
+﻿<div class="container">
+    <h2>จัดการ @ViewBag.ImportAndExportTitle</h2>
+
+    <hr />
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @for (int i = 1; i < 3; i++)
+            {
+                <div class="col-sm-12">
+                    <a>
+                        <span>@i</span><span>.) </span>
+                        File Name - @i
+                    </a>
+                </div>
+            }
+            @for (int i = 3; i < 4; i++)
+            {
+                <div class="col-sm-12">
+                    <a>
+                        <span>@i</span><span>.) </span>
+                        File Name - @i
+                    </a>
+                    <br />
+                    <pre>
+    1.) รายละเอียด 1
+    2.) รายละเอียด 2
+</pre>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    Download ข้อมูลมาสเตอร์ @ViewBag.ImportAndExportTitle
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input type="button" class="btn btn-primary" value="ดาวน์โหลด" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    นำเข้าข้อมูลมาสเตอร์ @ViewBag.ImportAndExportTitle เข้าสู่ระบบ
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">
+                    *อัพโหลดไฟล์ :
+                </div>
+                <div class="col-sm-10">
+                    <input type="file" class="form-control" />
+                    <p class="help-block">* อัพโหลดได้ไม่เกิน 10 MB</p>
+                    <p class="help-block">* อัพโหลดได้เฉพาะไฟล์ .xlsx เท่านั้น </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-10 col-md-push-2">
+                    <input type="button" class="btn btn-primary" value="อัพโหลดไฟล์" />
+                    <input type="button" class="btn btn-primary" value="ล้างหน้าจอ" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

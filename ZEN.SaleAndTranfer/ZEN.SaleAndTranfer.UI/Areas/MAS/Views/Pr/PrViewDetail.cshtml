@@ -1,0 +1,298 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.PrVM
+
+@{
+    ViewBag.Title = "ItemViewDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <h2>
+        หน้าจอใบตลาด (PR) : <small>รายละเอียด PR</small>
+    </h2>
+
+    <hr />
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+
+    <form class="form-horizontal" id="form1">
+        @Html.HiddenFor(m => m.prVM_MA.ST_PR_CODE)
+        @Html.HiddenFor(m => m.showImageFlag)
+        <div class="panel panel-primary">
+            <div class="panel-heading">รายชื่อสินค้า</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" style="text-align:left;">เลขที่ใบตลาด (PR) :</label>
+                        <label class="col-md-10 control-label" style="text-align:left; font-weight: normal;">
+                            @Model.prVM_MA.ST_PR_CODE
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" style="text-align:left;">วันที่สร้างใบตลาด :</label>
+                        <label class="col-md-10 control-label" style="text-align:left; font-weight: normal;">
+                            @Model.prVM_MA.CREATE_DATE.Value.ToShortDateString()
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" style="text-align:left;">วันกำหนดส่งสินค้า :</label>
+                        <label class="col-md-10 control-label" style="text-align:left; font-weight: normal;">
+                            @Model.prVM_MA.PLAN_DELIVERY_DATE.Value.ToShortDateString()
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" style="text-align:left;">ชื่อผู้ติดต่อ :</label>
+                        <label class="col-md-10 control-label" style="text-align:left; font-weight: normal;">
+                            @Model.prVM_MA.REMARK.ToString()
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" style="text-align:left;">ผู้สร้าง :</label>
+                        <label class="col-md-10 control-label" style="text-align:left; font-weight: normal;">
+                            @Model.prVM_MA.CREATE_BY : @Model.prVM_MA.CREATE_DATE.Value.ToString("dd/MM/yyyy HH:mm")
+                        </label>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" style="text-align:left;">แก้ไขล่าสุด :</label>
+                        <label class="col-md-10 control-label" style="text-align:left; font-weight: normal;">
+                            @Model.prVM_MA.UPDATE_BY : @Model.prVM_MA.UPDATE_DATE.Value.ToString("dd/MM/yyyy HH:mm")
+
+
+                            @if (Model.FRANCHISES_FLAG)
+                            {      <span class="pull-right">
+                                @Html.ActionLink("พิมพ์ใบตลาด", "RPT_ST_REPORT_FC", "/RPT/Report"
+                                                                         , new
+                                                                         {
+                                                                             //@P_USER_NAME = Model.USER_NAME,
+                                                                             @P_ST_PR_CODE = Model.prVM_MA.ST_PR_CODE
+                                                                         }
+                                                                         , new { @class = "reportPrDialog btn btn-primary" })
+
+                                @*<input type="button" value="พิมพ์ใบตลาด" class="btn btn-primary" />*@
+                            </span>
+                            }
+                            else
+                            {
+                                <span class="pull-right">
+                                    @Html.ActionLink("พิมพ์ใบตลาด", "RPT_ST_REPORT_EQ", "/RPT/Report"
+                                                                         , new
+                                                                         {
+                                                                             //@P_USER_NAME = Model.USER_NAME,
+                                                                             @P_ST_PR_CODE = Model.prVM_MA.ST_PR_CODE
+                                                                         }
+                                                                         , new { @class = "reportPrDialog btn btn-primary" })
+
+                                    @*<input type="button" value="พิมพ์ใบตลาด" class="btn btn-primary" />*@
+                                </span>
+                            }
+                            
+
+                    </label>
+                </div>
+                    <div id="dialog-report-pr" style="display: none">
+                        <input class="hide" id="btnClosePopupPr" type="button" />
+                    </div>
+
+
+
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">รายชื่อสินค้า</div>
+                        <div class="panel-body">
+                            @if (Model.prVM_MA != null)
+                            {
+                                if (Model.prVM_MA.itemCartList != null)
+                                {
+                                    <div class="table table-responsive">
+                                        <table class="table table-hover">
+                                            <tr>
+                                                <th class="text-right">ลำดับ.</th>
+                                                @* <th><a onclick="gotoOrder('USER_NAME');" class="normal-font">Username</a></th>*@
+                                                <th>ประเภทสินค้า</th>
+                                                <th>สั่งจากแบรนด์</th>
+                                                <th>รหัสสินค้า</th>
+                                                <th>ชื่อสินค้า</th>
+                                                <th>รายละเอียดอื่นๆ</th>
+                                                @if (Model.showImageFlag)
+                                                {
+                                                    <th>รูปภาพ</th>
+                                                }
+                                                <th>จำนวนที่สั่ง</th>
+                                                <th>หน่วยที่สั่ง</th>
+                                                @if (Model.FRANCHISES_FLAG)
+                                                {
+                                                    <th>ราคา/หน่วย</th>
+                                                    <th>ราคารวม</th>
+
+                                                }
+                                                else
+                                                {
+                                                    <th>Stock</th>
+                                                }
+                                                <th></th>
+                                            </tr>
+                                            @for (int i = 0; i < Model.prVM_MA.itemCartList.Count; i++)
+                                            {
+                                                int no = i + 1;
+                                                var item = Model.prVM_MA.itemCartList[i];
+                                                var url1 = string.Format("{0}://{1}/{2}", this.Request.Url.Scheme, this.Request.Url.Authority, item.FILE_PATH);
+                                                <tr>
+                                                    @*<td class="text-right" style="width:20px;">@item.ROW_NO.ToString("#,##0")</td>*@
+                                                    <td class="text-right" style="width:20px;">@no</td>
+                                                    @*<td>@item.ST_PR_CATEGORY_ID</td>*@
+                                                    <td>@item.ST_PR_CATEGORY_NAME</td>
+                                                    <td>@item.REQUEST_TO_BRAND_CODE</td>
+                                                    <td>@item.ITEM_CODE</td>
+                                                    <td>@item.ITEM_NAME</td>
+                                                    <td>@item.ITEM_DETAIL</td>
+                                                    @if (Model.showImageFlag)
+                                                    {
+                                                        <td><img class="zoom" src="@url1" onclick="window.open(src);" border="0" style="width:40px; height:40px;" alt=""></td>
+                                                    }
+                                                    <td>@item.ITEM_QTY</td>
+                                                    @*<td>
+                                                    @Html.TextBoxFor(m => m.prVM_MA.itemCartList[i].ITEM_QTY,
+                                            new { @class = "form-control" })
+                                                </td>*@
+                                                    <td>@item.ITEM_UNIT</td>
+                                                    @if (Model.FRANCHISES_FLAG)
+                                                    {
+                                                        <td class="text-right" style="width:30px;">
+                                                            @if (item.UNIT_PRICE.HasValue)
+                                                            {
+                                                                @item.UNIT_PRICE.Value.ToString("N2")
+                                                            }
+                                                        </td>
+                                                        <td class="text-right" style="width:30px;">
+                                                            @if (item.SALE_PRICE.HasValue)
+                                                            {
+                                                                @item.SALE_PRICE.Value.ToString("N2")
+                                                            }
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-right" style="width:30px;">
+                                                            @if (item.REMAIN_QTY.HasValue)
+                                                            {
+                                                                @item.REMAIN_QTY.Value.ToString("N2")
+                                                            }
+                                                        </td>
+                                                    }
+                                                    <td>
+                                                        @* <a onclick="gotoDeleteItem('@item.ITEM_CODE');" style="cursor: pointer;">ลบ</a>*@
+                                                    </td>
+                                                </tr>
+                                            }
+                                            @if (Model.FRANCHISES_FLAG)
+                                            {
+                                                <tr>
+                                                    <td class="text-right" colspan="9">มูลค่าสินค้า</td>
+                                                    <td class="text-right" colspan="2">@Model.prVM_MA.itemPrice.PRICE_BEFORE_VAT.Value.ToString("N2")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right" colspan="9">ภาษีมูลค่าเพิ่ม</td>
+                                                    <td class="text-right" colspan="2">@Model.prVM_MA.itemPrice.VAT.Value.ToString("N2")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right" colspan="9">มูลค่ารวม</td>
+                                                    <td class="text-right" colspan="2">@Model.prVM_MA.itemPrice.PRICE_INCLUDE_VAT.Value.ToString("N2")</td>
+                                                </tr>
+                                            }
+
+                                        </table>
+                                        @if (Model.FRANCHISES_FLAG)
+                                        {
+                                            <div>
+                                                <p>หมายเหตุ : จำนวนรายการสินค้า, ราคาในใบกำกับภาษีเปลี่ยนแปลงตามรายการสินค้าที่ส่งและรับจริง</p>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-sm-12 ">
+                                        <div class="alert alert-warning" style="text-align:center; font-size: 20px;">
+                                            กรุณาเลือกรายการสินค้า
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="col-sm-12 ">
+                                    <div class="alert alert-warning" style="text-align:center; font-size: 20px;">
+                                        กรุณาเลือกรายการสินค้า
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <a href="/MAS/Pr/Index/">กลับไปยังหน้าค้นหา</a>
+</div>
+
+<script>
+
+    /////////////////////////////////////////////////////////////////////////
+
+    // Start PR Dialog //
+    $(document).on("click", "#btnClosePopupPr", function (e) {
+
+        $("#dialog-report-pr").dialog('close');
+
+    });
+
+    $(document).on("click", ".reportPrDialog", function (e) {
+
+        var url = $(this).attr('href');
+        url = url.replace("/MAS", "");
+        url = url.replace("?P_ST_PR_CODE=", "/");
+        var url1 = url;
+
+        var weightDocument = ($(window).width() * 0.99);
+        var higghtDocument = ($(window).height() * 0.8);
+
+        var theDialog = $("#dialog-report-pr").dialog({
+            title: 'ตัวอย่างก่อนพิมพ์',
+            autoOpen: false,
+            resizable: false,
+            height: higghtDocument,
+            width: weightDocument,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            open: function (event, ui) {
+                $(this).load(url1);
+            },
+            close: function (event, ui) {
+                $('#ifrReport').remove();
+                $(this).dialog('close');
+            },
+            buttons: [
+                 {
+                     text: "ปิด",
+                     "class": 'ClossButtonClass',
+                     click: function () {
+                         $('#ifrReport').remove();
+                         $(this).dialog('close');
+                     }
+                 }
+            ]
+        });
+
+        theDialog.dialog("open");
+        return false;
+    });
+    // End PR Dialog //
+
+    /////////////////////////////////////////////////////////////////////////
+</script>

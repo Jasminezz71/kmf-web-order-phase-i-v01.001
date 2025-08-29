@@ -1,0 +1,49 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.DownloadVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    pre {
+        background-color: white;
+    }
+</style>
+<h2>ดาวน์โหลด</h2>
+<hr />
+
+@Html.Partial("_MessagePartial", Model.MessageList)
+
+<div class="container">
+    <div class="row">
+        @if (Model.downloadSearchResultVM != null)
+        {
+            if (Model.downloadSearchResultVM.resultList != null)
+            {
+                foreach (var item in Model.downloadSearchResultVM.resultList)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="well">
+                                <a target="_blank" class="downloadfile" href="~/@item.FILE_PATH">
+                                    <span>@item.ROW_NO</span><span>.) </span>
+                                    @item.LABEL
+                                </a>
+                                @if (item.DETAIL != null)
+                                {
+                                    string str = item.DETAIL;
+                                    str = str.Replace("@Link", item.FILE_PATH);
+                                    <br />
+                                    <div class="col-sm-12">
+                                        <pre>@Html.Raw(str)</pre>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>

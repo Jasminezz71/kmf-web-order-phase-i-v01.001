@@ -1,0 +1,169 @@
+﻿@using ZEN.SaleAndTranfer.UI.Util;
+@using ZEN.SaleAndTranfer.UI.ET2;
+@using ZEN.SaleAndTranfer.ET.AUT;
+@using ZEN.SaleAndTranfer.ET.MAS;
+
+@{
+    UserLoginInfoET sessionLogin = new UserLoginInfoET();
+    List<PrET> itemCartList = (List<PrET>)Session[SessionConst.ITEM_CART_PR];
+    string mode = (string)Session[SessionConst.MODE_MODEL];
+    string updatePRCode = (string)Session[SessionConst.UPDATE_PR_MODEL];
+
+    var itemCountInBasket = 0;
+    if (Session[SessionNameConst.ItemInBasket] is List<BasketItemET>)
+    {
+        var orders = (List<BasketItemET>)Session[SessionNameConst.ItemInBasket];
+        if (orders != null)
+        {
+            itemCountInBasket = orders.Count;
+        }
+    }
+}
+
+<style>
+    #ddlMasterBranch {
+        display: inline;
+        width: auto;
+        border-radius: 4px;
+    }
+</style>
+
+@if (Session[SessionConst.CURRENT_USER_LOGIN] != null)
+{
+    sessionLogin = (UserLoginInfoET)Session[SessionConst.CURRENT_USER_LOGIN];
+
+    <ul class="nav navbar-nav navbar-right">
+        @* สวัสดี *@
+        <li>
+            @if ((sessionLogin.ROLE_NAME.ToLower().Contains("admin") || sessionLogin.ROLE_NAME.ToLower().Contains("audit")) && (sessionLogin.ROLE_NAME.ToLower() != "saleadmin") && (sessionLogin.ROLE_NAME.ToLower() != "saleadminc"))
+            {
+                if (sessionLogin.BRANCH_CODE == null)
+                {
+                    <span class="copy-style-a" style="font-size:14px">
+                        <a href='@Url.Action("ChangePwd","Usr", new { Area=""})'>สวัสดี, @sessionLogin.FIRST_NAME_TH @sessionLogin.LAST_NAME_TH</a>
+                        @*<a href="/Home/ChangeBranch/">
+                                @sessionLogin.BRAND_CODE @sessionLogin.BRANCH_NAME
+                            </a>*@
+                    </span>
+                }
+                else
+                {
+                    <span class="copy-style-a" style="font-size:14px">
+                        <a href='@Url.Action("ChangePwd","Usr", new { Area=""})'>สวัสดี, @sessionLogin.FIRST_NAME_TH @sessionLogin.LAST_NAME_TH</a>
+                        @*<a href="/Home/ChangeBranch/">
+                                @sessionLogin.BRAND_CODE @sessionLogin.BRANCH_NAME
+                            </a>*@
+                    </span>
+                }
+            }
+            else if (sessionLogin.ROLE_NAME.ToLower().Contains("accounting"))
+            {
+                <span class="copy-style-a">
+                    สวัสดี, @sessionLogin.LAST_NAME_TH
+                </span>
+            }
+            else if (sessionLogin.ROLE_NAME.ToLower() == "saleadmin" )
+            {
+               
+                <span class="copy-style-a" style="font-size:14px">
+                    <a style="color:#999999" href='@Url.Action("SearchCus", "Prq", new { Area = "" })'>เลือก Profile ลูกค้า</a>
+                    <a href='@Url.Action("ChangePwd","Usr", new { Area=""})'> User : @sessionLogin.FIRST_NAME_TH</a>
+
+                </span>
+            }
+            else
+            {
+                if (sessionLogin.BRANCH_COUNT == 1)
+                {
+                    <span class="copy-style-a">
+                        @*สวัสดี, @sessionLogin.FIRST_NAME_TH @sessionLogin.LAST_NAME_TH @sessionLogin.BRAND_CODE @sessionLogin.BRANCH_NAME*@
+                        <a href='@Url.Action("ChangePwd","Usr", new { Area=""})'>สวัสดี, @sessionLogin.FIRST_NAME_TH</a>
+                    </span>
+                }
+                else
+                {
+                    <span class="copy-style-a" style="font-size:14px">
+                        @*สวัสดี, @sessionLogin.FIRST_NAME_TH @sessionLogin.LAST_NAME_TH*@
+                        <a href='@Url.Action("ChangePwd","Usr", new { Area=""})'>สวัสดี, @sessionLogin.FIRST_NAME_TH</a>
+                        @*<a href="/Home/ChangeBranch/">
+                                @if (sessionLogin.BRAND_CODE == "-- ทั้งหมด --")
+                                {
+                                    @sessionLogin.BRANCH_NAME
+                                }
+                                else
+                                {
+                                    @sessionLogin.BRAND_CODE @sessionLogin.BRANCH_NAME
+                                }
+                            </a>*@
+                    </span>
+                }
+            }
+        </li>
+
+        @* ตะกร้าเดิม *@
+        <li class="hide">
+            @if (!sessionLogin.ROLE_NAME.ToLower().Contains("account"))
+            {
+                if (itemCartList != null)
+                {
+                    if (mode == "UPDATE")
+                    {
+                        <a href="/MAS/Pr/ItemCartUpdate/@updatePRCode">
+                            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                            <span class="badge">@itemCartList.Count()</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="/MAS/Pr/ItemCart">
+                            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                            <span class="badge">@itemCartList.Count()</span>
+                        </a>
+                    }
+                }
+                else
+                {
+                    if (mode == "UPDATE")
+                    {
+                        <a href="/MAS/Pr/ItemCartUpdate/@updatePRCode">
+                            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                            <span class="badge">0</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="/MAS/Pr/ItemCart">
+                            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                            <span class="badge">0</span>
+                        </a>
+                    }
+                }
+            }
+        </li>
+
+        @* ตะกร้า KMF *@
+
+        @if (sessionLogin.ROLE_NAME == "Order")
+        {
+            <li>
+                @*<a style="cursor: pointer;" data-toggle="modal" data-target="#basketModal">
+                        <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                        <span class="badge" id="badgeQtyInBasket">@itemCountInBasket</span>
+                    </a>*@
+                @*<a style="cursor: pointer;" onclick="return showBasketModal();">
+                        <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                        <span class="badge" id="badgeQtyInBasket">@itemCountInBasket</span>
+                    </a>*@
+                <a href='@Url.Action("SearchItem", "Prq", new { Area = "", id = PrCategoryIDConst.All })'>
+                    <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                    <span class="badge" id="badgeQtyInBasket">@itemCountInBasket</span>
+                </a>
+            </li>
+        }
+
+        @* Logout *@
+        <li>
+            <a href="/Home/LogOut/Logout">ออกจากระบบ</a>
+        </li>
+    </ul>
+}

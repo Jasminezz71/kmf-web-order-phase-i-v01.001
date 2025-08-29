@@ -1,0 +1,85 @@
+﻿@using ZEN.SaleAndTranfer.UI.Util
+@model ZEN.SaleAndTranfer.UI.VM2.Prq.SummaryVM2
+
+@* Header *@
+
+@{
+    decimal? sumTotal = 0;
+
+    var col1 = string.Empty;
+
+    col1 = "col-xs-12 col-md-6";
+
+    //decimal? sum1;
+    //decimal? sum2;
+    string sumTotalDisp = string.Empty;
+}
+
+@if (Model.Detail != null && Model.Detail.Count > 0)
+{
+    foreach (var ret in Model.Detail)
+    {
+        sumTotal = sumTotal + (ret.UnitPrice * ret.OrderQty);
+    }
+    //sum1 = Model.Detail.Sum(m => m.UnitPrice);
+    //sum2 = Model.Detail.Where(m => m.UnitPrice != null && m.UnitPrice.HasValue).Sum(m => m.OrderQty);
+    //sumTotal = sum1.Value * Convert.ToDecimal(sum2);
+    sumTotalDisp = sumTotal != null && sumTotal.HasValue ? sumTotal.Value.ToString("N2") : string.Empty;
+}
+
+
+<h4 class="text-primary"><strong>รายละเอียด</strong></h4>
+
+@* Detail *@
+<div class="row" style="padding: 0px 15px 15px 15px;">
+    @if (Model.Detail != null && Model.Detail.Count > 0)
+    {
+        var index = 1;
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-right">#</th>
+                    <th>รหัสสินค้า</th>
+                    <th>ชื่อสินค้า</th>
+                    <th class="text-right">ราคา</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var det in Model.Detail)
+                {
+                    var sumPerLineDisp = "N/A";
+                    if (det.UnitPrice!=null && det.UnitPrice.HasValue)
+                    {
+                        var sumPerLine = det.OrderQty.Value * det.UnitPrice.Value;
+                        sumPerLineDisp = sumPerLine.ToString("N2");
+                    }
+
+                    <tr>
+                        <th class="text-right">@index</th>
+                        <td>@det.ItemCode</td>
+                        <td>
+                            @det.ItemName
+                            <br /><span class="text-danger">@det.Remark</span>
+                        </td>
+                        <td class="text-right">@string.Format("{0:N2}", det.OrderQty) x @string.Format("{0:N2}", det.UnitPrice) = @sumPerLineDisp</td>
+                    </tr>
+
+                    index++;
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th class="text-right">&nbsp;</th>
+                    <td>&nbsp;</td>
+                    <td><span class="text-danger hide">* ราคาจะถูกจะแปรผันตามวันกำหนดส่ง</span></td>
+                    <td class="text-right"><span id="sumTotaldis" class="text-danger">@sumTotalDisp</span></td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-warning" role="alert">ไม่พบข้อมูล</div>
+    }
+</div>

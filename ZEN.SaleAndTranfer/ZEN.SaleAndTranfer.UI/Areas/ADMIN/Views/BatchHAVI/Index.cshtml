@@ -1,0 +1,126 @@
+﻿@model ZEN.SaleAndTranfer.VM.ADMIN.BatchHaviVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        var RunBatchPOFlag = '@ViewBag.RunBatchPOFlag';
+        var RunBatchRNFlag = '@ViewBag.RunBatchRNFlag';
+        var RunBatchSOFlag = '@ViewBag.RunBatchSOFlag';
+        var RunBatchDNFlag = '@ViewBag.RunBatchDNFlag';
+
+        if (RunBatchPOFlag == 1 || RunBatchPOFlag == '1') { alert('run Batch PO Success') }
+        else if ((RunBatchPOFlag == 0 || RunBatchPOFlag == '0') && RunBatchPOFlag != '') { alert('run Batch PO not Success') }
+
+        if (RunBatchRNFlag == 1 || RunBatchRNFlag == '1') { alert('run Batch RN Success') }
+        else if ((RunBatchRNFlag == 0 || RunBatchRNFlag == '0') && RunBatchRNFlag != '') { alert('run Batch RN not Success') }
+
+        if (RunBatchSOFlag == 1 || RunBatchSOFlag == '1') { alert('run Batch SO Success') }
+        else if ((RunBatchSOFlag == 0 || RunBatchSOFlag == '0') && RunBatchSOFlag != '') { alert('run Batch SO not Success') }
+
+        if (RunBatchDNFlag == 1 || RunBatchDNFlag == '1') { alert('run Batch DN Success') }
+        else if ((RunBatchDNFlag == 0 || RunBatchDNFlag == '0') && RunBatchDNFlag != '') { alert('run Batch DN not Success') }
+    });
+
+    function gotoRunBatchPO() {
+        var url1 = '@Url.Action("BatchPO")';
+        url1 = url1.substring(0, url1.lastIndexOf("BatchPO")).concat("BatchPO");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoRunBatchRN() {
+        if (confirm('@ViewBag.msgConfirmRunBatchHAVIRN')) {
+            $('body').addClass('img-loading');
+
+            var url1 = '@Url.Action("RunBatchRN")';
+            url1 = url1.substring(0, url1.lastIndexOf("RunBatchRN")).concat("RunBatchRN");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+    function gotoRunBatchSO() {
+        var url1 = '@Url.Action("BatchSO")';
+        url1 = url1.substring(0, url1.lastIndexOf("BatchSO")).concat("BatchSO");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoRunBatchDN() {
+        if (confirm('@ViewBag.msgConfirmRunBatchHAVIDN')) {
+            $('body').addClass('img-loading');
+
+            var url1 = '@Url.Action("RunBatchDN")';
+            url1 = url1.substring(0, url1.lastIndexOf("RunBatchDN")).concat("RunBatchDN");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+</script>
+
+@{
+    var sessionData = Model.SessionLogin;
+}
+
+<form class="form-horizontal" id="form1">
+    <div class="container">
+        <h2>หน้าจอจัดการ Batch HAVI</h2>
+        <hr />
+        <div class="panel panel-primary">
+            <div class="panel-heading">จัดการ Batch</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    @if (sessionData.ROLE_NAME.Contains("ADMIN") || sessionData.ROLE_NAME.Contains("Purchasing"))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <input type="button" class="btn btn-warning btn-sm btn-block" value="ปรับปรุงข้อมูลใบสั่งซื้อ (PO)" onclick="gotoRunBatchPO();" />
+                            </div>
+                        </div>
+                    }
+                    @if (sessionData.ROLE_NAME.Contains("ADMIN") || sessionData.ROLE_NAME.Contains("Warehouse"))
+                    {
+                        @*<div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <input type="button" class="btn btn-warning btn-sm btn-block" value="ปรับปรุงข้อมูลใบรับสินค้า (RN)" onclick="gotoRunBatchRN();" />
+                            </div>
+                        </div>*@
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <input type="button" class="btn btn-primary btn-sm btn-block" value="ปรับปรุงข้อมูลใบตลาด (SO)" onclick="gotoRunBatchSO();" />
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <input type="button" class="btn btn-primary btn-sm btn-block" value="ปรับปรุงข้อมูลใบส่งสินค้า (DN)" onclick="gotoRunBatchDN();" />
+                            </div>
+                        </div>*@
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

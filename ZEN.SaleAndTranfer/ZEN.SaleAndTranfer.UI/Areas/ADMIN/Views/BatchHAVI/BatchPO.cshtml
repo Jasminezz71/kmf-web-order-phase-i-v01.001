@@ -1,0 +1,81 @@
+﻿@model ZEN.SaleAndTranfer.VM.ADMIN.BatchHaviVM
+
+@{
+    ViewBag.Title = "BatchPO";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script>
+    $(document).ready(function () {
+        var RunBatchPOFlag = '@ViewBag.RunBatchPOFlag';
+
+        if (RunBatchPOFlag == 1 || RunBatchPOFlag == '1') {
+            alert('run Batch PO Success')
+        }
+        else if ((RunBatchPOFlag == 0 || RunBatchPOFlag == "0") && RunBatchPOFlag != "")
+            alert('run Batch PO not Success')
+    });
+
+    function gotoRunBatchPO() {
+        if (confirm('@ViewBag.msgConfirmRunBatchHAVIPO')) {
+            $('body').addClass('img-loading');
+
+            var url1 = '@Url.Action("RunBatchPO")';
+            url1 = url1.substring(0, url1.lastIndexOf("RunBatchPO")).concat("RunBatchPO");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+</script>
+
+<form class="form-horizontal" id="form1">
+    <div class="container">
+        <h2>หน้าจอปรับปรุงข้อมูลใบสั่งซื้อ (PO)</h2>
+        <hr />
+
+        @Html.Partial("_MessagePartial", Model.MessageList)
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">จัดการ Batch PO</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-sm-3">บริษัท : </label>
+                        <div class="col-md-6">
+                            @if (Model != null)
+                            {
+                                if (Model.batchVM_MA.companyList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.batchVM_MA.COMPANY_CODE,
+                                         new SelectList(@Model.batchVM_MA.companyList, "ITEM_VALUE", "ITEM_TEXT")
+                                    , new { @class = "form-control" }
+                                    )
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3">หมายเลข PO : </label>
+                        <div class="col-md-6">
+                            @Html.TextAreaFor(m => m.batchVM_MA.SEND_DATA, new { @class = "form-control", @rows = "6", @col = "20" })
+                            <p class="help-block">1 ใบต่อ 1 บรรทัด.</p>
+                            <p style="color: #ff0000;">ข้อควรระวัง - หากไม่ระบุหมายเลข จะเป็นการส่งข้อมูลไปยัง Navision ทั้งหมด</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <input type="button" class="btn btn-primary btn-sm btn-block" value="ปรับปรุงข้อมูลใบสั่งซื้อ (PO)" onclick="gotoRunBatchPO();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/ZEN.ZenCommon.WcfServices.ET.LOG" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/ZEN.ZenCommon.WcfServices.ET.LOG" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="LogMAET">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="accessType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="actionControl" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="appID" type="xs:int" />
+      <xs:element minOccurs="0" name="clientBrowser" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="computerName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ipAddress" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="logDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="logDesc" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="pageName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="LogMAET" nillable="true" type="tns:LogMAET" />
+</xs:schema>

@@ -1,0 +1,344 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.RecTransferVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>
+        หน้าจอค้นหาการทำรับ Tranfer
+    </h2>
+    <hr />
+    @Html.Partial("_MessagePartial", Model.MessageList)
+
+    <form class="form-horizontal" id="form1">
+        <div class="panel panel-primary">
+            <div class="panel-heading">ระบุเงื่อนไขการค้นหา</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">แบรนด์</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                @Html.HiddenFor(m => m.recTransferSearchCriteriaVM.BRAND_CODE)
+                                @Html.TextBoxFor(m => m.recTransferSearchCriteriaVM.BRAND_NAME, new { @class = "form-control", @readonly = "readonly" })
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info" type="button" onclick="gotoChangeBrand()" id="chooseBrand">เลือกแบรนด์</button>
+                                </span>
+                            </div>
+                        </div>
+                        <label class="col-md-2 control-label">สาขา</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                @Html.HiddenFor(m => m.recTransferSearchCriteriaVM.BRANCH_CODE)
+                                @Html.TextBoxFor(m => m.recTransferSearchCriteriaVM.BRANCH_NAME, new { @class = "form-control", @readonly = "readonly" })
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info" type="button" onclick="gotoChangeBranch()" id="chooseBranch">เลือกสาขา</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">วันกำหนดส่งสินค้า จาก</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.recTransferSearchCriteriaVM.RECEIVE_DATE_FROM, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;"
+                            })
+                        </div>
+                        <label class="col-md-2 control-label">ถึง</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.recTransferSearchCriteriaVM.RECEIVE_DATE_TO, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;"
+                            })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-primary" value="ค้นหา" onclick="gotoSearch();" />
+                            <input type="button" class="btn btn-primary hide" id="hidbtnSearch" value="ค้นหา" onclick="gotoSearch();" />
+                            &nbsp;
+                            <input type="button" class="btn btn-default" value="ล้างหน้าจอ" onclick="gotoClear();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.recTransferSearchResultVM != null)
+        {
+            if (Model.recTransferSearchResultVM.resultList != null)
+            {
+                <div class="panel panel-default" id="divResult">
+                    <div class="panel-heading">
+                        ผลการค้นหา
+                        <span class="pull-right">
+                            ผลการค้นหา : @Model.recTransferSearchResultVM.countAll.ToString("#,###") รายการ
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table table-responsive">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th class="text-right">ลำดับ</th>
+                                    <th>แบรนด์</th>
+                                    <th>สาขา</th>
+                                    <th>เลขที่ใบเตรียมรับสินค้า</th>
+                                    <th>เลขที่ใบรับสินค้า</th>
+                                    <th>วันที่รับสินค้า</th>
+                                    <th>Location</th>
+                                    <th>รหัสสินค้า</th>
+                                    <th>จำนวนที่ส่ง</th>
+                                    <th>หน่วยที่ส่ง</th>
+                                    <th>จำนวนที่รับ</th>
+                                    <th>หน่วยที่รับ</th>
+                                    <th>Quantity Diff</th>
+                                </tr>
+                                @for (int i = 0; i < Model.recTransferSearchResultVM.resultList.Count; i++)
+                                {
+                                    var item = Model.recTransferSearchResultVM.resultList[i];
+                                    <tr>
+                                        <td class="text-right" style="width:20px;">@item.ROW_NO.ToString("#,##0")</td>
+                                        <td>@item.BRAND_NAME</td>
+                                        <td>@item.BRANCH_NAME ( @item.BRANCH_CODE )</td>
+                                        <td>@item.ST_DO_CODE</td>
+                                        <td>@item.ST_GR_CODE</td>
+                                        @if (item.RECEIVE_DATE.HasValue)
+                                        {
+                                            <td>@item.RECEIVE_DATE.Value.ToShortDateString()</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@item.RECEIVE_DATE</td>
+                                        }
+                                        <td>@item.LOCATION</td>
+                                        <td>@item.ITEM_CODE</td>
+                                        <td>@item.SEND_QTY</td>
+                                        <td>@item.SEND_UOM</td>
+                                        <td>@item.RECEIVE_QTY</td>
+                                        <td>@item.RECEIVE_UOM</td>
+                                        <td>@item.QUANTITY_DIFF</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                        @Html.Partial("_PaginationSearchPartial", Model.ZenPagination)
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <span class="pull-right">
+                                    <input type="button" class="btn btn-primary" value="ออกรายงาน Excel" onclick="gotoExportExcel()">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </form>
+
+    @* ===================================== Brand Model ===================================== *@
+    <div class="modal fade" tabindex="-1" id="brandModel" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        ×
+                    </button>
+                    <h4 class="modal-title">เลือกแบรนด์ที่ต้องการ</h4>
+                </div>
+                <form id="form2">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <table class="table table-striped">
+                                    @if (Model.recTransferSearchCriteriaVM.brandList != null)
+                                    {
+                                        for (int i = 0; i < Model.recTransferSearchCriteriaVM.brandList.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.CheckBoxFor(m => m.recTransferSearchCriteriaVM.brandList[i].CHECKED)
+                                                </td>
+                                                <td>
+                                                    @Html.HiddenFor(m => m.recTransferSearchCriteriaVM.brandList[i].ITEM_VALUE)
+                                                    @Html.HiddenFor(m => m.recTransferSearchCriteriaVM.brandList[i].ITEM_TEXT)
+                                                    @Html.DisplayFor(m => m.recTransferSearchCriteriaVM.brandList[i].ITEM_TEXT)
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-primary" value="บันทึก" onclick="gotoChangeBrandSave();" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ===================================== Branch Model ===================================== *@
+    <div class="modal fade" tabindex="-1" id="branchModel" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        ×
+                    </button>
+                    <h4 class="modal-title">เลือกสาขาที่ต้องการ</h4>
+                </div>
+                <form id="form3">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <table class="table table-striped">
+                                    @if (Model.recTransferSearchCriteriaVM.branchList != null)
+                                    {
+                                        for (int i = 0; i < Model.recTransferSearchCriteriaVM.branchList.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.CheckBoxFor(m => m.recTransferSearchCriteriaVM.branchList[i].CHECKED)
+                                                </td>
+                                                <td>
+                                                    @Html.HiddenFor(m => m.recTransferSearchCriteriaVM.branchList[i].ITEM_VALUE)
+                                                    @Html.HiddenFor(m => m.recTransferSearchCriteriaVM.branchList[i].ITEM_TEXT)
+                                                    @Html.DisplayFor(m => m.recTransferSearchCriteriaVM.branchList[i].ITEM_TEXT)
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-primary" value="บันทึก" onclick="gotoChangeBranchSave();" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        var chooseBrand = '@ViewBag.chooseBrand';
+        var chooseBranch = '@ViewBag.chooseBranch';
+
+        if (chooseBrand == '1') {
+            $("#chooseBrand").prop("disabled", "");
+        }
+        else {
+            $("#chooseBrand").prop("disabled", "disabled");
+        }
+
+        if (chooseBranch == '1') {
+            $("#chooseBranch").prop("disabled", "");
+        }
+        else {
+            $("#chooseBranch").prop("disabled", "disabled");
+        }
+
+        var ShowBrandModal = '@ViewBag.ShowBrandModal';
+        var ShowBranchModal = '@ViewBag.ShowBranchModal';
+
+        if (ShowBrandModal == '1') {
+            $("#brandModel").modal('show');
+        }
+        else {
+            $("#brandModel").modal('hide');
+        }
+
+        if (ShowBranchModal == '1') {
+            $("#branchModel").modal('show');
+        }
+        else {
+            $("#branchModel").modal('hide');
+        }
+    });
+
+    function gotoClear() {
+        var url1 = '@Url.Action("Index")';
+        url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoSearch() {
+        var url1 = '@Url.Action("Search")';
+        url1 = url1.substring(0, url1.lastIndexOf("Search")).concat("Search");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoChangeBrand() {
+        var url1 = '@Url.Action("ModalBrand")';
+        url1 = url1.substring(0, url1.lastIndexOf("ModalBrand")).concat("ModalBrand");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoChangeBrandSave() {
+        var url1 = '@Url.Action("ModalBrandSave")';
+        url1 = url1.substring(0, url1.lastIndexOf("ModalBrandSave")).concat("ModalBrandSave");
+
+        var vform = $('#form2');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoChangeBranch() {
+        var url1 = '@Url.Action("ModalBranch")';
+        url1 = url1.substring(0, url1.lastIndexOf("ModalBranch")).concat("ModalBranch");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoChangeBranchSave() {
+        var url1 = '@Url.Action("ModalBranchSave")';
+        url1 = url1.substring(0, url1.lastIndexOf("ModalBranchSave")).concat("ModalBranchSave");
+
+        var vform = $('#form3');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoExportExcel() {
+        var url1 = '@Url.Action("ExportFile")';
+        url1 = url1.substring(0, url1.lastIndexOf("ExportFile")).concat("ExportFile");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+</script>

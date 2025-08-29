@@ -1,0 +1,134 @@
+﻿@model ZEN.SaleAndTranfer.UI.VM2.MaPromotion.DoVM
+@using ZEN.SaleAndTranfer.UI.Util
+
+@{
+    ViewBag.Title = "เรียงสินค้าโปรโมชั่น Popup หน้าแรก";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <h2>@ViewBag.Title <small></small></h2>
+</div>
+
+
+<form id="form1">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label>Item Code</label>
+        @Html.TextBoxFor(m => m.Pet.ItemCodes, new { @class = "form-control", @placeholder = "ตัวอย่าง Item Code 1,Item Code 2,Item Code 3 ..." })
+        @Html.ValidationMessageFor(m => m.Pet.ItemCodes, "", new { @class = "text-danger" })
+        <p class="help-block">
+            <strong>เงื่อนไข</strong>
+            <ol>
+                <li>กรอก Item Code คั่นด้วย ,</li>
+                <li>กรณีกรอก Item Code ไม่ได้อยู่ประเภทรายการ Promotion ระบบจะไม่แสดงผลใน Popup</li>
+                <li>กรณีไม่ต้องการให้แสดง Popup ให้กรอก -</li>
+            </ol>
+        </p>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="return savePopupPromotionItem('#form1');">บันทึก</button>
+    <button type="button" class="btn btn-default" onclick="return testPromotion();">ทดสอบ</button>
+</form>
+
+
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+<script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+
+        function savePopupPromotionItem(formID) {
+            if (!$(formID).valid()) {
+                return false;
+            }
+
+            if (!confirm('ยืนยันบันทึก?')) {
+                return false;
+            }
+
+            //debugger;
+            var url1 = '@Url.Action("Do", "MaPromotion", new { Area = "" })';
+
+            //$(document.body).css({ 'cursor': 'wait' });
+
+            //var obj = new Object();
+            //obj.mode = mode;
+
+            var dataForm = $(formID).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                data: dataForm, //data: JSON.stringify(obj),
+                //processData: false,
+                //contentType: false,
+                dataType: "json", //dataType: "html",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',//contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //debugger;
+
+                    if (response.SuccessFlag) {
+                        alert("บันทึกสำเร็จ");
+                    }
+                    else {
+                        alert(response.Msg);
+                    }
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error occured!!")
+                    alert(response.responseText);
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+
+        function testPromotion() {
+            //debugger;
+            var url1 = '@Url.Action("hasPopupPromotionItem", "Promotion", new { Area = "" })';
+
+            //$(document.body).css({ 'cursor': 'wait' });
+
+            //var obj = new Object();
+            //obj.mode = mode;
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                //data: JSON.stringify(obj), //data: dataForm
+                //processData: false,
+                //contentType: false,
+                dataType: "json", //dataType: "html",
+                contentType: 'application/json; charset=utf-8', //'application/x-www-form-urlencoded; charset=UTF-8'
+                success: function (response) {
+                    debugger;
+                    if (response.SuccessFlag) {
+                        if (response.Data) {
+                            showPopupPromotionItem();
+                        }
+                        else {
+                            alert("ไม่พบข้อมูล Popup Promotion");
+                        }
+                    }
+                    else {
+                        alert(response.Msg);
+                        return false;
+                    }
+                    //$(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error occured!!")
+                    alert(response.responseText);
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+
+</script>
+}

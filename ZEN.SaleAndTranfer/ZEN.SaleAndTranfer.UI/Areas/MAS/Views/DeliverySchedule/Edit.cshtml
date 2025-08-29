@@ -1,0 +1,352 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.DeliveryScheduleVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>
+        หน้าจอรอบรถตลาด
+    </h2>
+    <hr />
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+    <form class="form-horizontal" id="form1">
+        <div class="panel panel-primary">
+            <div class="panel-heading">ระบุเงื่อนไขการค้นหา</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">แบรนด์</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.DSSearchCriteriaVM.BRAND_CODE, new { @maxlength = "15", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">สาขา</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.DSSearchCriteriaVM.BRANCH_CODE, new { @maxlength = "15", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Location</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.DSSearchCriteriaVM.LOCATION_CODE, new { @maxlength = "15", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-primary" value="ค้นหา" onclick="gotoSearch();" />
+                            &nbsp;
+                            <input type="button" class="btn btn-default" value="ล้างหน้าจอ" onclick="gotoClear();" />&nbsp;
+<input type="button" class="btn btn-warning" value="กลับหน้าแสดงผล" onclick="gotoView();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.DSResultVM != null)
+{
+    if (Model.DSResultVM.resultList != null)
+    {
+        <div class="panel panel-default" id="divResult" style="width: 1210px;">
+                    <div class=" panel-heading">
+            ผลการค้นหา
+            <span class="pull-right">
+                ผลการค้นหา : @Model.DSResultVM.resultList.Count().ToString("#,###") รายการ
+            </span>
+        </div>
+                    <div class="panel-body">
+                        <div class="table table-responsive">
+                            <table class="table table-hover" style="max-height: 500px;  overflow: auto;  display:inline-block;">
+                                <tr>
+                                    <th class="text-right">ลำดับ.</th>
+                                    <th>ร้านค้า</th>
+                                    <th>สาขา</th>
+                                    <th>ชื่อสาขา</th>  
+                                    <th>Zone</th>
+                                    <th>Type</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Sun</th>
+                                    <th>Mom</th>
+                                    <th>Tue</th>
+                                    <th>Wed</th>
+                                    <th>Thu</th>
+                                    <th>Fri</th>
+                                    <th>Sat</th>
+                                    <th>Location</th>
+                                </tr>
+
+                                <tr>
+                                    <td class="text-right" style="width:20px;"></td>
+                                    <td>@Html.TextBoxFor(m => m.DS_MA.BRAND_CODE, new { @maxlength = "15", @style = "width: 70px;", @class = "form-control" })</td>
+                                    <td>@Html.TextBoxFor(m => m.DS_MA.BRANCH_CODE, new { @maxlength = "15", @style = "width: 70px;", @class = "form-control" })</td>
+                                    <td>
+                                </td>
+                                <td>
+                                    @Html.DropDownListFor(m => m.DS_MA.ZONE,
+                                      new SelectList(@Model.DSSearchCriteriaVM.zoneList, "ITEM_VALUE", "ITEM_TEXT"),
+                                            new { @class = "form-control", @style = "width: 110px;" })
+                                </td>
+                                <td>
+                                    @Html.DropDownListFor(m => m.DS_MA.SCHEDULE_TYPE,
+                                   new SelectList(@Model.DSSearchCriteriaVM.typeList, "ITEM_VALUE", "ITEM_TEXT"),
+                                            new { @class = "form-control", @style = "width: 100px;" })
+                                </td>
+                                <td>@Html.TextBoxFor(m => m.DS_MA.START_TIME, new { @maxlength = "8", @class = "form-control", @style = "width: 80px;", @Value ="08:00:00" })</td>
+                                <td>@Html.TextBoxFor(m => m.DS_MA.END_TIME, new { @maxlength = "8", @class = "form-control", @style = "width: 80px;", @Value = "12:00:00" })</td>
+                                <td>
+                                    @Html.CheckBoxFor(m => m.DS_MA.SUN_FLAG)
+                                </td>
+                                <td>
+                                    @Html.CheckBoxFor(m => m.DS_MA.MON_FLAG)
+                                </td>
+                                <td>                                    
+                                    @Html.CheckBoxFor(m => m.DS_MA.TUE_FLAG)
+                                </td>
+                                <td>                                    
+                                    @Html.CheckBoxFor(m => m.DS_MA.WED_FLAG)
+                                </td>
+                                <td>                                    
+                                    @Html.CheckBoxFor(m => m.DS_MA.THU_FLAG)
+                                </td>
+                                <td>                                    
+                                    @Html.CheckBoxFor(m => m.DS_MA.FRI_FLAG)
+                                </td>
+                                <td>                                    
+                                    @Html.CheckBoxFor(m => m.DS_MA.SAT_FLAG)
+                                </td>
+                                <td>
+                                    @Html.DropDownListFor(m => m.DS_MA.LOCATION_CODE,
+                                   new SelectList(@Model.DSSearchCriteriaVM.locationList, "ITEM_VALUE", "ITEM_TEXT"),
+                                            new { @class = "form-control", @style = "width: 100px;" })
+                                    <input type="button" class="btn btn-primary btn-xs" value="เพิ่ม" onclick="gotoAdd();" />
+                                </td>
+                            </tr>
+
+                                @for (int i = 0; i < Model.DSResultVM.resultList.Count; i++)
+                                {
+                                    var item = Model.DSResultVM.resultList[i];
+                                    var cnt = i + 1;
+                                    <tr>
+                                        <td class="text-right" style="width:20px;">@cnt.ToString("#,##0")</td>
+                                        <td>@item.BRAND_CODE</td>
+                                        <td>@item.BRANCH_CODE</td>
+                                        <td>@item.BRANCH_NAME
+                                            @Html.HiddenFor(m => m.DSResultVM.resultList[i].BRAND_CODE)
+                                            @Html.HiddenFor(m => m.DSResultVM.resultList[i].BRANCH_CODE)
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => m.DSResultVM.resultList[i].ZONE,
+                                      new SelectList(@Model.DSSearchCriteriaVM.zoneList, "ITEM_VALUE", "ITEM_TEXT", Model.DSResultVM.resultList[i].ZONE),
+                                            new { @class = "form-control", @style = "width: 110px;" })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(m => m.DSResultVM.resultList[i].SCHEDULE_TYPE,
+                                   new SelectList(@Model.DSSearchCriteriaVM.typeList, "ITEM_VALUE", "ITEM_TEXT", Model.DSResultVM.resultList[i].SCHEDULE_TYPE),
+                                            new { @class = "form-control", @style = "width: 100px;" })
+                                        </td>
+                                        <td>@Html.TextBoxFor(m => m.DSResultVM.resultList[i].START_TIME, new { @maxlength = "8", @class = "form-control", @style = "width: 80px;", @Value = Model.DSResultVM.resultList[i].START_TIME })</td>
+                                        <td>@Html.TextBoxFor(m => m.DSResultVM.resultList[i].END_TIME, new { @maxlength = "8", @class = "form-control", @style = "width: 80px;", @Value = Model.DSResultVM.resultList[i].END_TIME })</td>
+                                        <td>
+                                            @if (item.SUN_FLAG)
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].SUN_FLAG, new { @checked = "checked" })}
+                                            else
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].SUN_FLAG)}
+                                        </td>
+                                        <td>
+                                            @if (item.MON_FLAG)
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].MON_FLAG, new { @checked = "checked" })}
+                                            else
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].MON_FLAG)}
+                                        </td>
+                                        <td>
+                                            @if (item.TUE_FLAG)
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].TUE_FLAG, new { @checked = "checked" })}
+                                            else
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].TUE_FLAG)}
+                                        </td>
+                                        <td>
+                                            @if (item.WED_FLAG)
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].WED_FLAG, new { @checked = "checked" })}
+                                            else
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].WED_FLAG)}
+                                        </td>
+                                        <td>
+                                            @if (item.THU_FLAG)
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].THU_FLAG, new { @checked = "checked" })}
+                                            else
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].THU_FLAG)}
+                                        </td>
+                                        <td>
+                                            @if (item.FRI_FLAG)
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].FRI_FLAG, new { @checked = "checked" })}
+                                            else
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].FRI_FLAG)}
+                                        </td>
+                                        <td>
+                                            @if (item.SAT_FLAG)
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].SAT_FLAG, new { @checked = "checked" })}
+                                            else
+                                            {@Html.CheckBoxFor(m => m.DSResultVM.resultList[i].SAT_FLAG)}
+                                        </td>
+                                        <td>
+                                            @item.LOCATION_CODE
+                                        @Html.HiddenFor(m => m.DSResultVM.resultList[i].LOCATION_CODE)
+                                        <input type="button" class="btn btn-success btn-xs" value="บันทึก" onclick="gotoSave(@i);" />
+                                    </td>
+                                </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </form>
+</div>
+
+<script>
+    function gotoSearch() {
+        var url1 = '@Url.Action("SearchEdit")';
+        url1 = url1.substring(0, url1.lastIndexOf("SearchEdit")).concat("SearchEdit");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+    function gotoClear() {
+        var url1 = '@Url.Action("Edit")';
+        url1 = url1.substring(0, url1.lastIndexOf("Edit")).concat("Edit");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoSave(i) {
+        var brandCode = $('#DSResultVM_resultList_' + i + '__BRAND_CODE').val();
+        var branchCode = $('#DSResultVM_resultList_' + i + '__BRANCH_CODE').val();
+        var zone = $('#DSResultVM_resultList_' + i + '__ZONE').val();
+        var scheduleType = $('#DSResultVM_resultList_' + i + '__SCHEDULE_TYPE').val();
+        var startTime = $('#DSResultVM_resultList_' + i + '__START_TIME').val();
+        var endTime = $('#DSResultVM_resultList_' + i + '__END_TIME').val();
+        var sunFlag = $('#DSResultVM_resultList_' + i + '__SUN_FLAG').is(":checked");
+        var monFlag = $('#DSResultVM_resultList_' + i + '__MON_FLAG').is(":checked");
+        var tueFlag = $('#DSResultVM_resultList_' + i + '__TUE_FLAG').is(":checked");
+        var wedFlag = $('#DSResultVM_resultList_' + i + '__WED_FLAG').is(":checked");
+        var thuFlag = $('#DSResultVM_resultList_' + i + '__THU_FLAG').is(":checked");
+        var friFlag = $('#DSResultVM_resultList_' + i + '__FRI_FLAG').is(":checked");
+        var satFlag = $('#DSResultVM_resultList_' + i + '__SAT_FLAG').is(":checked");
+        var location = $('#DSResultVM_resultList_' + i + '__LOCATION_CODE').val();
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("EditSave")',
+            datatype: JSON,
+            data: {
+                'brandCode': brandCode,
+                'branchCode': branchCode,
+                'zone': zone,
+                'scheduleType': scheduleType,
+                'startTime': startTime,
+                'endTime': endTime,
+                'sunFlag': sunFlag,
+                'monFlag': monFlag,
+                'tueFlag': tueFlag,
+                'wedFlag': wedFlag,
+                'thuFlag': thuFlag,
+                'friFlag': friFlag,
+                'satFlag': satFlag,
+                'location': location
+            },
+            success: function (response) {
+                if (response.SuccessFlag) {
+                    alert('บันทึกสำเร็จ');
+                }
+            },
+            error: function (response) {
+                alert('Error EX: ' + respond.responseText);
+            }
+        });
+    }
+    function gotoView() {
+        var url1 = '@Url.Action("Index")';
+        url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoAdd(i) {
+        var brandCode = $('#DS_MA_BRAND_CODE').val();
+        var branchCode = $('#DS_MA_BRANCH_CODE').val();
+        var zone = $('#DS_MA_ZONE').val();
+        var scheduleType = $('#DS_MA_SCHEDULE_TYPE').val();
+        var startTime = $('#DS_MA_START_TIME').val();
+        var endTime = $('#DS_MA_END_TIME').val();
+        var sunFlag = $('#DS_MA_SUN_FLAG').is(":checked");
+        var monFlag = $('#DS_MA_MON_FLAG').is(":checked");
+        var tueFlag = $('#DS_MA_TUE_FLAG').is(":checked");
+        var wedFlag = $('#DS_MA_WED_FLAG').is(":checked");
+        var thuFlag = $('#DS_MA_THU_FLAG').is(":checked");
+        var friFlag = $('#DS_MA_FRI_FLAG').is(":checked");
+        var satFlag = $('#DS_MA_SAT_FLAG').is(":checked");
+        var location = $('#DS_MA_LOCATION_CODE').val();
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("AddSave")',
+            datatype: JSON,
+            data: {
+                'brandCode': brandCode,
+                'branchCode': branchCode,
+                'zone': zone,
+                'scheduleType': scheduleType,
+                'startTime': startTime,
+                'endTime': endTime,
+                'sunFlag': sunFlag,
+                'monFlag': monFlag,
+                'tueFlag': tueFlag,
+                'wedFlag': wedFlag,
+                'thuFlag': thuFlag,
+                'friFlag': friFlag,
+                'satFlag': satFlag,
+                'location': location
+            },
+            success: function (response) {
+                if (response.SuccessFlag) {
+                    alert('บันทึกสำเร็จ');
+                    $('#DS_MA_BRAND_CODE').val('');
+                    $('#DS_MA_BRANCH_CODE').val('');
+                    $('#DS_MA_START_TIME').val('');
+                    $('#DS_MA_END_TIME').val('');
+                    $('#DS_MA_SUN_FLAG').removeAttr('checked');
+                    $('#DS_MA_MON_FLAG').removeAttr('checked');
+                    $('#DS_MA_TUE_FLAG').removeAttr('checked');
+                    $('#DS_MA_WED_FLAG').removeAttr('checked');
+                    $('#DS_MA_THU_FLAG').removeAttr('checked');
+                    $('#DS_MA_FRI_FLAG').removeAttr('checked');
+                    $('#DS_MA_SAT_FLAG').removeAttr('checked');
+                    gotoSearch();
+                }
+                else {
+                    alert('ไม่สามารถบันทึกได้ กรุณากรอกข้อมูลให้ถูกต้องค่ะ');
+                }
+            },
+            error: function (response) {
+                alert('Error EX: ' + respond.responseText);
+            }
+        });
+    }
+
+
+</script>

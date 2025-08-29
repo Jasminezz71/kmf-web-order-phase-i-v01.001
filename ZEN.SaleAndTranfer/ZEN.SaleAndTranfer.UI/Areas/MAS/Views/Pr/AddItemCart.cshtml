@@ -1,0 +1,612 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.PrVM
+
+@{
+    ViewBag.Title = "AddItemCart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string updatePRCode = (string)Session[SessionConst.UPDATE_PR_MODEL];
+    string mode = (string)Session[SessionConst.MODE_MODEL];
+
+    var url1 = string.Empty;
+}
+
+
+
+<div class="container">
+    <h2>
+        หน้าจอใบตลาด (PR) : <small>เลือกสินค้าเพิ่ม</small>
+    </h2>
+    <hr />
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+
+    <form class="form-horizontal" id="form1">
+        @Html.HiddenFor(m=>m.showImageFlag)
+        @Html.HiddenFor(m=>m.SessionLogin.FRANCHISES_FLAG)
+        @Html.HiddenFor(m => m.prVM_MA.ITEM_CODE)
+        @Html.HiddenFor(m => m.prVM_MA.REQUEST_UOM_CODE)
+        @Html.HiddenFor(m => m.prVM_MA.ST_MAP_WH_ITEM_ID)
+        @Html.HiddenFor(m => m.prVM_MA.FC_LOCATION)
+        <div class="panel panel-primary">
+            <div class="panel-heading">ระบุเงื่อนไขการค้นหา</div>
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">ประเภทสินค้า</label>
+                        <div class="col-md-4">
+                            @if (Model.prSearchCriteriaVM.prCategoryList != null)
+                            {
+                                @Html.DropDownListFor(m => m.prSearchCriteriaVM.ST_PR_CATEGORY_CODE,
+                                new SelectList(@Model.prSearchCriteriaVM.prCategoryList, "ITEM_VALUE", "ITEM_TEXT")
+                                , new { @class = "form-control" }
+                                )
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">รหัสสินค้า</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.prSearchCriteriaVM.ITEM_CODE, new { @class = "form-control" })
+                        </div>
+                        <label class="col-md-2 control-label">ชื่อสินค้า</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.prSearchCriteriaVM.ITEM_NAME, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">&nbsp;</div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-primary" value="ค้นหา" onclick="gotoSearch('search');" />
+                            &nbsp;
+                            <input type="button" class="btn btn-default" value="ล้างหน้าจอ" onclick="gotoClear();" />
+                        </div>
+                        <div class="col-md-6" style="text-align:right;">
+                            @if (Model.prSearchResultVM != null)
+                            {
+                                if (Model.prSearchResultVM.resultList != null)
+                                {
+                                    <input id="btnAddItemAll" type="button" class="btn btn-success" value="หยิบสินค้าทั้งหมดที่ระบุจำนวน" onclick="gotoAddItemCartSaveAll();" />
+                                }
+                            }
+                            &nbsp;
+                            @if (mode == "CREATE")
+                            {
+                                <input type="button" class="btn btn-warning" value="ไปที่ตะกร้า" onclick="gotoItemCart();" />
+                            }
+                            else
+                            {
+                                <input type="button" class="btn btn-warning" value="ไปที่ตะกร้า" onclick="gotoItemCartUpdate();" />
+                            }
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-12" style="text-align:right;">
+                        <p style="color:green">หากไม่พบรายการสินค้าที่ต้องการ กรุณาสอบถามที่ ฝ่ายคลังสินค้า ค่ะ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12" style="text-align:right; color:red;">
+            <input id="minutes" type="hidden" />
+            <input id="seconds" type="hidden" />
+            @* <input id="minutes" type="text" /> m
+                <input id="seconds" type="text" /> s*@
+
+            <span id="warningSession" style="text-align:right;" class="hide">**ต้องทำการบันทึกข้อมูลภายในเวลา <span id="sessionTime"></span> น. มิเช่นนั้นจะต้อง Login ใหม่ และข้อมูลที่เคยเลือกไว้จะหายไป</span>
+        </div>
+        
+        @if (Model.prSearchResultVM != null)
+        {
+            if (Model.prSearchResultVM.resultList != null)
+            {
+                if (Model.prSearchResultVM.ShowItemFlg == 1) 
+                {   
+                    <div class="panel panel-default">
+                        <div class="panel-heading">รายชื่อสินค้า <span class="pull-right">ผลการค้นหา : @Model.prSearchResultVM.countAll.ToString("#,###") รายการ</span></div>
+                        <div class="panel-body">
+                            <div class="table table-responsive">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th class="text-right">ลำดับ</th>
+                                        @* <th><a onclick="gotoOrder('USER_NAME');" class="normal-font">Username</a></th>*@
+                                        <th>ประเภทสินค้า</th>
+                                        @*<th>สั่งจากแบรนด์</th>*@
+                                        <th>รหัสสินค้า</th>
+                                        <th>ชื่อสินค้า</th>
+                                        <th>รายละเอียดอื่นๆ</th>
+                                        @if (Model.showImageFlag) 
+                                        { 
+                                            <th>รูปภาพ</th>
+                                        }                                        
+                                        <th>จำนวนที่สั่ง</th>
+                                        <th>หน่วยที่สั่ง</th>
+                                        @*@if (Model.SessionLogin.FRANCHISES_FLAG)
+                                        {
+                                            <th>ราคา (บาท)</th>    
+                                        }*@
+                                        @if (Model.FRANCHISES_FLAG)
+                                        {
+                                            <th>ราคา/หน่วย</th>    
+                                        }
+                                        else
+                                        {
+                                            @*<th>Stock</th>*@    
+                                        }
+                                    </tr>
+                                    @for (int i = 0; i < Model.prSearchResultVM.resultList.Count; i++)
+                                    {
+                                        var item = Model.prSearchResultVM.resultList[i];
+                                        url1 = string.Format("{0}://{1}/{2}", this.Request.Url.Scheme, this.Request.Url.Authority, item.FILE_PATH);
+                                        <tr>
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_BY_BRAND_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_BY_BRAND_NAME)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_BY_BRANCH_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_BY_BRANCH_NAME)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_TO_BRAND_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_TO_BRAND_NAME)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_TO_BRANCH_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_TO_BRANCH_NAME)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ST_PR_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ST_PR_CATEGORY_ID)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ST_PR_CATEGORY_NAME)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ITEM_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ITEM_NAME_TH)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ITEM_DETAIL)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].WH_UOM_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_UOM_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ITEM_UNIT)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ST_MAP_WH_ITEM_ID)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ST_WH_ITEM_CATEGORY_ID)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ST_WH_ITEM_CATEGORY_NAME)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ITEM_QTY_AVG)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].FILE_PATH)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].FULL_PATH)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].SALE_PRICE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REMAIN_QTY)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].UNIT_PRICE)
+
+
+                                            <td class="text-right" style="width:20px;">@item.ROW_NO.ToString("#,##0")</td>
+                                            <td>@item.ST_PR_CATEGORY_NAME</td>
+                                            @*<td>@item.REQUEST_TO_BRAND_CODE</td>*@
+                                            <td>@item.ITEM_CODE</td>
+                                            <td>@item.ITEM_NAME_TH</td>
+                                            <td>@item.ITEM_DETAIL</td>
+                                            @if (Model.showImageFlag) 
+                                            { 
+                                                <td><img class="zoom" src="@url1" onclick="window.open(src);" border="0" style="width:40px; height:40px;" alt=""></td>
+                                            }                                            
+                                            <td>
+                                                @{
+
+                                        if (@Model.prSearchResultVM.resultList[i].ITEM_QTY != null && @Model.prSearchResultVM.resultList[i].ITEM_QTY > 0)
+                                        {
+                                            @Html.TextBoxFor(m => m.prSearchResultVM.resultList[i].ITEM_QTY,
+                                                new
+                                                     {
+                                                         @class = "form-control"
+                                                         ,
+                                                         @readonly = "form-control readonly"
+                                                    ,
+                                                         @Value = "สินค้านี้อยู่ในตะกร้าแล้ว"
+                                                    ,
+                                                         @title = "สินค้ารายการนี้อยู่ในตะกร้าแล้ว หากต้องการเปลี่ยนแปลงยอดสั่ง ให้แก้ไขในตะกร้า"
+                                                     })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(m => m.prSearchResultVM.resultList[i].ITEM_QTY,
+                                                new
+                                                {
+                                                    @class = "form-control no-copy-paste numberOnlyPr"
+                                                    ,
+                                                    @maxlength = 10
+                                                    ,
+                                                    @onblur = "checkItemAvg(" + @i + ")"                                                    
+                                                })
+                                             <p class="text-danger" id="alertAvg_@i"></p>
+                                        }
+                                                }
+
+                                            </td>
+                                            <td>@item.REQUEST_UOM_CODE</td>
+                                            @if (Model.FRANCHISES_FLAG)
+                                            {
+                                                <td class="text-right" style="width:30px;">
+                                                    @if (item.UNIT_PRICE.HasValue)
+                                                    {
+                                                        @item.UNIT_PRICE.Value.ToString("N2")
+                                                    }
+                                                </td>
+                                            }
+                                            else 
+                                            { 
+                                                @*<td class="text-right" style="width:30px;">
+                                                    @if (item.REMAIN_QTY.HasValue)
+                                                    {
+                                                        @item.REMAIN_QTY.Value.ToString("N2")
+                                                    }
+                                                </td>*@
+                                            }
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                            @Html.Partial("_PaginationPartial", Model.ZenPagination)
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-heading">รายชื่อสินค้า <span class="pull-right">ผลการค้นหา : @Model.prSearchResultVM.countAll.ToString("#,###") รายการ</span></div>
+                        <div class="panel-body">
+                            <div class="table table-responsive">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th class="text-right">ลำดับ</th>
+                                        @* <th><a onclick="gotoOrder('USER_NAME');" class="normal-font">Username</a></th>*@
+                                        <th>ประเภทสินค้า</th>
+                                        @*<th>สั่งจากแบรนด์</th>*@
+                                        <th>รหัสสินค้า</th>
+                                        <th>ชื่อสินค้า</th>
+                                        <th>รูปภาพ</th>
+                                        <th>รายละเอียดอื่นๆ</th>
+                                        <th>จำนวนที่สั่ง</th>
+                                        <th>หน่วยที่สั่ง</th>
+                                        @*<th>ราคา (บาท)</th>
+                                            <th>Stock</th>*@
+                                    </tr>
+                                    @for (int i = 0; i < Model.prSearchResultVM.resultList.Count; i++)
+                                    {
+                                        var item = Model.prSearchResultVM.resultList[i];
+                                        url1 = string.Format("{0}://{1}/{2}", this.Request.Url.Scheme, this.Request.Url.Authority, item.FILE_PATH);
+                                        <tr>
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_BY_BRAND_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_BY_BRAND_NAME)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_BY_BRANCH_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_BY_BRANCH_NAME)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_TO_BRAND_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_TO_BRAND_NAME)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_TO_BRANCH_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_TO_BRANCH_NAME)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ST_PR_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ST_PR_CATEGORY_ID)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ST_PR_CATEGORY_NAME)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ITEM_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ITEM_NAME_TH)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ITEM_DETAIL)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].WH_UOM_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REQUEST_UOM_CODE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ITEM_UNIT)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ST_MAP_WH_ITEM_ID)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ST_WH_ITEM_CATEGORY_ID)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ST_WH_ITEM_CATEGORY_NAME)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].ITEM_QTY_AVG)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].FILE_PATH)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].FULL_PATH)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].FILE_NAME_WITH_EXTENSION)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].UNIT_PRICE)
+                                            @Html.HiddenFor(m => m.prSearchResultVM.resultList[i].REMAIN_QTY)
+
+                                            <td class="text-right" style="width:20px;">@item.ROW_NO.ToString("#,##0")</td>
+                                            <td>@item.ST_PR_CATEGORY_NAME</td>
+                                            @*<td>@item.REQUEST_TO_BRAND_CODE</td>*@
+                                            <td>@item.ITEM_CODE</td>
+                                            <td>@item.ITEM_NAME_TH</td>
+                                            <td><img class="zoom" src="@url1" onclick="window.open(src);" border="0" style="width:40px; height:40px;" alt=""></td>
+                                            <td>@item.ITEM_DETAIL</td>
+                                            <td>
+                                                @{
+
+                                        if (@Model.prSearchResultVM.resultList[i].ITEM_QTY != null && @Model.prSearchResultVM.resultList[i].ITEM_QTY > 0)
+                                        {
+                                            @Html.TextBoxFor(m => m.prSearchResultVM.resultList[i].ITEM_QTY,
+                                                new
+                                                     {
+                                                         @class = "form-control"
+                                                         ,
+                                                         @readonly = "form-control readonly"
+                                                    ,
+                                                         @Value = "สินค้านี้อยู่ในตะกร้าแล้ว"
+                                                    ,
+                                                         @title = "สินค้ารายการนี้อยู่ในตะกร้าแล้ว หากต้องการเปลี่ยนแปลงยอดสั่ง ให้แก้ไขในตะกร้า"
+                                                     })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(m => m.prSearchResultVM.resultList[i].ITEM_QTY,
+                                                new
+                                                {
+                                                    @class = "form-control no-copy-paste numberOnlyPr"
+                                                    ,
+                                                    @maxlength = 10
+                                                    ,
+                                                    @onblur = "checkItemAvg(" + @i + ")"
+                                                })
+                                            <p class="text-danger" id="alertAvg_@i"></p>
+                                        }
+                                                }
+
+                                            </td>
+                                            <td>@item.REQUEST_UOM_CODE</td>
+                                            @*<td class="text-right" style="width:30px;">
+                                                    @if (item.SALE_PRICE.HasValue)
+                                                    {
+                                                        @item.SALE_PRICE.Value.ToString("F2")
+                                                    }
+                                                </td>*@
+                                            @*<td class="text-right" style="width:30px;">
+                                                    @if (item.REMAIN_QTY.HasValue)
+                                                    {
+                                                        @item.REMAIN_QTY.Value.ToString("F2")
+                                                    }
+                                                </td>*@
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                            @Html.Partial("_PaginationPartial", Model.ZenPagination)
+                        </div>
+                    </div>
+                }
+
+            }
+        }
+    </form>
+</div>
+
+<script type="text/javascript">
+    var myTime;
+    var now = new Date();
+    var nowHour = now.getHours();
+    var nowMinute = now.getMinutes();
+
+    var sessionHour = nowHour;
+    var sessionMinute = nowMinute + parseInt('@ViewBag.sessionTimeout'); // เอานาทีปัจจุบันบวกเพิ่มกับ นาทีที่เราตั้งค่าไว้
+    if (sessionMinute >= 60) {
+        sessionHour = sessionHour + 1;
+        sessionMinute = sessionMinute - 60;
+    }
+
+    var sessionTime = sessionHour + ":" + sessionMinute;
+    if (sessionMinute >= 0 && sessionMinute <= 9) {
+        sessionTime = sessionHour + ":0" + sessionMinute;
+    }
+    var showSessionTimeout = '@ViewBag.showSessionTimeout';
+    if (showSessionTimeout == '1') {
+        $('#warningSession').removeClass('hide');
+        $('#sessionTime').text(sessionTime);
+    }
+    else {
+        $('#warningSession').addClass('hide');
+    }
+
+    var sessionTimeAlert = parseFloat('@ViewBag.sessionTimeoutAlert');
+
+
+    //Detect Enter key on ItemCode Textbox
+    var enterKey = 13;
+    $("#prSearchCriteriaVM_ITEM_CODE").keyup(function (e) {
+        if (e.keyCode == enterKey) gotoSearch();
+    });
+
+    $(document).ready(function () {
+        //focus on first textbox when search finish
+        $("#prSearchResultVM_resultList_0__ITEM_QTY").focus();
+
+        if (showSessionTimeout == '1') {
+            $('#warningSession').removeClass('hide');
+            $('#sessionTime').text(sessionTime);
+            var mins = sessionTimeAlert;
+            // calculate the seconds (don't change this! unless time progresses at a different speed for you...)
+            var secs = mins * 60;
+
+            document.getElementById("minutes").value = mins;
+            document.getElementById("seconds").value = secs;
+
+            countdown();
+
+            function countdown() {
+                myTime = setTimeout(function () {
+                    Decrement();
+                }, 1000);
+            }
+
+            function Decrement() {
+                if (document.getElementById) {
+                    minutes = document.getElementById("minutes");
+                    seconds = document.getElementById("seconds");
+                    // if less than a minute remaining
+                    if (seconds < 59) {
+                        seconds.value = secs;
+                    } else {
+                        minutes.value = getminutes();
+                        seconds.value = getseconds();
+                    }
+                    secs--;
+                    document.getElementById("minutes").value = minutes.value;
+                    document.getElementById("seconds").value = seconds.value;
+
+                    if (minutes.value == 0 && seconds.value == 0) {
+                        var timeoutMassage = '@ViewBag.sessionTimeoutMessage'.replace('{0}', sessionTime);
+                        if (window.confirm(timeoutMassage)) {
+                            $('#btnAddItemAll').click();
+                            //gotoAddItemCartSaveAll();
+                        } else {
+                            return false;
+                        }
+                        return;
+                    } else {
+                        myTime = setTimeout(function () {
+                            Decrement();
+                        }, 1000);
+                    }
+                }
+            }
+
+            function getminutes() {
+                // minutes is seconds divided by 60, rounded down
+                mins = Math.floor(secs / 60);
+                return mins;
+            }
+
+            function getseconds() {
+                // take mins remaining (as seconds) away from total seconds remaining
+                return secs - Math.round(mins * 60);
+            }
+        }
+    })
+
+    function checkItemAvg(row) {
+        var itemQty = $('#prSearchResultVM_resultList_' + row + '__ITEM_QTY').val();
+
+        if (itemQty.trim() == 0)
+            return;
+
+        var itemUomCode = $('#prSearchResultVM_resultList_' + row + '__REQUEST_UOM_CODE').val();
+        var itemQtyAvg = $('#prSearchResultVM_resultList_' + row + '__ITEM_QTY_AVG').val();
+        var itemWhUomCode = $('#prSearchResultVM_resultList_' + row + '__WH_UOM_CODE').val();
+        var itemCode = $('#prSearchResultVM_resultList_' + row + '__ITEM_CODE').val();
+
+        @*var messageText = '@ViewBag.msgAlertTotalItemAvg';
+        messageText = messageText.replace("{0}", itemCode);
+        messageText = messageText.replace("{1}", parseFloat(itemQtyAvg));
+        messageText = messageText.replace("{2}", itemWhUomCode);
+        messageText = messageText.replace("{3}", parseFloat(itemQty));
+        messageText = messageText.replace("{4}", itemUomCode);*@
+
+        //if (itemQty != null && itemQty != "") {
+        //    if ((parseFloat(itemQty) > parseFloat(itemQtyAvg)) && (itemQtyAvg) > 0) {
+        //        alert("คำเตือน : " + messageText);
+        //    }
+        //}
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetAlertAvgPRQtyMsg")',
+            datatype: JSON,
+            data: {
+                'itemCode': itemCode,
+                'itemUOM': itemUomCode,
+                'orderQty': itemQty
+            },
+            success: function (data) {                
+                var alertAvgID = "alertAvg_" + row.toString();
+                var ctrlAlert = $("#" + alertAvgID);
+                if (data != null && data != '')
+                {
+                    //alert(data.toString());                    
+                    $(ctrlAlert).empty();
+                    $(ctrlAlert).append(data.toString()); //"<span class='text-danger'>data.toString()</span>"
+                } else {
+                    $(ctrlAlert).empty();
+                }
+            },
+            error: function (data) {
+                if (data != null) {
+                    alert("ajax error: " + data.toString());                 
+                } else {
+                    var alertAvgID = "alertAvg_" + row.toString();
+                    var ctrlAlert = $("#" + alertAvgID);
+                    $(ctrlAlert).empty();
+                }
+            }
+        });
+    }
+
+    function checkItemAvg__BK_201904(row) {
+        var itemQty = $('#prSearchResultVM_resultList_' + row + '__ITEM_QTY').val();
+        var itemUomCode = $('#prSearchResultVM_resultList_' + row + '__REQUEST_UOM_CODE').val();
+        var itemQtyAvg = $('#prSearchResultVM_resultList_' + row + '__ITEM_QTY_AVG').val();
+        var itemWhUomCode = $('#prSearchResultVM_resultList_' + row + '__WH_UOM_CODE').val();
+        var itemCode = $('#prSearchResultVM_resultList_' + row + '__ITEM_CODE').val();
+
+        var messageText = '@ViewBag.msgAlertTotalItemAvg';
+        messageText = messageText.replace("{0}", itemCode);
+        messageText = messageText.replace("{1}", parseFloat(itemQtyAvg));
+        messageText = messageText.replace("{2}", itemWhUomCode);
+        messageText = messageText.replace("{3}", parseFloat(itemQty));
+        messageText = messageText.replace("{4}", itemUomCode);
+
+        if (itemQty != null && itemQty != "") {
+            if ((parseFloat(itemQty) > parseFloat(itemQtyAvg)) && (itemQtyAvg) > 0) {
+                alert("คำเตือน : " + messageText);
+            }
+        }
+    }
+
+    function gotoItemCart() {
+        var url1 = '@Url.Action("ItemCart")';
+        url1 = url1.substring(0, url1.lastIndexOf("ItemCart")).concat("ItemCart");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+    function gotoItemCartUpdate() {
+        var url1 = '@Url.Action("ItemCartUpdate")';
+        url1 = url1.substring(0, url1.lastIndexOf("ItemCartUpdate")).concat("ItemCartUpdate/@updatePRCode");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoAddItemCartSaveAll() {
+        var url1 = '@Url.Action("AddItemCartSaveAll")';
+        url1 = url1.substring(0, url1.lastIndexOf("AddItemCartSaveAll")).concat("AddItemCartSaveAll");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoAddItemCartSave(itemCode, uomCode, mapWhID) {
+        $('#prVM_MA_ITEM_CODE').val(itemCode);
+        $('#prVM_MA_REQUEST_UOM_CODE').val(uomCode);
+        $('#prVM_MA_ST_MAP_WH_ITEM_ID').val(mapWhID);
+
+        var url1 = '@Url.Action("AddItemCartSave")';
+        url1 = url1.substring(0, url1.lastIndexOf("AddItemCartSave")).concat("AddItemCartSave");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+
+        @*if (confirm('@ViewBag.msgConfirmChooseItem')) {
+            var url1 = '@Url.Action("AddItemCartSave")';
+            url1 = url1.substring(0, url1.lastIndexOf("AddItemCartSave")).concat("AddItemCartSave");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }*@
+    }
+
+    function gotoSearch() {
+        var url1 = '@Url.Action("SearchAddItemCart")';
+        url1 = url1.substring(0, url1.lastIndexOf("SearchAddItemCart")).concat("SearchAddItemCart");
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+    function gotoClear() {
+        var url1 = '/MAS/Pr/AddItemCart/Clear';
+        @*var url1 = '@Url.Action("AddItemCart")';
+        url1 = url1.substring(0, url1.lastIndexOf("AddItemCart")).concat("AddItemCart");*@
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+</script>

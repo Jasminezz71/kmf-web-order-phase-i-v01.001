@@ -1,0 +1,336 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.ItemStockVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>
+        หน้าจอค้นหาสินค้าคงเหลือ
+    </h2>
+
+    <hr />
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+
+    <form class="form-horizontal" id="form1">
+        @Html.HiddenFor(m => m.SessionLogin.USER_NAME)
+        <div class="panel panel-primary">
+            <div class="panel-heading">ระบุเงื่อนไขการค้นหา</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">แบรนด์</label>
+                        <div class="col-md-4">
+                            @if (Model != null)
+                            {
+                                if (Model.itemStockSearchCriteriaVM.brandList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.itemStockSearchCriteriaVM.BRAND_CODE,
+                                    new SelectList(@Model.itemStockSearchCriteriaVM.brandList, "ITEM_VALUE", "ITEM_TEXT")
+                                    , new { @class = "form-control", @onchange = "gotoChangeBrand()" }
+                                    )
+                                }
+                            }
+                        </div>
+                        <label class="col-md-2 control-label">สาขา</label>
+                        <div class="col-md-4">
+                            @if (Model != null)
+                            {
+                                if (Model.itemStockSearchCriteriaVM.branchList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.itemStockSearchCriteriaVM.BRANCH_CODE,
+                                    new SelectList(@Model.itemStockSearchCriteriaVM.branchList, "ITEM_VALUE", "ITEM_TEXT")
+                                    , new { @class = "form-control" }
+                                    )
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">วันรับสินค้า จาก</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.itemStockSearchCriteriaVM.START_DATE, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;"
+                            })
+                        </div>
+                        <label class="col-md-2 control-label">ถึง</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.itemStockSearchCriteriaVM.END_DATE, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;"
+                            })
+                        </div>
+                    </div>
+                    <div class="form-group hide">
+                            <label class="col-md-2 control-label">สินค้าจากระบบ :</label>
+                            <div class="col-md-4">
+                                @if (Model != null)
+                                {
+                                    if (Model.itemStockSearchCriteriaVM.appSystemList != null)
+                                    {
+                                        @Html.DropDownListFor(m => m.itemStockSearchCriteriaVM.APP_ID,
+                                        new SelectList(@Model.itemStockSearchCriteriaVM.appSystemList, "ITEM_VALUE", "ITEM_TEXT")
+                                        , new { @class = "form-control" }
+                                        )
+                                    }
+                                }
+                            </div>
+                        </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">สินค้าในสต๊อก</label>
+                        <div class="col-md-4">
+                            @if (Model != null)
+                            {
+                                if (Model.itemStockSearchCriteriaVM.itemStockTypeList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.itemStockSearchCriteriaVM.ITEM_STOCK_TYPE,
+                                    new SelectList(@Model.itemStockSearchCriteriaVM.itemStockTypeList, "ITEM_VALUE", "ITEM_TEXT")
+                                    , new { @class = "form-control" }
+                                    )
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-primary" value="ค้นหา" onclick="gotoSearch();" />
+                            <input type="button" class="btn btn-primary hide" id="hidbtnSearch" value="ค้นหา" onclick="gotoSearch();" />
+                            &nbsp;
+                            <input type="button" class="btn btn-default" value="ยกเลิกเงื่อนไขการค้นหา" onclick="gotoClear();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.itemStockSearchResultVM != null)
+        {
+            if (Model.itemStockSearchResultVM.resultList != null)
+            {
+                if (Model.itemStockSearchResultVM.resultList.Count > 0)
+                {
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.ActionLink("ออกรายงาน", "RPT_STOCKCARD", "/RPT/Report"
+                                    , new { @P_ID = "RPT_STOCKCARD_SEARCH" }
+                                    , new { @class = "reportStockDialog btn btn-success pull-right" })
+                            <div id="dialog-report-stock" style="display: none">
+                                <input class="hide" id="btnClosePopupStock" type="button" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default" id="divResult">
+                        <div class="panel-heading">
+                            ผลการค้นหา
+                            <span class="pull-right">ผลการค้นหา : @Model.itemStockSearchResultVM.countAll.ToString("#,###") รายการ</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table table-responsive">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th class="text-right">ลำดับ</th>
+                                        <th>แบรนด์</th>
+                                        <th>สาขา</th>
+                                        <th>สถานที่จัดเก็บ</th>
+                                        <th>รหัสสินค้า</th>
+                                        <th>ชื่อสินค้า</th>
+                                        <th>ยอดยกมา</th>
+                                        <th>จำนวนที่รับเข้า</th>
+                                        <th>จำนวนที่เหลือ</th>
+                                        <th>จำนวนที่ใช้ไป</th>
+                                        <th>หน่วย</th>
+                                        @*<th>ระบบ</th>*@
+                                    </tr>
+                                    @for (int i = 0; i < Model.itemStockSearchResultVM.resultList.Count; i++)
+                                    {
+                                        var item = Model.itemStockSearchResultVM.resultList[i];
+                                        <tr>
+                                            <td class="text-right" style="width: 20px; vertical-align: middle;">@item.ROW_NO.ToString("#,##0")</td>
+                                            <td>@item.BRAND_CODE</td>
+                                            <td>@item.BRANCH_CODE</td>
+                                            <td>@item.LOCATION</td>
+                                            <td>@item.ITEM_CODE</td>
+                                            <td>@item.ITEM_DESCRIPTION</td>
+                                            <td>@item.INCOMING_BALANCE_QTY</td>
+                                            <td>@item.RECEIVE_QTY</td>
+                                            <td>
+                                                @if (item.REMAIN_QTY >= 0)
+                                                {
+                                                    <span>@item.REMAIN_QTY</span>
+                                                }
+                                                else
+                                                {
+                                                    <span style="color:red;">@item.REMAIN_QTY</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.USAGE_QTY >= 0)
+                                                {
+                                                    <span>@item.USAGE_QTY</span>
+                                                }
+                                                else
+                                                {
+                                                    <span style="color:red;">@item.USAGE_QTY</span>
+                                                }
+                                            </td>
+                                            <td>@item.REMAIN_UOM</td>
+                                            @*<td>@item.APP_NAME</td>*@
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                            @Html.Partial("_PaginationSearchPartial", Model.ZenPagination)
+                        </div>
+                    </div>
+                }
+            }
+        }
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var CanEditBrand = '@ViewBag.CanEditBrand';
+        var CanEditBranch = '@ViewBag.CanEditBranch';
+
+        if (CanEditBrand == '0') {
+            $('#itemStockSearchCriteriaVM_BRAND_CODE').prop("disabled", "disabled");
+        }
+        else if (CanEditBrand == '1') {
+            $('#itemStockSearchCriteriaVM_BRAND_CODE').prop("disabled", null);
+        }
+
+        if (CanEditBranch == '0') {
+            $('#itemStockSearchCriteriaVM_BRANCH_CODE').prop("disabled", "disabled");
+        }
+        else if (CanEditBranch == '1') {
+            $('#itemStockSearchCriteriaVM_BRANCH_CODE').prop("disabled", null);
+        }
+    });
+
+    function gotoClear() {
+        var url1 = '@Url.Action("Index")';
+        url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoSearch() {
+        var url1 = '@Url.Action("Search")';
+        url1 = url1.substring(0, url1.lastIndexOf("Search")).concat("Search");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoChangeBrand() {
+        var url1 = '@Url.Action("ChangeBrand")';
+        url1 = url1.substring(0, url1.lastIndexOf("ChangeBrand")).concat("ChangeBrand");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+
+
+    /////////////////////////////////////////////////////////////////////////
+
+    // Start Report Stock Dialog //
+    $(document).on("click", "#btnClosePopupStock", function (e) {
+
+        $("#dialog-report-stock").dialog('close');
+
+    });
+
+    $(document).on("click", ".reportStockDialog", function (e) {
+
+        var brandCode = $('#itemStockSearchCriteriaVM_BRAND_CODE').val();
+        var branchCode = $('#itemStockSearchCriteriaVM_BRANCH_CODE').val();
+        var startDate = $('#itemStockSearchCriteriaVM_START_DATE').val();
+        var endDate = $('#itemStockSearchCriteriaVM_END_DATE').val();
+        var appID = $('#itemStockSearchCriteriaVM_APP_ID').val();
+        var itemStockType = $('#itemStockSearchCriteriaVM_ITEM_STOCK_TYPE').val();
+        var userName = $('#SessionLogin_USER_NAME').val();
+
+        //yyyy-mm-dd
+        if (startDate != "") {
+            var splitDate = startDate.split('/');
+            var newStartDate = splitDate[2] + '-' + splitDate[1] + '-' + splitDate[0];
+
+            startDate = newStartDate;
+        }
+        if (endDate != "") {
+            var splitDate = endDate.split('/');
+            var newEndDate = splitDate[2] + '-' + splitDate[1] + '-' + splitDate[0];
+
+            endDate = newEndDate;
+        }
+        var rptPrm = "";
+        rptPrm += brandCode + '|';
+        rptPrm += branchCode + '|';
+        rptPrm += startDate + '|';
+        rptPrm += endDate + '|';
+        rptPrm += appID + '|';
+        rptPrm += itemStockType + '|';
+        rptPrm += userName;
+
+        var url = $(this).attr('href');
+        url = url.replace("/MAS", "");
+        url = url.replace("?P_ID=", "/" + rptPrm);
+
+        var url1 = url;
+
+        var weightDocument = ($(window).width() * 0.99);
+        var higghtDocument = ($(window).height() * 0.8);
+
+        var theDialog = $("#dialog-report-stock").dialog({
+            title: 'ตัวอย่างก่อนพิมพ์',
+            autoOpen: false,
+            resizable: false,
+            height: higghtDocument,
+            width: weightDocument,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            open: function (event, ui) {
+                $(this).load(url1);
+            },
+            close: function (event, ui) {
+                $('#ifrReport').remove();
+                $(this).dialog('close');
+            },
+            buttons: [
+                 {
+                     text: "ปิด",
+                     "class": 'ClossButtonClass',
+                     click: function () {
+                         $('#ifrReport').remove();
+                         $(this).dialog('close');
+                     }
+                 }
+            ]
+        });
+
+        theDialog.dialog("open");
+        return false;
+    });
+    // End Report Stock Dialog //
+
+    /////////////////////////////////////////////////////////////////////////
+</script>

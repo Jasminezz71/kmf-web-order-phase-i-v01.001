@@ -1,0 +1,116 @@
+﻿@model ZEN.SaleAndTranfer.VM.ADMIN.BatchVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        var runBatchPRFlag = '@ViewBag.RunBatchPRFlag';
+        var runBatchDOFlag = '@ViewBag.RunBatchDOFlag';
+        var runBatchGRFlag = '@ViewBag.RunBatchGRFlag';
+        var runBatchMasterFlag = '@ViewBag.RunBatchMasterFlag';
+
+        if (runBatchPRFlag == 1 || runBatchPRFlag == "1") {
+            alert('run Batch PR Success');
+        }
+        else if ((runBatchPRFlag == 0 || runBatchPRFlag == "0") && runBatchPRFlag != "")
+            alert('run Batch PR not Success');
+        else if (runBatchDOFlag == 1 || runBatchDOFlag == "1") {
+            alert('run Batch DO Success');
+        }
+        else if (runBatchGRFlag == 1 || runBatchGRFlag == "1") {
+            alert('run Batch GR Success');
+        }
+        else if ((runBatchGRFlag == 0 || runBatchGRFlag == "0") && runBatchGRFlag != "")
+            alert('run Batch PR not Success');
+        else if (runBatchMasterFlag == 1) {
+            alert('run Batch Master Success');
+        }
+    });
+
+    function gotoRunBatchPR() {
+        var url1 = '@Url.Action("BatchPR")';
+        url1 = url1.substring(0, url1.lastIndexOf("BatchPR")).concat("BatchPR");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoRunBatchDO() {
+        if (confirm('@ViewBag.msgConfirmRunBatchDO')) {
+            var url1 = '@Url.Action("RunBatchDO")';
+            url1 = url1.substring(0, url1.lastIndexOf("RunBatchDO")).concat("RunBatchDO");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+    function gotoRunBatchGR() {
+        var url1 = '@Url.Action("BatchGR")';
+        url1 = url1.substring(0, url1.lastIndexOf("BatchGR")).concat("BatchGR");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoRunBatchMaster() {
+        if (confirm('@ViewBag.msgConfirmRunBatchMaster')) {
+            var url1 = '@Url.Action("RunBatchMaster")';
+            url1 = url1.substring(0, url1.lastIndexOf("RunBatchMaster")).concat("RunBatchMaster");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+</script>
+<form class="form-horizontal" id="form1">
+    <div class="container">
+        <h2>หน้าจอจัดการ Batch</h2>
+        <hr />
+        <div class="panel panel-primary">
+            <div class="panel-heading">จัดการ Batch</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <input type="button" class="btn btn-primary btn-sm btn-block" value="ปรับปรุงข้อมูลใบตลาด (PR)" onclick="gotoRunBatchPR();" />
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <input type="button" class="btn btn-primary btn-sm btn-block" value="ปรับปรุงข้อมูลใบสั่งซื้อ (DO)" onclick="gotoRunBatchDO();" />
+                        </div>
+                    </div>*@
+                    <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3">
+                                <input type="button" class="btn btn-primary btn-sm btn-block" value="ปรับปรุงข้อมูลใบรับสินค้า (GR)" onclick="gotoRunBatchGR();" />
+                            </div>
+                        </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <input type="button" class="btn btn-primary btn-sm btn-block" value="ปรับปรุงข้อมูล Master" onclick="gotoRunBatchMaster();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

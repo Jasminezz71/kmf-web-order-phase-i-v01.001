@@ -1,0 +1,299 @@
+﻿@using ZEN.SaleAndTranfer.UI.Util
+@model ZEN.SaleAndTranfer.UI.VM2.Prq.SummaryVM2
+
+
+@{
+    ViewBag.Title = "หน้าจอสรุปการสั่งซื้อ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    decimal sumTotal = 0;
+    int chkTransport = 0;
+}
+
+@if (Model.Detail != null && Model.Detail.Count > 0)
+{
+    string[] confvalue = Model.Het.ConfigValue.Split('#');
+    foreach (var ret in Model.Detail)
+    {
+        sumTotal = sumTotal + (Convert.ToDecimal(ret.UnitPrice) * Convert.ToDecimal(ret.OrderQty));
+        for (int i = 1; i < confvalue.Length; i++)
+        {
+            if (ret.ItemCode.Trim() == confvalue[i].ToString().Trim())
+            {
+                chkTransport = 1;
+            }
+            else
+            {
+                string ItemCodeStr = ret.ItemCode.Trim().Substring(0, 2);
+                if (!string.IsNullOrEmpty(ItemCodeStr) && ItemCodeStr.Equals("SA"))
+                {
+                    chkTransport = 1;
+                }
+            }
+        }
+
+    }
+
+    Model.Het.SumTotalPrice = sumTotal;
+    Model.Het.CheckTransport = chkTransport;
+
+
+
+}
+
+
+<div class="page-header">
+    <h2>@ViewBag.Title <small></small></h2>
+</div>
+
+
+<div id="divHeader" class="col-xs-12 col-md-4">
+    <h4 class="text-primary"><strong>ข้อมูลสั่งซื้อ</strong></h4>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @Html.Partial("_Prq_PrH_Partial", Model.Het)
+            @*@if (Model.Het.ConfigValue.Split('#')[0].ToString() != "0")
+                {
+
+                }*@
+            <input type="hidden" id="configValue" value='@Model.Het.ConfigValue.Split('#')[0]' />
+            <input type="hidden" id="hdTransport" value="@Model.Het.CheckTransport" />
+        </div>
+        <div class="panel-footer">
+            <input type="hidden" id="hdSummary" value="@Model.Het.SumTotalPrice" />
+            <button type="button" class="btn btn-primary" style="width:100%;" onclick="return savePrH('#formPrH');">ยืนยันคำสั่งซื้อ</button>
+        </div>
+    </div>
+</div>
+<div id="divDetail" class="col-xs-12 col-md-8">
+    @Html.Partial("_Prq_Summary_Partial", Model)
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+        });
+
+        function savePrH(formID) {
+            if (!$(formID).valid()) {
+                return false;
+            }
+
+            var currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+
+            var parts = $('#PlanDeliveryDate').val().split('-'); // ["YYYY", "MM", "DD"]
+
+            var selectedDay = parseInt(parts[2], 10);
+            var selectedMonth = parseInt(parts[1], 10) - 1;
+            var selectedYear = parseInt(parts[0], 10);
+
+            var selectedDate = new Date(selectedYear, selectedMonth, selectedDay);
+            selectedDate.setHours(0, 0, 0, 0);
+
+            if (selectedDate.getTime() < currentDate.getTime()) {
+                alert('วันที่ที่เลือก (น้อยกว่าวันที่ปัจจุบัน)');
+            }
+            else {
+
+                var conf = $('#configValue').val();
+                if (conf != "0") {
+                    var dataForm = $(formID).serialize();
+
+
+                    var urlPR = '@Url.Action("FindPR", "Prq")';
+                    var url1 = '@Url.Action("CreatePr", "Prq", new { Area = "" })';
+
+                    $.ajax({
+                        type: "POST",
+                        url: urlPR,
+                        data: JSON.stringify({ deliveryDate: $('#PlanDeliveryDate').val() }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.SuccessFlag) {
+                                $('#hdTransport').val('1');
+                                if ($('#hdTransport').val() == "0") {
+                                    if (parseFloat($('#hdSummary').val()) < parseFloat(conf)) {
+                                        alert('จำนวนยอดสั่งสินค้าไม่ครบ ' + $('#configValue').val() + ' บาท กรุณาเลือกค่าจัดส่งสินค้า')
+                                    }
+                                    else {
+                                        $(document.body).css({ 'cursor': 'wait' });
+                                        $.ajax({
+                                            type: "POST",
+                                            url: url1,
+                                            data: dataForm, //data: JSON.stringify(obj),
+                                            //processData: false,
+                                            //contentType: false,
+                                            dataType: "json", //dataType: "html",
+                                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                                            success: function (response) {
+                                                //debugger;
+                                                if (response.SuccessFlag) {
+                                                    alert('บันทึกสำเร็จ เลขที่สั่งซื้อของท่าน คือ ' + response.Data);
+                                                } else {
+                                                    alert(response.Msg);
+                                                }
+
+                                                //bindOrderQtyInBasket();
+
+                                                $(document.body).css({ 'cursor': 'default' });
+
+                                                window.location = '@Url.Action("SearchItem", "Prq", new { Area = "", id = PrCategoryIDConst.All })';
+                                            },
+                                            error: function (response) {
+                                                alert("Error occured!!")
+                                                alert(response.responseText);
+
+                                                $(document.body).css({ 'cursor': 'default' });
+                                            }
+                                        });
+                                    }
+                                }
+                                else {
+                                    $(document.body).css({ 'cursor': 'wait' });
+                                    $.ajax({
+                                        type: "POST",
+                                        url: url1,
+                                        data: dataForm,
+                                        dataType: "json", //dataType: "html",
+                                        contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                                        success: function (response) {
+                                            //debugger;
+                                            if (response.SuccessFlag) {
+                                                alert('บันทึกสำเร็จ เลขที่สั่งซื้อของท่าน คือ ' + response.Data);
+                                            } else {
+                                                alert(response.Msg);
+                                            }
+
+                                            $(document.body).css({ 'cursor': 'default' });
+
+                                            window.location = '@Url.Action("SearchItem", "Prq", new { Area = "", id = PrCategoryIDConst.All })';
+                                        },
+                                        error: function (response) {
+                                            alert("Error occured!!")
+                                            alert(response.responseText);
+
+                                            $(document.body).css({ 'cursor': 'default' });
+                                        }
+                                    });
+                                }
+
+                            } else {
+                                //$('#hdTransport').val('0');
+                                if ($('#hdTransport').val() == "0") {
+                                    if (parseFloat($('#hdSummary').val()) < parseFloat(conf)) {
+                                        alert('จำนวนยอดสั่งสินค้าไม่ครบ ' + $('#configValue').val() + ' บาท กรุณาเลือกค่าจัดส่งสินค้า')
+                                    }
+                                    else {
+                                        $(document.body).css({ 'cursor': 'wait' });
+                                        $.ajax({
+                                            type: "POST",
+                                            url: url1,
+                                            data: dataForm, //data: JSON.stringify(obj),
+                                            //processData: false,
+                                            //contentType: false,
+                                            dataType: "json", //dataType: "html",
+                                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                                            success: function (response) {
+                                                //debugger;
+                                                if (response.SuccessFlag) {
+                                                    alert('บันทึกสำเร็จ เลขที่สั่งซื้อของท่าน คือ ' + response.Data);
+                                                } else {
+                                                    alert(response.Msg);
+                                                }
+
+                                                //bindOrderQtyInBasket();
+
+                                                $(document.body).css({ 'cursor': 'default' });
+
+                                                window.location = '@Url.Action("SearchItem", "Prq", new { Area = "", id = PrCategoryIDConst.All })';
+                                            },
+                                            error: function (response) {
+                                                alert("Error occured!!")
+                                                alert(response.responseText);
+
+                                                $(document.body).css({ 'cursor': 'default' });
+                                            }
+                                        });
+                                    }
+                                }
+                                else {
+                                    $(document.body).css({ 'cursor': 'wait' });
+                                    $.ajax({
+                                        type: "POST",
+                                        url: url1,
+                                        data: dataForm,
+                                        dataType: "json", //dataType: "html",
+                                        contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                                        success: function (response) {
+                                            //debugger;
+                                            if (response.SuccessFlag) {
+                                                alert('บันทึกสำเร็จ เลขที่สั่งซื้อของท่าน คือ ' + response.Data);
+                                            } else {
+                                                alert(response.Msg);
+                                            }
+
+                                            $(document.body).css({ 'cursor': 'default' });
+
+                                            window.location = '@Url.Action("SearchItem", "Prq", new { Area = "", id = PrCategoryIDConst.All })';
+                                        },
+                                        error: function (response) {
+                                            alert("Error occured!!")
+                                            alert(response.responseText);
+
+                                            $(document.body).css({ 'cursor': 'default' });
+                                        }
+                                    });
+                                }
+
+                            }
+                        },
+                        failure: function (response) {
+                            alert(response.d);
+                        }
+
+                    });
+
+
+
+                }
+                else {
+                    $(document.body).css({ 'cursor': 'wait' });
+                    $.ajax({
+                        type: "POST",
+                        url: url1,
+                        data: dataForm, //data: JSON.stringify(obj),
+                        //processData: false,
+                        //contentType: false,
+                        dataType: "json", //dataType: "html",
+                        contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                        success: function (response) {
+                            //debugger;
+                            if (response.SuccessFlag) {
+                                alert('บันทึกสำเร็จ เลขที่สั่งซื้อของท่าน คือ ' + response.Data);
+                            } else {
+                                alert(response.Msg);
+                            }
+
+                            //bindOrderQtyInBasket();
+
+                            $(document.body).css({ 'cursor': 'default' });
+
+                            window.location = '@Url.Action("SearchItem", "Prq", new { Area = "", id = PrCategoryIDConst.All })';
+                        },
+                        error: function (response) {
+                            alert("Error occured!!")
+                            alert(response.responseText);
+
+                            $(document.body).css({ 'cursor': 'default' });
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+}

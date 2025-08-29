@@ -1,0 +1,77 @@
+﻿@using ZEN.SaleAndTranfer.UI.Util
+@model ZEN.SaleAndTranfer.UI.VM2.BasketVM
+
+@* Header *@
+
+@{
+    decimal? sumTotal = 0;
+}
+
+@if (Model.Detail != null && Model.Detail.Count > 0)
+{
+    var sum1 = Model.Detail.Sum(m => m.UnitPrice);
+    sum1 = 1000;
+    var sum2 = Model.Detail.Sum(m => m.OrderQty);
+    sumTotal = sum1.Value * Convert.ToDecimal(sum2);
+}
+
+<h4><strong>รายการในตะกร้า</strong></h4>
+
+@* Detail *@
+<div class="row" style="padding:15px;">
+    @if (Model.Detail != null && Model.Detail.Count > 0)
+    {
+        <div class="row" style="padding:0px 15px 0px 15px;">
+            <span style="font-size: small; font-weight: bold; color: red;">รวมทั้งสิ้น @sumTotal.Value.ToString("N2") &#3647;</span>
+        </div>
+
+        foreach (var det in Model.Detail)
+        {
+            var priceDisp = det.UnitPrice != null && det.UnitPrice.HasValue ? det.UnitPrice.Value.ToString() : "N/A";
+            var price = det.UnitPrice != null && det.UnitPrice.HasValue ? det.UnitPrice.Value : 0;
+            var formID = string.Format("formAddItemToBasketOnBasket{0}", det.StMapWhItemID);
+            var totalPrice = 100000 * det.OrderQty;
+            var totalPriceDisp = totalPrice.ToString("N2");
+            <div class="col-xs-12 col-md-12" style="padding: 0px;">
+                <div class="thumbnail">
+                    @*<div class="text-center"><img src="..." alt="..." style="width: 40px; height: 40px;"></div>*@
+                    <div class="caption">
+                        <div style="font-size: small; font-weight: bold; overflow: hidden; text-overflow: ellipsis; max-height: 40px; min-height: 40px; ">
+                            @det.ItemName
+                        </div>
+                        <p><span style="font-size: smaller;">รหัสสินค้า @det.ItemCode</span></p>
+                        <p>
+                            <span style="font-size: smaller; font-weight: bold;">@priceDisp &#3647;</span>
+                            <span style="font-size: smaller;">ราคาต่อชิ้น</span>
+                        </p>
+                        <form class="form-inline" id="@formID" biz-key="@det.StMapWhItemID">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" id="StMapWhItemID" name="StMapWhItemID" value="@det.StMapWhItemID" />
+                            <input type="hidden" id="ItemCode" name="ItemCode" value="@det.ItemCode" />
+                            <input type="hidden" id="RequestUomCode" name="RequestUomCode" value="@det.RequestUomCode" />
+                            <input type="hidden" id="ItemName" name="ItemName" value="@det.ItemName" />
+                            <input type="hidden" id="UnitPrice" name="UnitPrice" value="@det.UnitPrice" />
+                            <div class="input-group input-group-sm">
+                                <input type="number" class="form-control text-right" min="1" id="OrderQty" name="OrderQty" placeholder="จำนวน" value="@det.OrderQty" style="width: 50%;" onblur="return saveOrderOnBasket('@formID');" />
+                                <!--<div class="input-group-btn">
+                                <button type="button" class="btn btn-warning" aria-label="Left Align" onclick="det.Dataurn addItemToBasket('@formID');">-->
+                                @*<span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>*@
+                                <!--บันทึก
+                                    </button>
+                                </div>-->
+                                <input type="text" class="form-control text-right" min="1" id="Remark" name="Remark" placeholder="หมายเหตุ" value="@det.Remark" style="width: 50%;" onblur="return saveOrderOnBasket('@formID');" />
+                            </div>
+                        </form>
+                        <p>
+                            <span style="font-size: smaller; font-weight: bold; " class="text-danger">@totalPriceDisp &#3647;</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-warning" role="alert">ไม่พบข้อมูล</div>
+    }
+</div>

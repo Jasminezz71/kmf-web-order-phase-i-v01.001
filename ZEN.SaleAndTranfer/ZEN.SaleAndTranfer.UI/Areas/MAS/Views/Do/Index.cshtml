@@ -1,0 +1,281 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.DoVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <h2>
+        หน้าจอใบเตรียมรับสินค้า : <small>ค้นหาใบเตรียมรับสินค้า</small>
+    </h2>
+
+    <hr />
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+
+    <form class="form-horizontal" id="form1">
+        @Html.HiddenFor(m => m.doVM_MA.ST_DO_CODE)
+        @Html.HiddenFor(m => m.doVM_MA.ST_PR_CODE)
+        <div class="panel panel-primary">
+            <div class="panel-heading">ระบุเงื่อนไขการค้นหา</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">เลขที่ใบตลาด (PR)</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.doSearchCriteriaVM.ST_PR_CODE, new { @maxlength = "20", @class = "form-control" })
+                        </div>
+                        <label class="col-md-2 control-label">เลขที่ใบเตรียมรับสินค้า (DO)</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.doSearchCriteriaVM.ST_DO_CODE, new { @maxlength = "20", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">วันกำหนดส่งสินค้า จาก</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.doSearchCriteriaVM.PLAN_DELIVERY_DATE_FROM, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;"
+                            })
+                        </div>
+                        <label class="col-md-2 control-label">ถึง</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.doSearchCriteriaVM.PLAN_DELIVERY_DATE_TO, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;"
+                            })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-primary" value="ค้นหา" onclick="gotoSearch();" />
+                            <input type="button" class="btn btn-primary hide" id="hidbtnSearch" value="ค้นหา" onclick="gotoSearch();" />
+                            &nbsp;
+                            <input type="button" class="btn btn-default" value="ล้างหน้าจอ" onclick="gotoClear();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.doSearchResultVM != null)
+        {
+            if (Model.doSearchResultVM.resultList != null)
+            {
+                <div class="panel panel-default" id="divResult">
+                    <div class="panel-heading">
+                        ผลการค้นหา
+                        <span class="pull-right">ผลการค้นหา : @Model.doSearchResultVM.countAll.ToString("#,###") รายการ</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table table-responsive">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th class="text-right">ลำดับ.</th>
+                                    <th><a onclick="gotoOrder('ST_PR_CODE');">เลขที่ใบตลาด</a></th>
+                                    <th><a onclick="gotoOrder('ST_DO_CODE');">เลขที่ใบเตรียมรับสินค้า</a></th>
+                                    <th><a onclick="gotoOrder('CREATE_DATE');">วันที่สร้างใบตลาด</a></th>
+                                    <th><a onclick="gotoOrder('PLAN_DELIVERY_DATE');">วันกำหนดส่งสินค้า</a></th>
+                                    <th><a onclick="gotoOrder('DO_STATUS_CODE');">สถานะ</a></th>
+                                    <th><a onclick="gotoOrder('ST_GR_CODE');">เลขที่ทำรับ</a></th>
+                                    <th><a onclick="gotoOrder('LOCATION_CODE');">Location</a></th>
+                                    @*<th>เลขที่ทำรับ (GR)</th>*@
+                                    <th></th>
+                                </tr>
+                                @for (int i = 0; i < Model.doSearchResultVM.resultList.Count; i++)
+                                {
+                                    var item = Model.doSearchResultVM.resultList[i];
+                                    <tr>
+                                        <td class="text-right" style="width:20px;">@item.ROW_NO.ToString("#,##0")</td>
+                                        <td><a style="cursor:pointer;" onclick="gotoPrDetail('@item.ST_PR_CODE');">@item.ST_PR_CODE</a></td>
+                                        <td>@item.ST_DO_CODE</td>
+                                        <td>@item.CREATE_DATE.Value.ToShortDateString() @item.CREATE_DATE.Value.ToString("HH:mm")</td>
+                                        <td>@item.PLAN_DELIVERY_DATE.Value.ToShortDateString()</td>
+                                        <td>@item.DO_STATUS_NAME</td>
+                                        <td>
+                                            @if (item.ST_GR_CODE == null || item.ST_GR_CODE == "")
+                                            { @item.ST_GR_CODE }
+                                            else
+                                            { <a style="cursor:pointer;" onclick="gotoGrDetail('@item.ST_GR_CODE');">@item.ST_GR_CODE</a> }
+                                        </td>
+                                        <td>@item.LOCATION_CODE</td>
+                                        <td>
+                                            @if (item.DO_STATUS_CODE == "1")
+                                            {
+                                                <a onclick="gotoReceiveItem('@item.ST_DO_CODE','@item.ST_PR_CODE');" style="cursor: pointer;">ทำรับ</a><span>&nbsp;|&nbsp;</span>
+                                            }
+                                            @Html.ActionLink("พิมพ์", "RPT_ST_REPORT_EQ", "/RPT/Report"
+                                                                         , new
+                                                                         {
+                                                                             //@P_USER_NAME = Model.USER_NAME,
+                                                                             @P_ST_DO_CODE = item.ST_DO_CODE
+                                                                         }
+                                                                         , new { @class = "reportDoDialog" })
+
+                                            <div id="dialog-report-do" style="display: none">
+                                                <input class="hide" id="btnClosePopupDo" type="button" />
+                                            </div>
+                                            @*<a onclick="gotoPrint('@item.ST_DO_CODE');" style="cursor: pointer;">พิมพ์</a>*@
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                        @Html.Partial("_PaginationSearchPartial", Model.ZenPagination)
+                    </div>
+                </div>
+            }
+        }
+    </form>
+</div>
+
+
+<style>
+    .normal-font {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    tr th a {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+</style>
+
+<script>
+    function gotoClear() {
+        var url1 = '@Url.Action("Index")';
+        url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoSearch() {
+        var url1 = '@Url.Action("Search")';
+        url1 = url1.substring(0, url1.lastIndexOf("Search")).concat("Search");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoOrder(menu) {
+
+        var url1 = '@Url.Action("SearchOrderByMenu")';
+        url1 = url1.substring(0, url1.lastIndexOf("SearchOrderByMenu")).concat("SearchOrderByMenu/");
+
+        var vform = $('#form1');
+        vform.attr("action", url1.concat(menu));
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoReceiveItem(doCode, prCode) {
+        $('#doVM_MA_ST_DO_CODE').val(doCode);
+        $('#doVM_MA_ST_PR_CODE').val(prCode);
+
+        var url1 = '@Url.Action("ReceiveItem")';
+        url1 = url1.substring(0, url1.lastIndexOf("ReceiveItem")).concat("ReceiveItem/");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+
+        @*if (confirm('@ViewBag.msgConfirmReceiveItem')) {
+            var url1 = '@Url.Action("ReceiveItem")';
+            url1 = url1.substring(0, url1.lastIndexOf("ReceiveItem")).concat("ReceiveItem/");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }*@
+    }
+    function gotoGrDetail(id) {
+        var url1 = '/MAS/Gr/Detail/'.concat(id);
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+    function gotoPrDetail(prCode) {
+        var url1 = '/MAS/Pr/PrViewDetail/';
+        var vform = $('#form1');
+        vform.attr("action", url1.concat(prCode));
+        vform.attr("method", "post");
+        vform.submit();
+
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////
+
+    // Start DO Dialog //
+    $(document).on("click", "#btnClosePopupDo", function (e) {
+
+        $("#dialog-report-do").dialog('close');
+
+    });
+
+    $(document).on("click", ".reportDoDialog", function (e) {
+
+        var url = $(this).attr('href');
+        url = url.replace("/MAS", "");
+        url = url.replace("?P_ST_DO_CODE=", "/");
+        var url1 = url;
+
+        var weightDocument = ($(window).width() * 0.99);
+        var higghtDocument = ($(window).height() * 0.8);
+
+        var theDialog = $("#dialog-report-do").dialog({
+            title: 'ตัวอย่างก่อนพิมพ์',
+            autoOpen: false,
+            resizable: false,
+            height: higghtDocument,
+            width: weightDocument,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            open: function (event, ui) {
+                $(this).load(url1);
+            },
+            close: function (event, ui) {
+                $('#ifrReport').remove();
+                $(this).dialog('close');
+            },
+            buttons: [
+                 {
+                     text: "ปิด",
+                     "class": 'ClossButtonClass',
+                     click: function () {
+                         $('#ifrReport').remove();
+                         $(this).dialog('close');
+                     }
+                 }
+            ]
+        });
+
+        theDialog.dialog("open");
+        return false;
+    });
+    // End PR Dialog //
+
+    /////////////////////////////////////////////////////////////////////////
+
+</script>

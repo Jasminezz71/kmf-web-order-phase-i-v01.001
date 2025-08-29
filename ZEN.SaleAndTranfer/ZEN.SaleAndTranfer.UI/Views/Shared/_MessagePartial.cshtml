@@ -1,0 +1,40 @@
+﻿@using ZEN.SaleAndTranfer.ET;
+@model List<ZEN.SaleAndTranfer.ET.MessageET>
+
+<div @*class="container"*@ style="margin-top: 20px;">
+    @if (Model != null && Model.Count > 0)
+    {
+        var errorMessage = Model.GroupBy(s => s.MESSAGE_TYPE);
+
+        foreach (var item in errorMessage)
+        {
+            if (item.Key == "ERR")
+            {
+                <div class="alert alert-danger" role="alert">
+                    @foreach (var err in item)
+                    {
+                        <strong>@err.MESSAGE_CODE :</strong> @err.MESSAGE_TEXT_FOR_DISPLAY <br />
+                    }
+                </div>
+            }
+            else if (item.Key == "INF")
+            {
+                <div class="alert alert-success" role="alert">
+                    @foreach (var err in item)
+                    {
+                        <strong>@err.MESSAGE_CODE :</strong> @err.MESSAGE_TEXT_FOR_DISPLAY <br />
+                    }
+                </div>
+            }
+            else if (item.Key == "QST" || item.Key == "WRN")
+            {
+                <div class="alert alert-warning" role="alert">
+                    @foreach (var err in item)
+                    {
+                        <strong>@err.MESSAGE_CODE :</strong> @err.MESSAGE_TEXT_FOR_DISPLAY <br />
+                    }
+                </div>
+            }
+        }
+    }
+</div>

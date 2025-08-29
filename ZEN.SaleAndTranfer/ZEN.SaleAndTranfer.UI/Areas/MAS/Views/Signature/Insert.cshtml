@@ -1,0 +1,91 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.SignatureVM
+
+@{
+    ViewBag.Title = "Insert";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>
+        หน้าจอเพิ่มลายเซ็นต์
+    </h2>
+
+    <hr />
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+
+
+    <form id="form1" class="form-horizontal" enctype="multipart/form-data">
+        <div class="panel panel-primary">
+            <div class="panel-heading">เพิ่มลายเซ็นต์</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">*บริษัท</label>
+                    <div class="col-md-4">
+                        @if (Model != null)
+                            {
+                                if (Model.signatureVM_MA.companyList != null)
+                                {
+                        @Html.DropDownListFor(m => m.signatureVM_MA.COMPANY_CODE,
+                                        new SelectList(@Model.signatureVM_MA.companyList, "ITEM_VALUE", "ITEM_TEXT")
+                                        , new { @class = "form-control" }
+                                        )
+                                }
+                            }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">*อัพโหลดไฟล์</label>
+                    <div class="col-md-4">
+                        <input type="file" name="file" class="form-control" />
+                        <p class="help-block">* อัพโหลดได้ไม่เกิน @ViewBag.signatureUploadFileMaxSize MB</p>
+                        <p class="help-block">* อัพโหลดได้เฉพาะไฟล์ @ViewBag.signatureUploadFileType เท่านั้น </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">หมายเหตุ</label>
+                    <div class="col-md-4">
+                        @Html.TextAreaFor(m => m.signatureVM_MA.REMARK, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4">
+                        <input type="button" class="btn btn-primary" value="เพิ่มลายเซ็นต์" onclick="gotoInsert();" />
+                        <input type="button" class="btn btn-default" value="ล้างหน้าจอ" onclick="gotoClear();" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<script>
+    function gotoClear() {
+        var url1 = '@Url.Action("Insert")';
+        url1 = url1.substring(0, url1.lastIndexOf("Insert")).concat("Insert");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoInsert() {
+        var url1 = '@Url.Action("InsertSave")';
+        url1 = url1.substring(0, url1.lastIndexOf("InsertSave")).concat("InsertSave");
+
+        var message = 'ถ้าเลือกบริษัทที่เคยมีแล้ว จะทำการยกเลิกการใช้งานอันเก่า';
+        message += '\n';
+        message += 'ต้องการบันทึกใช่หรือไม่';
+        if (confirm(message)) {
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        return false;
+    }
+</script>

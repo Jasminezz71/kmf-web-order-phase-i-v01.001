@@ -1,0 +1,436 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.ItemStockVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>
+        หน้าจอบันทึกสินค้าคงเหลือ
+    </h2>
+
+    <hr />
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+
+    <form class="form-horizontal" id="form1">
+        <div class="panel panel-primary">
+            <div class="panel-heading">กรอกข้อมูล</div>
+            @* -------------------------------------- Panel Header ----------------------------------------*@
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-md-3 control-label">แบรนด์ :</label>
+                    @Html.HiddenFor(m => m.itemStockVM_MA.BRAND_CODE)
+                    <p class="col-md-9 form-control-static">@Model.itemStockVM_MA.BRAND_CODE</p>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">สาขา :</label>
+                    @Html.HiddenFor(m => m.itemStockVM_MA.BRANCH_CODE)
+                    <p class="col-md-9 form-control-static">@Model.itemStockVM_MA.BRANCH_NAME</p>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">*บันทึกสินค้าคงเหลือ ณ เดือน :</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.itemStockVM_MA.ITEM_PICK_DATE, "{0:MM/yyyy}",
+                            new
+                            {
+                                @class = "form-control datepickerMonth",
+                                @onkeypress = "return false;"
+                            })
+                    </div>
+                </div>
+                <div class="form-group hide">
+                    <label class="col-md-3 control-label">สินค้าจากระบบ :</label>
+                    <div class="col-md-4">
+                        @if (Model != null)
+                        {
+                            if (Model.itemStockVM_MA.appSystemList != null)
+                            {
+                                @Html.DropDownListFor(m => m.itemStockVM_MA.APP_ID,
+                                        new SelectList(@Model.itemStockVM_MA.appSystemList, "ITEM_VALUE", "ITEM_TEXT")
+                                        , new { @class = "form-control" }
+                                        )
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-4">
+                        <input type="button" class="btn btn-primary" value="เปิดการ์ด" onclick="gotoOpenCard();" />
+                    </div>
+                </div>
+            </div>
+
+            @* ------------------------------------- Panel Open Card ------------------------------------- *@
+            @if (Model.itemStockVM_MA != null)
+            {
+                if (Model.itemStockVM_MA.itemStockList != null)
+                {
+                    if (Model.itemStockVM_MA.itemStockList.Count > 0)
+                    {
+                        <input type="hidden" id="totalCount" value="@Model.itemStockVM_MA.itemStockList.Count" />
+                        <hr />
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.ActionLink("ออกรายงาน", "RPT_STOCKCARD", "/RPT/Report"
+                                    , new { @P_ID = "RPT_STOCKCARD_GETITEM" }
+                                    , new { @class = "reportStockDialog btn btn-success pull-right" })
+                                    @*<input type="button" class="btn btn-success pull-right" value="ออกรายงาน" onclick="gotoSearch();" />*@
+
+
+                                    <div id="dialog-report-stock" style="display: none">
+                                        <input class="hide" id="btnClosePopupStock" type="button" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-5">
+                                    <span style="text-align:left;">จำนวน Item ทั้งหมด @Model.itemStockVM_MA.itemStockList.Count รายการ</span>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input id="minutes" type="hidden" />
+                                    <input id="seconds" type="hidden" />
+                                    <span id="warningSession" style="text-align:right; color:red;" class="hide">**ต้องทำการบันทึกข้อมูลภายในเวลา <span id="sessionTime"></span> น. มิเช่นนั้นจะต้อง Login ใหม่ และข้อมูลที่เคยเลือกไว้จะหายไป</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="table table-responsive">
+                                    <table class="table table-hover">
+                                        <tr class="success">
+                                            <th>ลำดับ.</th>
+                                            <th>แบรนด์</th>
+                                            <th>สาขา</th>
+                                            <th>สถานที่จัดเก็บ</th>
+                                            <th>รหัสสินค้า</th>
+                                            <th>ชื่อสินค้า</th>
+                                            <th>กรอกจำนวนที่เหลือในร้าน</th>
+                                            <th>หน่วย</th>
+                                            @*<th>ระบบ</th>*@
+                                        </tr>
+                                        @for (int i = 0; i < Model.itemStockVM_MA.itemStockList.Count; i++)
+                                        {
+                                            int editFlag = 0;
+                                            if (Model.itemStockVM_MA.itemStockList[i].CAN_EDIT && Model.itemStockVM_MA.itemStockList[i].FIRST_EDIT) { editFlag = 1; }
+                                            else if (Model.itemStockVM_MA.itemStockList[i].CAN_EDIT && !Model.itemStockVM_MA.itemStockList[i].FIRST_EDIT) { editFlag = 2; }
+                                            else { editFlag = 3; }
+
+                                            @Html.HiddenFor(m => m.itemStockVM_MA.itemStockList[i].ROW_NO)
+                                            @Html.HiddenFor(m => m.itemStockVM_MA.itemStockList[i].BRAND_CODE)
+                                            @Html.HiddenFor(m => m.itemStockVM_MA.itemStockList[i].BRANCH_CODE)
+                                            @Html.HiddenFor(m => m.itemStockVM_MA.itemStockList[i].ITEM_CODE)
+                                            @Html.HiddenFor(m => m.itemStockVM_MA.itemStockList[i].ITEM_NAME)
+                                            @Html.HiddenFor(m => m.itemStockVM_MA.itemStockList[i].CAN_EDIT)
+                                            @Html.HiddenFor(m => m.itemStockVM_MA.itemStockList[i].REMAIN_UOM)
+                                            @Html.HiddenFor(m => m.itemStockVM_MA.itemStockList[i].APP_NAME)
+                                            <tr>
+                                                <td style="text-align:right;">@Model.itemStockVM_MA.itemStockList[i].ROW_NO</td>
+                                                <td>@Model.itemStockVM_MA.itemStockList[i].BRAND_CODE</td>
+                                                <td>@Model.itemStockVM_MA.itemStockList[i].BRANCH_CODE</td>
+                                                <td>
+                                                    @if (editFlag == 1 || editFlag == 2)
+                                                    {
+                                                        @Html.TextBoxFor(m => m.itemStockVM_MA.itemStockList[i].LOCATION, new { @class = "form-control" })
+                                                    }
+                                                    else if (editFlag == 3)
+                                                    {
+                                                        @Html.TextBoxFor(m => m.itemStockVM_MA.itemStockList[i].LOCATION, new { @class = "form-control", @disabled = "disabled" })
+                                                    }
+                                                </td>
+                                                <td>@Model.itemStockVM_MA.itemStockList[i].ITEM_CODE</td>
+                                                <td>@Model.itemStockVM_MA.itemStockList[i].ITEM_NAME</td>
+                                                <td>
+                                                    @if (editFlag == 1)
+                                                    {
+                                                        string id = "itemStockVM_MA_itemStockList_" + @i + "__REMAIN_QTY";
+                                                        <input class="form-control no-copy-paste numberOnlyCanZero"
+                                                               id="@id"
+                                                               name="itemStockVM_MA.itemStockList[@i].REMAIN_QTY"
+                                                               type="text" value="">
+                                                    }
+                                                    else if (editFlag == 2)
+                                                    {
+                                                        @Html.TextBoxFor(m => m.itemStockVM_MA.itemStockList[i].REMAIN_QTY, new { @class = "form-control no-copy-paste numberOnlyCanZero" })
+                                                    }
+                                                    else if (editFlag == 3)
+                                                    {
+                                                        @Html.TextBoxFor(m => m.itemStockVM_MA.itemStockList[i].REMAIN_QTY, new { @class = "form-control", @disabled = "disabled" })
+                                                    }
+                                                </td>
+                                                <td>@Model.itemStockVM_MA.itemStockList[i].REMAIN_UOM</td>
+                                                @*   <td>@Model.itemStockVM_MA.itemStockList[i].APP_NAME</td>*@
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                                @*@Html.Partial("_PaginationSearchPartial", Model.ZenPagination)*@
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @if (Model.itemStockVM_MA.itemStockList[0].CAN_EDIT)
+                                    {
+                                        <input type="button" class="btn btn-primary pull-right" value="บันทึก" onclick="gotoSaveCard();" />
+                                        <input id="btnSaveCard" type="button" class="btn btn-primary pull-right hide" value="บันทึก" onclick="gotoSaveCardNoConfirm();" />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </form>
+</div>
+
+@* Function ทั่วไป *@
+<script>
+    function gotoOpenCard() {
+        var url1 = '@Url.Action("InventoryStockGetItem")';
+        url1 = url1.substring(0, url1.lastIndexOf("InventoryStockGetItem")).concat("InventoryStockGetItem");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+    function gotoSaveCard() {
+        var checkValue = checkTxtRemainQty();
+        if (checkValue) {
+            if (confirm('ท่านยังกรอกจำนวนที่เหลือในร้านไม่ครบ ต้องการบันทึกใช่หรือไม่')) {
+                var url1 = '@Url.Action("InventoryStockSave")';
+                url1 = url1.substring(0, url1.lastIndexOf("InventoryStockSave")).concat("InventoryStockSave");
+
+                var vform = $('#form1');
+                vform.attr("action", url1);
+                vform.attr("method", "post");
+                vform.submit();
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            if (confirm('@ViewBag.msgConfirmSave')) {
+                var url1 = '@Url.Action("InventoryStockSave")';
+                url1 = url1.substring(0, url1.lastIndexOf("InventoryStockSave")).concat("InventoryStockSave");
+
+                var vform = $('#form1');
+                vform.attr("action", url1);
+                vform.attr("method", "post");
+                vform.submit();
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    function gotoSaveCardNoConfirm() {
+        var url1 = '@Url.Action("InventoryStockSave")';
+        url1 = url1.substring(0, url1.lastIndexOf("InventoryStockSave")).concat("InventoryStockSave");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+    function checkTxtRemainQty() {
+        var totalRow = parseInt($('#totalCount').val());
+        var checkValue = false;
+        for (var i = 0; i < totalRow; i++) {
+            var idTxtBox = 'itemStockVM_MA_itemStockList_' + i + '__REMAIN_QTY';
+            if ($('#' + idTxtBox).val() == '' || $('#' + idTxtBox).val() == null) {
+                checkValue = true;
+                return checkValue;
+            }
+        }
+        return checkValue;
+    }
+</script>
+
+@* Function แสดง Report *@
+<script>
+
+    /////////////////////////////////////////////////////////////////////////
+
+    // Start PR Dialog //
+    $(document).on("click", "#btnClosePopupStock", function (e) {
+
+        $("#dialog-report-stock").dialog('close');
+
+    });
+
+    $(document).on("click", ".reportStockDialog", function (e) {
+
+        var brandCode = $('#itemStockVM_MA_BRAND_CODE').val();
+        var branchCode = $('#itemStockVM_MA_BRANCH_CODE').val();
+        var itemPickDate = $('#itemStockVM_MA_ITEM_PICK_DATE').val();
+        var appID = $('#itemStockVM_MA_APP_ID').val();
+
+        //yyyy-mm-dd
+        if (itemPickDate != "") {
+            var splitDate = itemPickDate.split('/');
+
+            var firstDay = new Date(parseInt(splitDate[1]), parseInt(splitDate[0]), 1);;
+
+            var lastDay = new Date(parseInt(splitDate[1]), parseInt(splitDate[0]), 0);
+
+            var newItemPickDate = splitDate[1] + '-' + splitDate[0] + '-' + lastDay.getDate();
+
+            itemPickDate = newItemPickDate;
+        }
+
+        var rptPrm = "";
+        rptPrm += brandCode + '|';
+        rptPrm += branchCode + '|';
+        rptPrm += itemPickDate + '|';
+        rptPrm += appID;
+
+        var url = $(this).attr('href');
+        url = url.replace("/MAS", "");
+        url = url.replace("?P_ID=", "/" + rptPrm);
+
+        var url1 = url;
+
+        var weightdocument = ($(window).width() * 0.99);
+        var higghtdocument = ($(window).height() * 0.8);
+
+        var thedialog = $("#dialog-report-stock").dialog({
+            title: 'ตัวอย่างก่อนพิมพ์',
+            autoopen: false,
+            resizable: false,
+            height: higghtdocument,
+            width: weightdocument,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            open: function (event, ui) {
+                $(this).load(url1);
+            },
+            close: function (event, ui) {
+                $('#ifrreport').remove();
+                $(this).dialog('close');
+            },
+            buttons: [
+                 {
+                     text: "ปิด",
+                     "class": 'clossbuttonclass',
+                     click: function () {
+                         $('#ifrreport').remove();
+                         $(this).dialog('close');
+                     }
+                 }
+            ]
+        });
+
+        thedialog.dialog("open");
+        return false;
+    });
+    // End PR Dialog //
+
+</script>
+
+@* Function Countdown Save Card *@
+<script>
+    /////////////////////////////////////////////////////////////////////////
+    ///////////////////////// Show Timeout //////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////
+    var myTime;
+    var now = new Date();
+    var nowHour = now.getHours();
+    var nowMinute = now.getMinutes();
+
+    var sessionHour = nowHour;
+    var sessionMinute = nowMinute + parseInt('@ViewBag.sessionTimeout'); // เอานาทีปัจจุบันบวกเพิ่มกับ นาทีที่เราตั้งค่าไว้
+    if (sessionMinute >= 60) {
+        sessionHour = sessionHour + 1;
+        sessionMinute = sessionMinute - 60;
+    }
+
+    var sessionTime = sessionHour + ":" + sessionMinute;
+    if (sessionMinute >= 0 && sessionMinute <= 9) {
+        sessionTime = sessionHour + ":0" + sessionMinute;
+    }
+    var showSessionTimeout = '@ViewBag.showSessionTimeout';
+
+    if (showSessionTimeout == '1') {
+        $('#warningSession').removeClass('hide');
+        $('#sessionTime').text(sessionTime);
+    }
+    else {
+        $('#warningSession').addClass('hide');
+    }
+
+    var sessionTimeAlert = parseFloat('@ViewBag.sessionTimeoutAlert');
+
+    $(document).ready(function () {
+        if (showSessionTimeout == '1') {
+            $('#warningSession').removeClass('hide');
+            $('#sessionTime').text(sessionTime);
+            var mins = sessionTimeAlert;
+            // calculate the seconds (don't change this! unless time progresses at a different speed for you...)
+            var secs = mins * 60;
+
+            document.getElementById("minutes").value = mins;
+            document.getElementById("seconds").value = secs;
+
+            countdown();
+
+            function countdown() {
+                myTime = setTimeout(function () {
+                    Decrement();
+                }, 1000);
+            }
+
+            function Decrement() {
+                if (document.getElementById) {
+                    minutes = document.getElementById("minutes");
+                    seconds = document.getElementById("seconds");
+                    // if less than a minute remaining
+                    if (seconds < 59) {
+                        seconds.value = secs;
+                    } else {
+                        minutes.value = getminutes();
+                        seconds.value = getseconds();
+                    }
+                    secs--;
+                    document.getElementById("minutes").value = minutes.value;
+                    document.getElementById("seconds").value = seconds.value;
+
+                    if (minutes.value == 0 && seconds.value == 0) {
+                        var timeoutMassage = '@ViewBag.sessionTimeoutMessage'.replace('{0}', sessionTime);
+                        if (window.confirm(timeoutMassage)) {
+                            $('#btnSaveCard').click();
+                        } else {
+                            return false;
+                        }
+                        return;
+                    } else {
+                        myTime = setTimeout(function () {
+                            Decrement();
+                        }, 1000);
+                    }
+                }
+            }
+
+            function getminutes() {
+                // minutes is seconds divided by 60, rounded down
+                mins = Math.floor(secs / 60);
+                return mins;
+            }
+
+            function getseconds() {
+                // take mins remaining (as seconds) away from total seconds remaining
+                return secs - Math.round(mins * 60);
+            }
+        }
+    })
+
+    /////////////////////////////////////////////////////////////////////////
+    ///////////////////////// Show Timeout //////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////
+
+</script>

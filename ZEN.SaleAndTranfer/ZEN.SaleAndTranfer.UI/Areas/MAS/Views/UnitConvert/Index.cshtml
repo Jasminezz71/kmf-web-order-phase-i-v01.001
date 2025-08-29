@@ -1,0 +1,241 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.UnitConvertVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>
+        หน้าจอแสดงหน่วยที่ยังไม่ได้แปลงหน่วย
+    </h2>
+
+    <hr />
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="col-sm-12">
+                <span><b>ขั้นตอนการ ดาวน์โหลด และ อัพโหลด</b></span>
+            </div>
+            <div class="col-sm-12">
+                <span style="padding-left: 20px;">1. ให้เลือกเงื่อนไขการค้นหาหรือค้นหาทั้งหมดแล้วคลิกปุ่ม ค้นหา เพื่อแสดงข้อมูลหน่วยที่ยังไม่ถูกเปลี่ยนท้ังหมด</span>
+                <br />
+                <span style="padding-left: 20px;">2. แก้ไขข้อมูลในไฟล์ Excel ให้ถูกต้อง โดย</span>
+                <br />
+                <span style="padding-left: 60px;">2.1. ในช่อง 'หน่วยนับที่ต้องการเปลี่ยน' ให้กรอกหน่วยที่ต้องการเปลี่ยน หากไม่ต้องการเปลี่ยนให้กรอกให้เหมือน 'หน่วยนับ'</span>
+                <br />
+                <span style="padding-left: 60px;">2.2. ในช่อง 'ตัวคูณ' , 'ตัวหาร' และ 'ค่าคงที่' นั้นคือให้กรอกสูตรจาก 'หน่วยนับ' มาเป็น 'หน่วยนับที่ต้องการเปลี่ยน'</span>
+                <br />
+                <span style="padding-left: 20px;">3. เมื่อแก้ไขไฟล์เสร็จเรียบร้อยแล้ว ให้เลือกไฟล์ Excel ที่ต้องการจะอัพโหลด</span>
+                <br />
+                <span style="padding-left: 20px;">4. คลิกปุ่ม "อัพโหลดไฟล์"</span>
+                <br />
+                <span style="padding-left: 20px;">5. เมื่ออัพโหลดสำเร็จ ระบบจะแสดงข้อความ บันทึกข้อมูลสำเร็จ</span>
+                <br />
+                <span style="padding-left: 20px;">6. จบกระบวนการ</span>
+            </div>
+        </div>
+    </div>
+
+    <form class="form-horizontal" id="form1" enctype="multipart/form-data">
+        <div class="panel panel-primary">
+            <div class="panel-heading">ระบุเงื่อนไขการค้นหา</div>
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">แบรนด์</label>
+                        <div class="col-md-4">
+                            @if (Model != null)
+                            {
+                                if (Model.unitConvertSearchCriteriaVM.brandList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.unitConvertSearchCriteriaVM.BRAND_CODE,
+                                    new SelectList(@Model.unitConvertSearchCriteriaVM.brandList, "ITEM_VALUE", "ITEM_TEXT")
+                                    , new { @class = "form-control", @onchange = "gotoChangeBrand()" }
+                                    )
+                                }
+                            }
+                        </div>
+                        <label class="col-md-2 control-label">สาขา</label>
+                        <div class="col-md-4">
+                            @if (Model != null)
+                            {
+                                if (Model.unitConvertSearchCriteriaVM.branchList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.unitConvertSearchCriteriaVM.BRANCH_CODE,
+                                    new SelectList(@Model.unitConvertSearchCriteriaVM.branchList, "ITEM_VALUE", "ITEM_TEXT")
+                                    , new { @class = "form-control" }
+                                    )
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-4">
+                            <input type="button" class="btn btn-primary" value="ค้นหา" onclick="gotoSearch();" />
+                            &nbsp;
+                            <input type="button" class="btn btn-default" value="ยกเลิกเงื่อนไขการค้นหา" onclick="gotoClear();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.unitConvertSearchResultVM != null)
+        {
+            if (Model.unitConvertSearchResultVM.resultList != null)
+            {
+                if (Model.unitConvertSearchResultVM.resultList.Count > 0)
+                {
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input class="btn btn-success pull-right" value="ออกรายงาน" onclick="gotoExport()" />
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            ผลการค้นหา
+                            <span class="pull-right">ผลการค้นหา : @Model.unitConvertSearchResultVM.countAll.ToString("#,###") รายการ</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table table-responsive">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th class="text-right">ลำดับ</th>
+                                        <th>แบรนด์</th>
+                                        <th>สาขา</th>
+                                        <th>รหัสสินค้า</th>
+                                        <th>ชื่อสินค้า</th>
+                                        <th>หน่วยในระบบ</th>
+                                        <th>หน่วยนับ</th>
+                                    </tr>
+                                    @for (int i = 0; i < Model.unitConvertSearchResultVM.countAll; i++)
+                                    {
+                                        var item = Model.unitConvertSearchResultVM.resultList[i];
+                                    <tr>
+                                        <td class="text-right" style="width: 20px; vertical-align: middle;">@item.ROW_NO.ToString("#,##0")</td>
+                                        <td>@item.BRAND_CODE</td>
+                                        <td>@item.BRANCH_CODE</td>
+                                        <td>@item.ITEM_CODE</td>
+                                        <td>@item.ITEM_NAME</td>
+                                        <td>@item.UNIT_FROM</td>
+                                        <td>@item.UNIT_TO</td>
+                                    </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+
+        <div class="panel panel-info">
+            <div class="panel-heading">อัพโหลดไฟล์การเปลี่ยนหน่วย</div>
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            *อัพโหลดไฟล์ :
+                        </div>
+                        <div class="col-sm-10">
+                            <input type="file" name="file" class="form-control" />
+                            <p class="help-block">* อัพโหลดได้ไม่เกิน @ViewBag.uploadFileMaxSize MB</p>
+                            <p class="help-block">* อัพโหลดได้เฉพาะไฟล์ @ViewBag.uploadFileType เท่านั้น </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-10 col-md-push-2">
+                            <input type="button" class="btn btn-primary" value="อัพโหลดไฟล์" onclick="gotoImport();" />
+                            @*<input type="button" class="btn btn-default" value="ล้างหน้าจอ" onclick="gotoClear();" />*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        var ExportFileFlag = '@ViewBag.ExportFileFlag';
+        if (ExportFileFlag == '1') {
+            var url1 = '@Url.Action("ExportFile")';
+            url1 = url1.substring(0, url1.lastIndexOf("ExportFile")).concat("ExportFile");
+
+            window.location = url1;
+        }
+        var brandListViewFlag = '@Model.unitConvertSearchCriteriaVM.BRAND_CODE_VIEW_FLAG';
+        if (brandListViewFlag == '1') {
+            $('#unitConvertSearchCriteriaVM_BRAND_CODE').prop('disabled', '');
+        }
+        else {
+            $('#unitConvertSearchCriteriaVM_BRAND_CODE').prop('disabled', '');
+        }
+        var branchListViewFlag = '@Model.unitConvertSearchCriteriaVM.BRANCH_CODE_VIEW_FLAG';
+        if (branchListViewFlag == '1') {
+            $('#unitConvertSearchCriteriaVM_BRANCH_CODE').prop('disabled', '');
+        }
+        else {
+            $('#unitConvertSearchCriteriaVM_BRANCH_CODE').prop('disabled', 'disabled');
+        }
+    });
+
+    function gotoSearch() {
+        var url1 = '@Url.Action("Search")';
+        url1 = url1.substring(0, url1.lastIndexOf("Search")).concat("Search");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoClear() {
+        var url1 = '@Url.Action("Index")';
+        url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoChangeBrand() {
+        var url1 = '@Url.Action("OnChangeBrand")';
+        url1 = url1.substring(0, url1.lastIndexOf("OnChangeBrand")).concat("OnChangeBrand");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+    
+    function gotoExport() {
+        var url1 = '@Url.Action("ExportFile")';
+        url1 = url1.substring(0, url1.lastIndexOf("ExportFile")).concat("ExportFile");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoImport() {
+        var url1 = '@Url.Action("ImportFile")';
+        url1 = url1.substring(0, url1.lastIndexOf("ImportFile")).concat("ImportFile");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+</script>

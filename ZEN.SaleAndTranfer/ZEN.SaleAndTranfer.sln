@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEN.SaleAndTranfer.UI", "ZEN.SaleAndTranfer.UI\ZEN.SaleAndTranfer.UI.csproj", "{BDB99938-79F2-4D0F-B8EA-D979A5A2BF50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEN.SaleAndTranfer.DC", "ZEN.SaleAndTranfer.DC\ZEN.SaleAndTranfer.DC.csproj", "{A51CC911-13A6-40B4-861B-12278C2B0EAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEN.SaleAndTranfer.BC", "ZEN.SaleAndTranfer.BC\ZEN.SaleAndTranfer.BC.csproj", "{E647C244-A3A2-43A5-83D7-2E1A5F2887EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEN.SaleAndTranfer.ET", "ZEN.SaleAndTranfer.ET\ZEN.SaleAndTranfer.ET.csproj", "{2489CC8D-D9D5-4205-A875-276C1D995427}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEN.SaleAndTranfer.VM", "ZEN.SaleAndTranfer.VM\ZEN.SaleAndTranfer.VM.csproj", "{83A0955D-9782-43A4-92B3-7FF2B45CB9A2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BDB99938-79F2-4D0F-B8EA-D979A5A2BF50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDB99938-79F2-4D0F-B8EA-D979A5A2BF50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDB99938-79F2-4D0F-B8EA-D979A5A2BF50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDB99938-79F2-4D0F-B8EA-D979A5A2BF50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A51CC911-13A6-40B4-861B-12278C2B0EAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A51CC911-13A6-40B4-861B-12278C2B0EAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A51CC911-13A6-40B4-861B-12278C2B0EAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A51CC911-13A6-40B4-861B-12278C2B0EAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E647C244-A3A2-43A5-83D7-2E1A5F2887EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E647C244-A3A2-43A5-83D7-2E1A5F2887EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E647C244-A3A2-43A5-83D7-2E1A5F2887EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E647C244-A3A2-43A5-83D7-2E1A5F2887EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2489CC8D-D9D5-4205-A875-276C1D995427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2489CC8D-D9D5-4205-A875-276C1D995427}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2489CC8D-D9D5-4205-A875-276C1D995427}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2489CC8D-D9D5-4205-A875-276C1D995427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83A0955D-9782-43A4-92B3-7FF2B45CB9A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83A0955D-9782-43A4-92B3-7FF2B45CB9A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83A0955D-9782-43A4-92B3-7FF2B45CB9A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83A0955D-9782-43A4-92B3-7FF2B45CB9A2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

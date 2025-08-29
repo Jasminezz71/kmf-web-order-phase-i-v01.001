@@ -1,0 +1,169 @@
+﻿@using ZEN.SaleAndTranfer.UI.Util
+@model ZEN.SaleAndTranfer.UI.VM2.Prq.SearchItemVM2
+
+@if (Model.SearchResult != null && Model.SearchResult.Count > 0)
+{
+    if (!Model.Pet.HideResultCountFlag)
+    {
+        <div class="alert alert-success" role="alert">พบ @Model.SearchCountAll รายการ</div>
+    }
+    <div class="row" style="padding:0px 15px 0px 15px">
+        @foreach (var ret in Model.SearchResult)
+        {
+            var price = ret.UnitPrice != null && ret.UnitPrice.HasValue ? ret.UnitPrice.Value.ToString("N2") : "N/A";
+            //var price = "N/A";
+            var formID = string.Format("formAddItemToBasket{0}", ret.StMapWhItemID);
+            string imgPath = "../../images/Item/" + @ret.ItemCode + ".jpg";
+            
+
+            <div class="col-xs-6 col-md-3" style="padding: 0px;">
+                <div class="thumbnail">
+
+                    <div class="text-center">
+                        <img src=@imgPath 
+                             alt="..." 
+                             style="width: 100px; height: 100px;"
+                             onerror="this.onerror=null; this.src='../../images/Item/KMF-0000.jpg';" />
+                    </div>
+                    <div class="caption">
+                        <div style="font-size: medium; font-weight: bold; overflow: hidden; text-overflow: ellipsis; max-height: 40px; min-height: 40px; ">
+                            @ret.ItemName
+                        </div>
+                        <p><span style="font-size: smaller;">รหัสสินค้า @ret.ItemCode</span></p>
+                        <div class="input-group input-group-sm">
+                            <select id="retRequestUomCode" name="ret.RequestUomCode" class="form-control" onchange="setPrice('@ret.ItemCode',this,'@formID')">
+
+                                @*@{
+                                        var j = 0;
+                                    }
+                                    @for (int i = 0; i < ret.UOMList.Split('#').Length; i++)
+                                    {
+
+                                        if (ret.PriceList != null)
+                                        {
+                                            if (@ret.PriceList.Contains(ret.UOMList.Split('#')[i]))
+                                            {
+                                                if (ret.PriceList.Contains('#'))
+                                                {
+                                                    <option value="@ret.PriceList.Split('#')[j].Split('$')[1]">@ret.UOMList.Split('#')[i]</option>
+                                                    j++;
+                                                }
+                                                else
+                                                {
+                                                    <option value="@ret.PriceList.Split('$')[1]">@ret.UOMList.Split('#')[j]</option>
+                                                    j++;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <option value="">@ret.UOMList.Split('#')[i]</option>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <option value="">@ret.UOMList.Split('#')[i]</option>
+                                        }
+                                    }*@
+
+
+
+                                @for (int i = 0; i < ret.PriceList.Split('#').Length; i++)
+                                {  
+                                    <option value="@ret.PriceList.Split('#')[i].Split('$')[1]">@ret.PriceList.Split('#')[i].Split('$')[0]</option>                        
+                              
+                                }
+                            </select>
+
+                        </div>
+                        <p>
+                            @if (ret.PriceList != null)
+                            {
+                                <span id="@ret.ItemCode" style="font-size: medium; font-weight: bold; color: red;">@ret.PriceList.Split('#')[0].Split('$')[1] &#3647;</span>
+                                //@ret.UnitPrice = ret.PriceList.Split('#')[0].Split('$')[1];
+                                ret.UnitPrice = Convert.ToDecimal(ret.PriceList.Split('#')[0].Split('$')[1]);
+                                ret.RequestUomCode = ret.PriceList.Split('#')[0].Split('$')[0];
+                            }
+                            else
+                            {
+                                <span id="@ret.ItemCode" style="font-size: medium; font-weight: bold; color: red;">N/A</span>
+
+                            }
+
+                            @*<br /><span id="txtRequestUom" style="font-size: smaller;">@string.Format("ราคาต่อ{0}", ret.RequestUomCode)</span>*@
+                        </p>
+                        <form class="form-inline" id="@formID" biz-key="@ret.StMapWhItemID" onloadeddata="alert('1')">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" id="StMapWhItemID" name="StMapWhItemID" value="@ret.StMapWhItemID" />
+                            <input type="hidden" id="ItemCode" name="ItemCode" value="@ret.ItemCode" />
+                            <input type="hidden" id="RequestUomCode" name="RequestUomCode" value="@ret.RequestUomCode" />
+                            <input type="hidden" id="ItemName" name="ItemName" value="@ret.ItemName" />
+                            <input type="hidden" id="UnitPrice" name="UnitPrice" value="@ret.UnitPrice" />
+                            <div class="input-group input-group-sm">
+                                <input type="number" class="form-control text-right" min="1" id="OrderQty" name="OrderQty" value="@ret.OrderQty" search-result-key="@ret.StMapWhItemID" />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-danger" aria-label="Left Align" onclick="return addItemToBasket('@formID');">
+                                        <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                                        เพิ่ม +
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row" style="padding:0px 15px 15px 15px; text-align: center;">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li>
+                    <a onclick="return searchItem('@Model.Pet.FormID',1,'@Model.Pet.DivSearchResultID');" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                @{
+                    var pageAmt = PagingHelper.GetPageAmount(Model.SearchCountAll, Model.Pet.PageSize);
+                }
+                @for (var i = 1; i <= pageAmt; i++)
+                {
+                    var activePage = i == Model.Pet.CurrentPageId ? "active" : string.Empty;
+                    <li class="@activePage"><a onclick="return searchItem('@Model.Pet.FormID',@i,'@Model.Pet.DivSearchResultID');">@i</a></li>
+                }
+                <li>
+                    <a onclick="return searchItem('@Model.Pet.FormID', @pageAmt,'@Model.Pet.DivSearchResultID');" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">ไม่พบข้อมูล</div>
+}
+
+<script>
+
+
+
+    function setPrice(name, selectObject, formID) {
+        var value = selectObject.value;
+        var txtUOM = selectObject.selectedOptions[0].innerText;
+        var number = Number(value.replace(/[^0-9.-]+/g, ""));
+        // alert(number);
+        //$("input[id=UnitPrice]").val(number)
+        $('#' + formID + ' input[id=UnitPrice]').val(number);
+        //$("input[id=RequestUomCode]").val(txtUOM)
+        $('#' + formID + ' input[id=RequestUomCode]').val(txtUOM);
+        $('#' + name).html(value + " &#3647;");
+        //alert($('#' + formID + ' #txtRequestUom').html());
+
+        //$('#UnitPrice').attr("value", value);
+        //$('#UnitPrice').val(value);
+        $('#' + name).val(value);
+        $('#' + name).html(value + " &#3647;");
+    }
+
+
+</script>

@@ -1,0 +1,104 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.DoVM
+
+<div class="col-md-6" style="font-size:12px">
+    <h5>ให้คะแนนความพึงพอใจผู้ส่งสินค้า</h5>
+    <hr />
+    @if (Model != null && Model.complainRETs != null && Model.complainRETs.Count > 0)
+    {
+        var radioID = string.Empty;
+        var radioName = string.Empty;
+        var selectedResultHddID = string.Empty;
+        for (int indexTopic = 0; indexTopic < Model.complainRETs.Count; indexTopic++)
+        {
+            <div class="form-horizontal col-sm-11 col-sm-offset-1">
+                <div class="form-group">
+                    @Model.complainRETs[indexTopic].COMPLAIN_DESCRIPTION
+
+                    @Html.HiddenFor(m => Model.complainRETs[indexTopic].COMPLAIN_ID)
+                    @Html.HiddenFor(m => Model.complainRETs[indexTopic].COMPLAIN_DESCRIPTION)
+                    @Html.HiddenFor(m => Model.complainRETs[indexTopic].SELECTED_RESULT_ID)
+
+                    @*@Html.HiddenFor(m => Model.complainRETs[indexTopic].COMPLAIN_TYPE)
+                        @Html.HiddenFor(m => Model.complainRETs[indexTopic].ORDER_DISPLAY)*@
+
+                    <div class="col-sm-12">
+
+                        @if (Model.complainRETs[indexTopic].Childs != null && Model.complainRETs[indexTopic].Childs.Count > 0)
+                        {
+                            for (int indexDet = 0; indexDet < Model.complainRETs[indexTopic].Childs.Count; indexDet++)
+                            {
+                                radioID = string.Format("complainRETs_{0}__Childs_{1}__RESULT_ID", indexTopic, indexDet);
+                                //radioName = string.Format("complainRETs[{0}].Childs[{1}].RESULT_ID", indexTopic, indexDet);
+                                radioName = Model.complainRETs[indexTopic].COMPLAIN_DESCRIPTION;
+                                selectedResultHddID = string.Format("complainRETs_{0}__Childs_{1}__SELECTED_RESULT_ID", indexTopic, indexDet);
+
+                                @Html.HiddenFor(m => Model.complainRETs[indexTopic].Childs[indexDet].GR_COMPLAIN_ID)
+
+                                @*@Html.RadioButtonFor(m => Model.complainRETs[indexTopic].Childs[indexDet].RESULT_ID, Model.complainRETs[indexTopic].Childs[indexDet].RESULT_ID)*@
+
+                                if (Model.complainRETs[indexTopic].Childs[indexDet].GR_COMPLAIN_ID > 0)
+                                {
+                                    @Html.HiddenFor(m => Model.complainRETs[indexTopic].Childs[indexDet].RESULT_ID)
+                                    <div class="col-sm-3 col-sm-offset-1 radio">
+                                        <label>
+                                            <input type="radio"
+                                                   name="@radioName"
+                                                   id="@radioID"
+                                                   onchange="selectResultID_onchange(@Model.complainRETs[indexTopic].Childs[indexDet].RESULT_ID, @indexTopic, this);"
+                                                   value="@Model.complainRETs[indexTopic].Childs[indexDet].RESULT_ID" checked>
+                                            @Model.complainRETs[indexTopic].Childs[indexDet].RESULT_DESCRIPTION_MAS
+                                            @Html.HiddenFor(m => Model.complainRETs[indexTopic].Childs[indexDet].RESULT_DESCRIPTION_MAS)
+                                        </label>
+                                    </div>
+                                }
+                                else
+                                {
+                                    @Html.HiddenFor(m => Model.complainRETs[indexTopic].Childs[indexDet].RESULT_ID)
+                                    <div class="col-sm-3 col-sm-offset-1 radio">
+                                        <label>
+                                            <input type="radio"
+                                                   name="@radioName"
+                                                   id="@radioID"
+                                                   onchange="selectResultID_onchange(@Model.complainRETs[indexTopic].Childs[indexDet].RESULT_ID, @indexTopic, this);"
+                                                   value="@Model.complainRETs[indexTopic].Childs[indexDet].RESULT_ID">
+                                            @Model.complainRETs[indexTopic].Childs[indexDet].RESULT_DESCRIPTION_MAS
+                                            @Html.HiddenFor(m => Model.complainRETs[indexTopic].Childs[indexDet].RESULT_DESCRIPTION_MAS)
+                                        </label>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+</div>
+
+
+
+<script type="text/javascript">
+    function selectResultID_onchange(resultID, complainID, sender) {
+        //alert(sender.name);
+        //var n1 = 'input[name=' + sender.name + "]";
+        //// หา name ที่ = sender.name แล้ว set zero
+        
+        //$(n1).each(function( index ) {
+        //    $(this).prop("value", 0);
+        //});
+        
+
+        var selectControlID = "#complainRETs_{0}__SELECTED_RESULT_ID"; 
+        selectControlID = selectControlID.replace("{0}",complainID);
+
+        //alert(selectControlID);
+
+        //alert(sender.checked);
+
+        if (sender.checked) {
+            $(selectControlID).prop("value",resultID);   
+            //alert($(selectControlID).prop("value"));
+        }
+    }
+</script>

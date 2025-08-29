@@ -1,0 +1,121 @@
+﻿@model ZEN.SaleAndTranfer.VM.ADMIN.BatchVM
+@{
+    ViewBag.Title = "SaesTranTOERP";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>
+        หน้าจอ Export Sale Translation to ERP
+    </h2>
+    
+    <hr />
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+
+    <form class="form-horizontal" id="form1">
+        @Html.HiddenFor(m => m.SessionLogin.USER_NAME)
+        <div class="panel panel-primary">
+            <div class="panel-heading">ระบุเงื่อนไข</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">แบรนด์</label>
+                        <div class="col-md-4">
+                            @if (Model != null)
+                            {
+                                if (Model.batchSearchCriteriaVM.brandList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.batchSearchCriteriaVM.BRAND_CODE,
+                                         new SelectList(@Model.batchSearchCriteriaVM.brandList, "ITEM_VALUE", "ITEM_TEXT")
+                                    , new { @class = "form-control", @onchange = "gotoChangeBrand()" }
+                                    )
+                                }
+                            }
+                        </div>
+                        <label class="col-md-2 control-label">สาขา</label>
+                        <div class="col-md-4">
+                            @if (Model != null)
+                            {
+                                if (Model.batchSearchCriteriaVM.branchList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.batchSearchCriteriaVM.BRANCH_CODE,
+                                         new SelectList(@Model.batchSearchCriteriaVM.branchList, "ITEM_VALUE", "ITEM_TEXT")
+                                    , new { @class = "form-control" }
+                                    )
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">วันที่ขาย จาก</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.batchSearchCriteriaVM.START_DATE, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;"
+                            })
+                        </div>
+                        <label class="col-md-2 control-label">ถึง</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.batchSearchCriteriaVM.END_DATE, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;"
+                            })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-primary" value="Export" onclick="gotoExport();" />
+                            <input type="button" class="btn btn-primary hide" id="hidbtnSearch" value="Export" onclick="gotoExport();" />
+                            &nbsp;
+                            <input type="button" class="btn btn-default" value="Clear" onclick="gotoClear();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+    });
+
+    function gotoClear() {
+        var url1 = '@Url.Action("SaesTranTOERP")';
+        url1 = url1.substring(0, url1.lastIndexOf("SaesTranTOERP")).concat("SaesTranTOERP");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoExport() {
+        var url1 = '@Url.Action("ExportSaesTranTOERP")';
+        url1 = url1.substring(0, url1.lastIndexOf("ExportSaesTranTOERP")).concat("ExportSaesTranTOERP");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoChangeBrand() {
+        var url1 = '@Url.Action("ChangeBrand")';
+        url1 = url1.substring(0, url1.lastIndexOf("ChangeBrand")).concat("ChangeBrand");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+</script>

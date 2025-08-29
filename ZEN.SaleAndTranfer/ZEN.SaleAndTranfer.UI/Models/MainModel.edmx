@@ -1,0 +1,812 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MainModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <Function Name="USP_C_CONFIG__GetPopupPromoItem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="USP_C_CONFIG__HasPopupPromoItem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="USP_C_CONFIG__SavePopupPromotionItem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ItemCodes" Type="varchar" Mode="In" />
+          <Parameter Name="UpdateBy" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_COMMON_SearchResult__GetPageSize" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PageName" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="USP_M_USM_USER__GetByPK_V2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_M_USM_USER__Save" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="PasswrodHash" Type="varchar" Mode="In" />
+          <Parameter Name="EmployeeID" Type="varchar" Mode="In" />
+          <Parameter Name="FirstNameTh" Type="varchar" Mode="In" />
+          <Parameter Name="LastNameTh" Type="varchar" Mode="In" />
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+          <Parameter Name="ActiveFlag" Type="bit" Mode="In" />
+          <Parameter Name="SaveBy" Type="varchar" Mode="In" />
+          <Parameter Name="Mode" Type="varchar" Mode="In" />
+          <Parameter Name="RoleName" Type="varchar" Mode="In" />
+          <Parameter Name="BranchCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_M_USM_USER__Search" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="EmployeeID" Type="varchar" Mode="In" />
+          <Parameter Name="FirstName" Type="varchar" Mode="In" />
+          <Parameter Name="LastName" Type="varchar" Mode="In" />
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+          <Parameter Name="ActiveFlag" Type="bit" Mode="In" />
+          <Parameter Name="Branch" Type="nvarchar" Mode="In" />
+          <Parameter Name="RoleName" Type="varchar" Mode="In" />
+          <Parameter Name="OrderByList" Type="nvarchar" Mode="In" />
+          <Parameter Name="PageSize" Type="int" Mode="In" />
+          <Parameter Name="CurrentPageId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="USP_M_USM_USER__Search_V2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="EmployeeID" Type="varchar" Mode="In" />
+          <Parameter Name="FirstName" Type="varchar" Mode="In" />
+          <Parameter Name="LastName" Type="varchar" Mode="In" />
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+          <Parameter Name="ActiveFlag" Type="bit" Mode="In" />
+          <Parameter Name="Branch" Type="nvarchar" Mode="In" />
+          <Parameter Name="RoleName" Type="varchar" Mode="In" />
+          <Parameter Name="OrderByList" Type="nvarchar" Mode="In" />
+          <Parameter Name="PageSize" Type="int" Mode="In" />
+          <Parameter Name="CurrentPageId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="USP_M_USM_USER__SearchCountAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="EmployeeID" Type="varchar" Mode="In" />
+          <Parameter Name="FirstName" Type="varchar" Mode="In" />
+          <Parameter Name="LastName" Type="varchar" Mode="In" />
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+          <Parameter Name="ActiveFlag" Type="bit" Mode="In" />
+          <Parameter Name="Branch" Type="nvarchar" Mode="In" />
+          <Parameter Name="RoleName" Type="varchar" Mode="In" />
+          <Parameter Name="OrderByList" Type="nvarchar" Mode="In" />
+          <Parameter Name="PageSize" Type="int" Mode="In" />
+          <Parameter Name="CurrentPageId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="USP_M_USM_USER__SearchCountAll_V2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="EmployeeID" Type="varchar" Mode="In" />
+          <Parameter Name="FirstName" Type="varchar" Mode="In" />
+          <Parameter Name="LastName" Type="varchar" Mode="In" />
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+          <Parameter Name="ActiveFlag" Type="bit" Mode="In" />
+          <Parameter Name="Branch" Type="nvarchar" Mode="In" />
+          <Parameter Name="RoleName" Type="varchar" Mode="In" />
+          <Parameter Name="OrderByList" Type="nvarchar" Mode="In" />
+          <Parameter Name="PageSize" Type="int" Mode="In" />
+          <Parameter Name="CurrentPageId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="USP_M_USM_USER__UpdatePwd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="PasswordHash" Type="varchar" Mode="In" />
+          <Parameter Name="UpdateBy" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_BATCH_MASTER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CREATE_BY" Type="varchar" Mode="In" />
+          <Parameter Name="PROCESS_TYPE" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_BATCH_SEND_ST_PR_SALE_MANUAL_KMF" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PRNO" Type="nvarchar" Mode="In" />
+          <Parameter Name="PRPCESS_BY" Type="nvarchar" Mode="In" />
+          <Parameter Name="PROCESS_TYPE" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_ST_MAP_PR_CATEGORY_BRAND_GetByBrandCode" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="P_BRAND_CODE" Type="varchar" Mode="In" />
+          <Parameter Name="P_ACTIVE_FLAG" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="USP_R_ST_MAP_WH_ITEM__GetPopupPromoItem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_ST_MAP_WH_ITEM__Search" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ST_PR_CATEGORY_ID" Type="int" Mode="In" />
+          <Parameter Name="ITEM_CODE" Type="varchar" Mode="In" />
+          <Parameter Name="ITEM_NAME" Type="varchar" Mode="In" />
+          <Parameter Name="OrderByList" Type="nvarchar" Mode="In" />
+          <Parameter Name="PageSize" Type="int" Mode="In" />
+          <Parameter Name="CurrentPageId" Type="int" Mode="In" />
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="BranchCode" Type="varchar" Mode="In" />
+          <Parameter Name="BrandCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_ST_MAP_WH_ITEM__SearchCountAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ST_PR_CATEGORY_ID" Type="int" Mode="In" />
+          <Parameter Name="ITEM_CODE" Type="varchar" Mode="In" />
+          <Parameter Name="ITEM_NAME" Type="varchar" Mode="In" />
+          <Parameter Name="OrderByList" Type="nvarchar" Mode="In" />
+          <Parameter Name="PageSize" Type="int" Mode="In" />
+          <Parameter Name="CurrentPageId" Type="int" Mode="In" />
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_ST_PR_D__GetByPrCode" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PrCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_ST_PR_D_GetByPRCode" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ST_PR_CODE" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_ST_PR_D_Insert_V2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="StMapWhItemID" Type="int" Mode="In" />
+          <Parameter Name="OrderQty" Type="decimal" Mode="In" />
+          <Parameter Name="ItemCode" Type="varchar" Mode="In" />
+          <Parameter Name="RequestUomCode" Type="varchar" Mode="In" />
+          <Parameter Name="ItemName" Type="varchar" Mode="In" />
+          <Parameter Name="UnitPrice" Type="decimal" Mode="In" />
+          <Parameter Name="Remark" Type="varchar" Mode="In" />
+          <Parameter Name="CreateBy" Type="varchar" Mode="In" />
+          <Parameter Name="PrCode" Type="varchar" Mode="In" />
+          <Parameter Name="BrandCode" Type="varchar" Mode="In" />
+          <Parameter Name="BranchCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_ST_PR_H__GetByPK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PrCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_ST_PR_H_Insert_V2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BRANCH_CODE" Type="varchar" Mode="In" />
+          <Parameter Name="PLAN_DELIVERY_DATE" Type="datetime" Mode="In" />
+          <Parameter Name="CREATE_BY" Type="varchar" Mode="In" />
+          <Parameter Name="MOBILE_NO" Type="nvarchar" Mode="In" />
+          <Parameter Name="CUS_PO_CODE" Type="nvarchar" Mode="In" />
+          <Parameter Name="PR_REMARK" Type="nvarchar" Mode="In" />
+          <Parameter Name="PR_BY" Type="nvarchar" Mode="In" />
+          <Parameter Name="ADDR" Type="nvarchar" Mode="In" />
+          <Parameter Name="ADDR2" Type="nvarchar" Mode="In" />
+          <Parameter Name="ADDR3" Type="nvarchar" Mode="In" />
+          <Parameter Name="POSTCODE" Type="nvarchar" Mode="In" />
+          <Parameter Name="CITY" Type="nvarchar" Mode="In" />
+          <Parameter Name="IS_SALE_ADMIN" Type="nvarchar" Mode="In" />
+          <Parameter Name="SALE_ADMIN_CODE" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_ST_PR_H_Update_FLAG" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="P_ST_PR_CODE" Type="varchar" Mode="In" />
+          <Parameter Name="P_DELETE_FLAG" Type="bit" Mode="In" />
+          <Parameter Name="P_UPDATE_BY" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_ST_PR_Search_V2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PrCode" Type="varchar" Mode="In" />
+          <Parameter Name="PlanDeliveryDateFrom" Type="datetime" Mode="In" />
+          <Parameter Name="PlanDeliveryDateTo" Type="datetime" Mode="In" />
+          <Parameter Name="CreateDateFrom" Type="datetime" Mode="In" />
+          <Parameter Name="CreateDateTo" Type="datetime" Mode="In" />
+          <Parameter Name="CustomerPoCode" Type="nvarchar" Mode="In" />
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="OrderByList" Type="nvarchar" Mode="In" />
+          <Parameter Name="PageSize" Type="int" Mode="In" />
+          <Parameter Name="CurrentPageId" Type="int" Mode="In" />
+          <Parameter Name="IS_SALE_ADMIN" Type="varchar" Mode="In" />
+          <Parameter Name="SALE_ADMIN_CODE" Type="varchar" Mode="In" />
+          <Parameter Name="NAME_2" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_ST_PR_SearchCountAll_V2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PrCode" Type="varchar" Mode="In" />
+          <Parameter Name="PlanDeliveryDateFrom" Type="datetime" Mode="In" />
+          <Parameter Name="PlanDeliveryDateTo" Type="datetime" Mode="In" />
+          <Parameter Name="CreateDateFrom" Type="datetime" Mode="In" />
+          <Parameter Name="CreateDateTo" Type="datetime" Mode="In" />
+          <Parameter Name="CustomerPoCode" Type="nvarchar" Mode="In" />
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="OrderByList" Type="nvarchar" Mode="In" />
+          <Parameter Name="PageSize" Type="int" Mode="In" />
+          <Parameter Name="CurrentPageId" Type="int" Mode="In" />
+          <Parameter Name="IS_SALE_ADMIN" Type="varchar" Mode="In" />
+          <Parameter Name="SALE_ADMIN_CODE" Type="varchar" Mode="In" />
+          <Parameter Name="NAME_2" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="USP_R_ST_PR_SendToNavision" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="P_ST_PR_CODE" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="MainModelStoreContainer" />
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MainModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="MainEntities" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="USP_R_ST_MAP_PR_CATEGORY_BRAND_GetByBrandCode" ReturnType="Collection(MainModel.USP_R_ST_MAP_PR_CATEGORY_BRAND_GetByBrandCode_Result)">
+            <Parameter Name="P_BRAND_CODE" Mode="In" Type="String" />
+            <Parameter Name="P_ACTIVE_FLAG" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="USP_R_ST_MAP_WH_ITEM__SearchCountAll" ReturnType="Collection(Int32)">
+            <Parameter Name="ST_PR_CATEGORY_ID" Mode="In" Type="Int32" />
+            <Parameter Name="ITEM_CODE" Mode="In" Type="String" />
+            <Parameter Name="ITEM_NAME" Mode="In" Type="String" />
+            <Parameter Name="OrderByList" Mode="In" Type="String" />
+            <Parameter Name="PageSize" Mode="In" Type="Int32" />
+            <Parameter Name="CurrentPageId" Mode="In" Type="Int32" />
+            <Parameter Name="Username" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_R_ST_PR_H_Insert_V2" ReturnType="Collection(String)">
+            <Parameter Name="BRANCH_CODE" Mode="In" Type="String" />
+            <Parameter Name="PLAN_DELIVERY_DATE" Mode="In" Type="DateTime" />
+            <Parameter Name="CREATE_BY" Mode="In" Type="String" />
+            <Parameter Name="MOBILE_NO" Mode="In" Type="String" />
+            <Parameter Name="CUS_PO_CODE" Mode="In" Type="String" />
+            <Parameter Name="PR_REMARK" Mode="In" Type="String" />
+            <Parameter Name="PR_BY" Mode="In" Type="String" />
+            <Parameter Name="ADDR" Mode="In" Type="String" />
+            <Parameter Name="ADDR2" Mode="In" Type="String" />
+            <Parameter Name="ADDR3" Mode="In" Type="String" />
+            <Parameter Name="POSTCODE" Mode="In" Type="String" />
+            <Parameter Name="CITY" Mode="In" Type="String" />
+            <Parameter Name="IS_SALE_ADMIN" Mode="In" Type="String" />
+            <Parameter Name="SALE_ADMIN_CODE" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_R_ST_PR_D_Insert_V2">
+            <Parameter Name="StMapWhItemID" Mode="In" Type="Int32" />
+            <Parameter Name="OrderQty" Mode="In" Type="Decimal" />
+            <Parameter Name="ItemCode" Mode="In" Type="String" />
+            <Parameter Name="RequestUomCode" Mode="In" Type="String" />
+            <Parameter Name="ItemName" Mode="In" Type="String" />
+            <Parameter Name="UnitPrice" Mode="In" Type="Decimal" />
+            <Parameter Name="Remark" Mode="In" Type="String" />
+            <Parameter Name="CreateBy" Mode="In" Type="String" />
+            <Parameter Name="PrCode" Mode="In" Type="String" />
+            <Parameter Name="BrandCode" Mode="In" Type="String" />
+            <Parameter Name="BranchCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_R_ST_PR_SearchCountAll_V2" ReturnType="Collection(Int32)">
+            <Parameter Name="PrCode" Mode="In" Type="String" />
+            <Parameter Name="PlanDeliveryDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="PlanDeliveryDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="CreateDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="CreateDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="CustomerPoCode" Mode="In" Type="String" />
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="OrderByList" Mode="In" Type="String" />
+            <Parameter Name="PageSize" Mode="In" Type="Int32" />
+            <Parameter Name="CurrentPageId" Mode="In" Type="Int32" />
+            <Parameter Name="IS_SALE_ADMIN" Mode="In" Type="String" />
+            <Parameter Name="SALE_ADMIN_CODE" Mode="In" Type="String" />
+            <Parameter Name="NAME_2" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_COMMON_SearchResult__GetPageSize" ReturnType="Collection(Int32)">
+          <Parameter Name="PageName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_R_ST_MAP_WH_ITEM__Search" ReturnType="Collection(MainModel.USP_R_ST_MAP_WH_ITEM__Search_Result)">
+            <Parameter Name="ST_PR_CATEGORY_ID" Mode="In" Type="Int32" />
+            <Parameter Name="ITEM_CODE" Mode="In" Type="String" />
+            <Parameter Name="ITEM_NAME" Mode="In" Type="String" />
+            <Parameter Name="OrderByList" Mode="In" Type="String" />
+            <Parameter Name="PageSize" Mode="In" Type="Int32" />
+            <Parameter Name="CurrentPageId" Mode="In" Type="Int32" />
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="BranchCode" Mode="In" Type="String" />
+            <Parameter Name="BrandCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_R_ST_PR_Search_V2" ReturnType="Collection(MainModel.USP_R_ST_PR_Search_V2_Result)">
+            <Parameter Name="PrCode" Mode="In" Type="String" />
+            <Parameter Name="PlanDeliveryDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="PlanDeliveryDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="CreateDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="CreateDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="CustomerPoCode" Mode="In" Type="String" />
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="OrderByList" Mode="In" Type="String" />
+            <Parameter Name="PageSize" Mode="In" Type="Int32" />
+            <Parameter Name="CurrentPageId" Mode="In" Type="Int32" />
+            <Parameter Name="IS_SALE_ADMIN" Mode="In" Type="String" />
+            <Parameter Name="SALE_ADMIN_CODE" Mode="In" Type="String" />
+            <Parameter Name="NAME_2" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_R_ST_PR_H__GetByPK" ReturnType="Collection(MainModel.USP_R_ST_PR_H__GetByPK_Result)">
+          <Parameter Name="PrCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_C_CONFIG__SavePopupPromotionItem">
+            <Parameter Name="ItemCodes" Mode="In" Type="String" />
+            <Parameter Name="UpdateBy" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_C_CONFIG__GetPopupPromoItem" ReturnType="Collection(MainModel.USP_C_CONFIG__GetPopupPromoItem_Result)" />
+          <FunctionImport Name="USP_C_CONFIG__HasPopupPromoItem" ReturnType="Collection(Boolean)" />
+          <FunctionImport Name="USP_R_ST_MAP_WH_ITEM__GetPopupPromoItem" ReturnType="Collection(String)">
+          <Parameter Name="Username" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_M_USM_USER__Search_V2" ReturnType="Collection(MainModel.USP_M_USM_USER__Search_V2_Result)">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="EmployeeID" Mode="In" Type="String" />
+            <Parameter Name="FirstName" Mode="In" Type="String" />
+            <Parameter Name="LastName" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="ActiveFlag" Mode="In" Type="Boolean" />
+            <Parameter Name="Branch" Mode="In" Type="String" />
+            <Parameter Name="RoleName" Mode="In" Type="String" />
+            <Parameter Name="OrderByList" Mode="In" Type="String" />
+            <Parameter Name="PageSize" Mode="In" Type="Int32" />
+            <Parameter Name="CurrentPageId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="USP_M_USM_USER__SearchCountAll_V2" ReturnType="Collection(Int32)">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="EmployeeID" Mode="In" Type="String" />
+            <Parameter Name="FirstName" Mode="In" Type="String" />
+            <Parameter Name="LastName" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="ActiveFlag" Mode="In" Type="Boolean" />
+            <Parameter Name="Branch" Mode="In" Type="String" />
+            <Parameter Name="RoleName" Mode="In" Type="String" />
+            <Parameter Name="OrderByList" Mode="In" Type="String" />
+            <Parameter Name="PageSize" Mode="In" Type="Int32" />
+            <Parameter Name="CurrentPageId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="USP_M_USM_USER__Save" ReturnType="Collection(MainModel.USP_M_USM_USER__Save_Result)">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="PasswrodHash" Mode="In" Type="String" />
+            <Parameter Name="EmployeeID" Mode="In" Type="String" />
+            <Parameter Name="FirstNameTh" Mode="In" Type="String" />
+            <Parameter Name="LastNameTh" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="ActiveFlag" Mode="In" Type="Boolean" />
+            <Parameter Name="SaveBy" Mode="In" Type="String" />
+            <Parameter Name="Mode" Mode="In" Type="String" />
+            <Parameter Name="RoleName" Mode="In" Type="String" />
+            <Parameter Name="BranchCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_M_USM_USER__GetByPK_V2" ReturnType="Collection(MainModel.USP_M_USM_USER__GetByPK_V2_Result)">
+          <Parameter Name="Username" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_M_USM_USER__UpdatePwd">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="PasswordHash" Mode="In" Type="String" />
+            <Parameter Name="UpdateBy" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_R_BATCH_MASTER" ReturnType="Collection(MainModel.USP_R_BATCH_MASTER_Result)">
+            <Parameter Name="CREATE_BY" Mode="In" Type="String" />
+            <Parameter Name="PROCESS_TYPE" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_R_ST_PR_D__GetByPrCode" ReturnType="Collection(MainModel.USP_R_ST_PR_D__GetByPrCode_Result)">
+          <Parameter Name="PrCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_R_ST_PR_SendToNavision" ReturnType="Collection(String)">
+          <Parameter Name="P_ST_PR_CODE" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_R_ST_PR_H_Update_FLAG">
+            <Parameter Name="P_ST_PR_CODE" Mode="In" Type="String" />
+            <Parameter Name="P_DELETE_FLAG" Mode="In" Type="Boolean" />
+            <Parameter Name="P_UPDATE_BY" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="USP_M_USM_USER__Search" ReturnType="Collection(MainModel.USP_M_USM_USER__Search_V2_Result)">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="EmployeeID" Mode="In" Type="String" />
+            <Parameter Name="FirstName" Mode="In" Type="String" />
+            <Parameter Name="LastName" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="ActiveFlag" Mode="In" Type="Boolean" />
+            <Parameter Name="Branch" Mode="In" Type="String" />
+            <Parameter Name="RoleName" Mode="In" Type="String" />
+            <Parameter Name="OrderByList" Mode="In" Type="String" />
+            <Parameter Name="PageSize" Mode="In" Type="Int32" />
+            <Parameter Name="CurrentPageId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="USP_M_USM_USER__SearchCountAll" ReturnType="Collection(Int32)">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="EmployeeID" Mode="In" Type="String" />
+            <Parameter Name="FirstName" Mode="In" Type="String" />
+            <Parameter Name="LastName" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="ActiveFlag" Mode="In" Type="Boolean" />
+            <Parameter Name="Branch" Mode="In" Type="String" />
+            <Parameter Name="RoleName" Mode="In" Type="String" />
+            <Parameter Name="OrderByList" Mode="In" Type="String" />
+            <Parameter Name="PageSize" Mode="In" Type="Int32" />
+            <Parameter Name="CurrentPageId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="USP_R_BATCH_SEND_ST_PR_SALE_MANUAL_KMF">
+            <Parameter Name="PRNO" Mode="In" Type="String" />
+            <Parameter Name="PRPCESS_BY" Mode="In" Type="String" />
+            <Parameter Name="PROCESS_TYPE" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="USP_R_ST_MAP_PR_CATEGORY_BRAND_GetByBrandCode_Result">
+          <Property Type="Int32" Name="ST_PR_CATEGORY_ID" Nullable="false" />
+          <Property Type="String" Name="ST_PR_CATEGORY_NAME" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="USP_R_ST_MAP_WH_ITEM__Search_Result">
+          <Property Type="Int64" Name="RowNumber" Nullable="true" />
+          <Property Type="Int32" Name="StMapWhItemID" Nullable="false" />
+          <Property Type="String" Name="RequestByBrandCode" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="RequestByBranchCode" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="RequestToBrandCode" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="RequestToLocationCode" Nullable="true" MaxLength="20" />
+          <Property Type="Int32" Name="StWhitemCategoryID" Nullable="true" />
+          <Property Type="String" Name="ItemCode" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="RequestUomCode" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="DeliveryUomCode" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="ItemName" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="UnitPrice" Nullable="true" Precision="38" Scale="20" />
+          <Property Type="Decimal" Name="OrderQty" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="String" Name="UOMList" Nullable="true" />
+          <Property Type="String" Name="PriceList" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="USP_R_ST_PR_Search_V2_Result">
+          <Property Type="Int64" Name="RowNumber" Nullable="true" />
+          <Property Type="String" Name="PrCode" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="CreateBy" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="PlanDeliveryDate" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="SumSalePrice" Nullable="true" Precision="38" Scale="2" />
+          <Property Type="String" Name="PR_REMARK" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="PR_STATUS_CODE" Nullable="false" />
+          <Property Type="String" Name="NAME_2" />
+          <Property Type="Boolean" Name="DELETE_FLAG" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="USP_R_ST_PR_H__GetByPK_Result">
+          <Property Type="String" Name="ST_PR_CODE" Nullable="false" MaxLength="20" />
+          <Property Type="DateTime" Name="PLAN_DELIVERY_DATE" Nullable="true" Precision="23" />
+          <Property Type="Byte" Name="PR_STATUS_CODE" Nullable="true" />
+          <Property Type="String" Name="REMARK" Nullable="true" MaxLength="250" />
+          <Property Type="Boolean" Name="DELETE_FLAG" Nullable="true" />
+          <Property Type="String" Name="CREATE_BY" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="CREATE_DATE" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UPDATE_BY" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="UPDATE_DATE" Nullable="true" Precision="23" />
+          <Property Type="String" Name="MOBILE_NO" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CUS_PO_CODE" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PR_REMARK" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="PR_BY" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="PR_STATUS_NAME" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="SumSalePrice" Nullable="true" Precision="38" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="USP_C_CONFIG__GetPopupPromoItem_Result">
+          <Property Type="String" Name="CONFIG_VALUE" Nullable="false" MaxLength="256" />
+          <Property Type="String" Name="UPDATE_BY" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="USP_M_USM_USER__Search_V2_Result">
+          <Property Type="Int64" Name="RowNumber" Nullable="true" />
+          <Property Type="String" Name="USER_NAME" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="PASSWORD_HASH" Nullable="true" MaxLength="256" />
+          <Property Type="String" Name="EMPLOYEE_ID" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="FIRST_NAME_TH" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="LAST_NAME_TH" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="FIRST_NAME_EN" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="LAST_NAME_EN" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="EMAIL" Nullable="true" MaxLength="256" />
+          <Property Type="String" Name="PHONE_NO" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="PHONE_EXT" Nullable="true" MaxLength="4" />
+          <Property Type="String" Name="MOBILE_NO" Nullable="true" MaxLength="30" />
+          <Property Type="Boolean" Name="ACTIVE_FLAG" Nullable="true" />
+          <Property Type="String" Name="USER_USM_TYPE" Nullable="true" MaxLength="3" />
+          <Property Type="String" Name="CREATE_BY" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="CREATE_DATE" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UPDATE_BY" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="UPDATE_DATE" Nullable="true" Precision="23" />
+          <Property Type="String" Name="BRAND_CODE" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="BRANCH_CODE" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="BRANCH_NAME" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="BranchAbbr" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="StatusDisp" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="ROLE_NAME" Nullable="true" />
+          <Property Type="String" Name="NAME_2" Nullable="false" />
+          <Property Type="String" Name="CUSTOMER_NAME" Nullable="false" />
+          <Property Type="Decimal" Name="BALANCE" Nullable="false" />
+          <Property Type="Decimal" Name="CREDIT_LIMIT" Nullable="false" />
+          <Property Type="String" Name="ADDRESS" />
+          <Property Type="String" Name="ADDRESS_2" />
+          <Property Type="String" Name="ADDRESS_3" />
+          <Property Type="Int32" Name="CUST_DUMMY" Nullable="true" />
+          <Property Type="String" Name="CITY" Nullable="true" />
+          <Property Type="String" Name="CONFIG_VALUE" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="USP_M_USM_USER__Save_Result">
+          <Property Type="String" Name="Msg" Nullable="true" MaxLength="200" />
+          <Property Type="Boolean" Name="SuccessFlag" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="USP_M_USM_USER__GetByPK_V2_Result">
+          <Property Type="String" Name="USER_NAME" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="PASSWORD_HASH" Nullable="true" MaxLength="256" />
+          <Property Type="String" Name="EMPLOYEE_ID" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="FIRST_NAME_TH" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="LAST_NAME_TH" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="FIRST_NAME_EN" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="LAST_NAME_EN" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="EMAIL" Nullable="true" MaxLength="256" />
+          <Property Type="String" Name="PHONE_NO" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="PHONE_EXT" Nullable="true" MaxLength="4" />
+          <Property Type="String" Name="MOBILE_NO" Nullable="true" MaxLength="30" />
+          <Property Type="Boolean" Name="ACTIVE_FLAG" Nullable="true" />
+          <Property Type="String" Name="USER_USM_TYPE" Nullable="true" MaxLength="3" />
+          <Property Type="String" Name="CREATE_BY" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="CREATE_DATE" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UPDATE_BY" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="UPDATE_DATE" Nullable="true" Precision="23" />
+          <Property Type="String" Name="SYS_REMARK" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ROLE_NAME" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="USER_ROLE_ID" Nullable="true" />
+          <Property Type="String" Name="BranchCode" Nullable="true" MaxLength="20" />
+        </ComplexType>
+        <ComplexType Name="USP_R_BATCH_MASTER_Result">
+          <Property Type="Int32" Name="BATCH_NO" Nullable="false" />
+          <Property Type="String" Name="PROCESS_TYPE" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="TABLE_NAME" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="START_TIME" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="COMPLETE_TIME" Nullable="true" Precision="23" />
+          <Property Type="String" Name="BATCH_STATUS" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="REMARK" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="CREATE_BY" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="CREATE_DATE" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="USP_R_ST_PR_D__GetByPrCode_Result">
+          <Property Type="String" Name="ST_PR_CODE" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="LINE_NO" Nullable="false" />
+          <Property Type="Int32" Name="ST_PR_CATEGORY_ID" Nullable="false" />
+          <Property Type="Int32" Name="ST_MAP_WH_ITEM_ID" Nullable="true" />
+          <Property Type="String" Name="REQUEST_BY_BRAND_CODE" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="REQUEST_BY_BRANCH_CODE" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="REQUEST_TO_BRAND_CODE" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="REQUEST_TO_BRANCH_CODE" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="ITEM_CODE" Nullable="true" MaxLength="20" />
+          <Property Type="Decimal" Name="QTY" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="String" Name="REQUEST_UOM_CODE" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="REMARK" Nullable="true" MaxLength="250" />
+          <Property Type="Boolean" Name="DELETE_FLAG" Nullable="true" />
+          <Property Type="String" Name="CREATE_BY" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="CREATE_DATE" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UPDATE_BY" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="UPDATE_DATE" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="SALE_PRICE" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="String" Name="ITEM_REMARK" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ST_PR_CATEGORY_NAME" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ITEM_NAME_TH" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ITEM_NAME_TH2" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ITEM_FULL_NAME_TH" Nullable="false" MaxLength="101" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MainModelStoreContainer" CdmEntityContainer="MainEntities" >
+          <FunctionImportMapping FunctionImportName="USP_R_ST_MAP_PR_CATEGORY_BRAND_GetByBrandCode" FunctionName="MainModel.Store.USP_R_ST_MAP_PR_CATEGORY_BRAND_GetByBrandCode">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MainModel.USP_R_ST_MAP_PR_CATEGORY_BRAND_GetByBrandCode_Result">
+                <ScalarProperty Name="ST_PR_CATEGORY_ID" ColumnName="ST_PR_CATEGORY_ID" />
+                <ScalarProperty Name="ST_PR_CATEGORY_NAME" ColumnName="ST_PR_CATEGORY_NAME" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_R_ST_MAP_WH_ITEM__SearchCountAll" FunctionName="MainModel.Store.USP_R_ST_MAP_WH_ITEM__SearchCountAll" />
+          <FunctionImportMapping FunctionImportName="USP_R_ST_PR_H_Insert_V2" FunctionName="MainModel.Store.USP_R_ST_PR_H_Insert_V2" />
+          <FunctionImportMapping FunctionImportName="USP_R_ST_PR_D_Insert_V2" FunctionName="MainModel.Store.USP_R_ST_PR_D_Insert_V2" />
+          <FunctionImportMapping FunctionImportName="USP_R_ST_PR_SearchCountAll_V2" FunctionName="MainModel.Store.USP_R_ST_PR_SearchCountAll_V2" />
+          <FunctionImportMapping FunctionImportName="USP_COMMON_SearchResult__GetPageSize" FunctionName="MainModel.Store.USP_COMMON_SearchResult__GetPageSize" />
+          <FunctionImportMapping FunctionImportName="USP_R_ST_MAP_WH_ITEM__Search" FunctionName="MainModel.Store.USP_R_ST_MAP_WH_ITEM__Search">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MainModel.USP_R_ST_MAP_WH_ITEM__Search_Result">
+                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+                <ScalarProperty Name="StMapWhItemID" ColumnName="StMapWhItemID" />
+                <ScalarProperty Name="RequestByBrandCode" ColumnName="RequestByBrandCode" />
+                <ScalarProperty Name="RequestByBranchCode" ColumnName="RequestByBranchCode" />
+                <ScalarProperty Name="RequestToBrandCode" ColumnName="RequestToBrandCode" />
+                <ScalarProperty Name="RequestToLocationCode" ColumnName="RequestToLocationCode" />
+                <ScalarProperty Name="StWhitemCategoryID" ColumnName="StWhitemCategoryID" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="RequestUomCode" ColumnName="RequestUomCode" />
+                <ScalarProperty Name="DeliveryUomCode" ColumnName="DeliveryUomCode" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="OrderQty" ColumnName="OrderQty" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_R_ST_PR_Search_V2" FunctionName="MainModel.Store.USP_R_ST_PR_Search_V2">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MainModel.USP_R_ST_PR_Search_V2_Result">
+                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+                <ScalarProperty Name="PrCode" ColumnName="PrCode" />
+                <ScalarProperty Name="CreateBy" ColumnName="CreateBy" />
+                <ScalarProperty Name="PlanDeliveryDate" ColumnName="PlanDeliveryDate" />
+                <ScalarProperty Name="SumSalePrice" ColumnName="SumSalePrice" />
+                <ScalarProperty Name="PR_REMARK" ColumnName="PR_REMARK" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_R_ST_PR_H__GetByPK" FunctionName="MainModel.Store.USP_R_ST_PR_H__GetByPK">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MainModel.USP_R_ST_PR_H__GetByPK_Result">
+                <ScalarProperty Name="ST_PR_CODE" ColumnName="ST_PR_CODE" />
+                <ScalarProperty Name="PLAN_DELIVERY_DATE" ColumnName="PLAN_DELIVERY_DATE" />
+                <ScalarProperty Name="PR_STATUS_CODE" ColumnName="PR_STATUS_CODE" />
+                <ScalarProperty Name="REMARK" ColumnName="REMARK" />
+                <ScalarProperty Name="DELETE_FLAG" ColumnName="DELETE_FLAG" />
+                <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+                <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="MOBILE_NO" ColumnName="MOBILE_NO" />
+                <ScalarProperty Name="CUS_PO_CODE" ColumnName="CUS_PO_CODE" />
+                <ScalarProperty Name="PR_REMARK" ColumnName="PR_REMARK" />
+                <ScalarProperty Name="PR_BY" ColumnName="PR_BY" />
+                <ScalarProperty Name="PR_STATUS_NAME" ColumnName="PR_STATUS_NAME" />
+                <ScalarProperty Name="SumSalePrice" ColumnName="SumSalePrice" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_C_CONFIG__SavePopupPromotionItem" FunctionName="MainModel.Store.USP_C_CONFIG__SavePopupPromotionItem" />
+          <FunctionImportMapping FunctionImportName="USP_C_CONFIG__GetPopupPromoItem" FunctionName="MainModel.Store.USP_C_CONFIG__GetPopupPromoItem">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MainModel.USP_C_CONFIG__GetPopupPromoItem_Result">
+                <ScalarProperty Name="CONFIG_VALUE" ColumnName="CONFIG_VALUE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_C_CONFIG__HasPopupPromoItem" FunctionName="MainModel.Store.USP_C_CONFIG__HasPopupPromoItem" />
+          <FunctionImportMapping FunctionImportName="USP_R_ST_MAP_WH_ITEM__GetPopupPromoItem" FunctionName="MainModel.Store.USP_R_ST_MAP_WH_ITEM__GetPopupPromoItem" />
+          <FunctionImportMapping FunctionImportName="USP_M_USM_USER__Search_V2" FunctionName="MainModel.Store.USP_M_USM_USER__Search_V2">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MainModel.USP_M_USM_USER__Search_V2_Result">
+                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+                <ScalarProperty Name="USER_NAME" ColumnName="USER_NAME" />
+                <ScalarProperty Name="PASSWORD_HASH" ColumnName="PASSWORD_HASH" />
+                <ScalarProperty Name="EMPLOYEE_ID" ColumnName="EMPLOYEE_ID" />
+                <ScalarProperty Name="FIRST_NAME_TH" ColumnName="FIRST_NAME_TH" />
+                <ScalarProperty Name="LAST_NAME_TH" ColumnName="LAST_NAME_TH" />
+                <ScalarProperty Name="FIRST_NAME_EN" ColumnName="FIRST_NAME_EN" />
+                <ScalarProperty Name="LAST_NAME_EN" ColumnName="LAST_NAME_EN" />
+                <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+                <ScalarProperty Name="PHONE_NO" ColumnName="PHONE_NO" />
+                <ScalarProperty Name="PHONE_EXT" ColumnName="PHONE_EXT" />
+                <ScalarProperty Name="MOBILE_NO" ColumnName="MOBILE_NO" />
+                <ScalarProperty Name="ACTIVE_FLAG" ColumnName="ACTIVE_FLAG" />
+                <ScalarProperty Name="USER_USM_TYPE" ColumnName="USER_USM_TYPE" />
+                <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+                <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="BRAND_CODE" ColumnName="BRAND_CODE" />
+                <ScalarProperty Name="BRANCH_CODE" ColumnName="BRANCH_CODE" />
+                <ScalarProperty Name="BRANCH_NAME" ColumnName="BRANCH_NAME" />
+                <ScalarProperty Name="BranchAbbr" ColumnName="BranchAbbr" />
+                <ScalarProperty Name="StatusDisp" ColumnName="StatusDisp" />
+                <ScalarProperty Name="ROLE_NAME" ColumnName="ROLE_NAME" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_M_USM_USER__SearchCountAll_V2" FunctionName="MainModel.Store.USP_M_USM_USER__SearchCountAll_V2" />
+          <FunctionImportMapping FunctionImportName="USP_M_USM_USER__Save" FunctionName="MainModel.Store.USP_M_USM_USER__Save">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MainModel.USP_M_USM_USER__Save_Result">
+                <ScalarProperty Name="Msg" ColumnName="Msg" />
+                <ScalarProperty Name="SuccessFlag" ColumnName="SuccessFlag" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_M_USM_USER__GetByPK_V2" FunctionName="MainModel.Store.USP_M_USM_USER__GetByPK_V2">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MainModel.USP_M_USM_USER__GetByPK_V2_Result">
+                <ScalarProperty Name="USER_NAME" ColumnName="USER_NAME" />
+                <ScalarProperty Name="PASSWORD_HASH" ColumnName="PASSWORD_HASH" />
+                <ScalarProperty Name="EMPLOYEE_ID" ColumnName="EMPLOYEE_ID" />
+                <ScalarProperty Name="FIRST_NAME_TH" ColumnName="FIRST_NAME_TH" />
+                <ScalarProperty Name="LAST_NAME_TH" ColumnName="LAST_NAME_TH" />
+                <ScalarProperty Name="FIRST_NAME_EN" ColumnName="FIRST_NAME_EN" />
+                <ScalarProperty Name="LAST_NAME_EN" ColumnName="LAST_NAME_EN" />
+                <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+                <ScalarProperty Name="PHONE_NO" ColumnName="PHONE_NO" />
+                <ScalarProperty Name="PHONE_EXT" ColumnName="PHONE_EXT" />
+                <ScalarProperty Name="MOBILE_NO" ColumnName="MOBILE_NO" />
+                <ScalarProperty Name="ACTIVE_FLAG" ColumnName="ACTIVE_FLAG" />
+                <ScalarProperty Name="USER_USM_TYPE" ColumnName="USER_USM_TYPE" />
+                <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+                <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="SYS_REMARK" ColumnName="SYS_REMARK" />
+                <ScalarProperty Name="ROLE_NAME" ColumnName="ROLE_NAME" />
+                <ScalarProperty Name="USER_ROLE_ID" ColumnName="USER_ROLE_ID" />
+                <ScalarProperty Name="BranchCode" ColumnName="BranchCode" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_M_USM_USER__UpdatePwd" FunctionName="MainModel.Store.USP_M_USM_USER__UpdatePwd" />
+          <FunctionImportMapping FunctionImportName="USP_R_BATCH_MASTER" FunctionName="MainModel.Store.USP_R_BATCH_MASTER">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MainModel.USP_R_BATCH_MASTER_Result">
+                <ScalarProperty Name="BATCH_NO" ColumnName="BATCH_NO" />
+                <ScalarProperty Name="PROCESS_TYPE" ColumnName="PROCESS_TYPE" />
+                <ScalarProperty Name="TABLE_NAME" ColumnName="TABLE_NAME" />
+                <ScalarProperty Name="START_TIME" ColumnName="START_TIME" />
+                <ScalarProperty Name="COMPLETE_TIME" ColumnName="COMPLETE_TIME" />
+                <ScalarProperty Name="BATCH_STATUS" ColumnName="BATCH_STATUS" />
+                <ScalarProperty Name="REMARK" ColumnName="REMARK" />
+                <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+                <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_R_ST_PR_D__GetByPrCode" FunctionName="MainModel.Store.USP_R_ST_PR_D__GetByPrCode">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MainModel.USP_R_ST_PR_D__GetByPrCode_Result">
+                <ScalarProperty Name="ST_PR_CODE" ColumnName="ST_PR_CODE" />
+                <ScalarProperty Name="LINE_NO" ColumnName="LINE_NO" />
+                <ScalarProperty Name="ST_PR_CATEGORY_ID" ColumnName="ST_PR_CATEGORY_ID" />
+                <ScalarProperty Name="ST_MAP_WH_ITEM_ID" ColumnName="ST_MAP_WH_ITEM_ID" />
+                <ScalarProperty Name="REQUEST_BY_BRAND_CODE" ColumnName="REQUEST_BY_BRAND_CODE" />
+                <ScalarProperty Name="REQUEST_BY_BRANCH_CODE" ColumnName="REQUEST_BY_BRANCH_CODE" />
+                <ScalarProperty Name="REQUEST_TO_BRAND_CODE" ColumnName="REQUEST_TO_BRAND_CODE" />
+                <ScalarProperty Name="REQUEST_TO_BRANCH_CODE" ColumnName="REQUEST_TO_BRANCH_CODE" />
+                <ScalarProperty Name="ITEM_CODE" ColumnName="ITEM_CODE" />
+                <ScalarProperty Name="QTY" ColumnName="QTY" />
+                <ScalarProperty Name="REQUEST_UOM_CODE" ColumnName="REQUEST_UOM_CODE" />
+                <ScalarProperty Name="REMARK" ColumnName="REMARK" />
+                <ScalarProperty Name="DELETE_FLAG" ColumnName="DELETE_FLAG" />
+                <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+                <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="SALE_PRICE" ColumnName="SALE_PRICE" />
+                <ScalarProperty Name="ITEM_REMARK" ColumnName="ITEM_REMARK" />
+                <ScalarProperty Name="ST_PR_CATEGORY_NAME" ColumnName="ST_PR_CATEGORY_NAME" />
+                <ScalarProperty Name="ITEM_NAME_TH" ColumnName="ITEM_NAME_TH" />
+                <ScalarProperty Name="ITEM_NAME_TH2" ColumnName="ITEM_NAME_TH2" />
+                <ScalarProperty Name="ITEM_FULL_NAME_TH" ColumnName="ITEM_FULL_NAME_TH" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_R_ST_PR_SendToNavision" FunctionName="MainModel.Store.USP_R_ST_PR_SendToNavision" />
+          <FunctionImportMapping FunctionImportName="USP_R_ST_PR_H_Update_FLAG" FunctionName="MainModel.Store.USP_R_ST_PR_H_Update_FLAG" />
+          <FunctionImportMapping FunctionImportName="USP_M_USM_USER__Search" FunctionName="MainModel.Store.USP_M_USM_USER__Search">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MainModel.USP_M_USM_USER__Search_V2_Result">
+                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+                <ScalarProperty Name="USER_NAME" ColumnName="USER_NAME" />
+                <ScalarProperty Name="PASSWORD_HASH" ColumnName="PASSWORD_HASH" />
+                <ScalarProperty Name="EMPLOYEE_ID" ColumnName="EMPLOYEE_ID" />
+                <ScalarProperty Name="FIRST_NAME_TH" ColumnName="FIRST_NAME_TH" />
+                <ScalarProperty Name="LAST_NAME_TH" ColumnName="LAST_NAME_TH" />
+                <ScalarProperty Name="FIRST_NAME_EN" ColumnName="FIRST_NAME_EN" />
+                <ScalarProperty Name="LAST_NAME_EN" ColumnName="LAST_NAME_EN" />
+                <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+                <ScalarProperty Name="PHONE_NO" ColumnName="PHONE_NO" />
+                <ScalarProperty Name="PHONE_EXT" ColumnName="PHONE_EXT" />
+                <ScalarProperty Name="MOBILE_NO" ColumnName="MOBILE_NO" />
+                <ScalarProperty Name="ACTIVE_FLAG" ColumnName="ACTIVE_FLAG" />
+                <ScalarProperty Name="USER_USM_TYPE" ColumnName="USER_USM_TYPE" />
+                <ScalarProperty Name="CREATE_BY" ColumnName="CREATE_BY" />
+                <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+                <ScalarProperty Name="UPDATE_BY" ColumnName="UPDATE_BY" />
+                <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+                <ScalarProperty Name="BRAND_CODE" ColumnName="BRAND_CODE" />
+                <ScalarProperty Name="BRANCH_CODE" ColumnName="BRANCH_CODE" />
+                <ScalarProperty Name="BRANCH_NAME" ColumnName="BRANCH_NAME" />
+                <ScalarProperty Name="BranchAbbr" ColumnName="BranchAbbr" />
+                <ScalarProperty Name="StatusDisp" ColumnName="StatusDisp" />
+                <ScalarProperty Name="ROLE_NAME" ColumnName="ROLE_NAME" />
+                <ScalarProperty Name="NAME_2" ColumnName="NAME_2" />
+                <ScalarProperty Name="CUSTOMER_NAME" ColumnName="CUSTOMER_NAME" />
+                <ScalarProperty Name="BALANCE" ColumnName="BALANCE" />
+                <ScalarProperty Name="CREDIT_LIMIT" ColumnName="CREDIT_LIMIT" />
+                <ScalarProperty Name="ADDRESS" ColumnName="ADDRESS" />
+                <ScalarProperty Name="ADDRESS_2" ColumnName="ADDRESS_2" />
+                <ScalarProperty Name="ADDRESS_3" ColumnName="ADDRESS_3" />
+                <ScalarProperty Name="CUST_DUMMY" ColumnName="CUST_DUMMY" />
+                <ScalarProperty Name="CITY" ColumnName="CITY" />
+                <ScalarProperty Name="CONFIG_VALUE" ColumnName="CONFIG_VALUE" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USP_M_USM_USER__SearchCountAll" FunctionName="MainModel.Store.USP_M_USM_USER__SearchCountAll" />
+          <FunctionImportMapping FunctionImportName="USP_R_BATCH_SEND_ST_PR_SALE_MANUAL_KMF" FunctionName="MainModel.Store.USP_R_BATCH_SEND_ST_PR_SALE_MANUAL_KMF" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

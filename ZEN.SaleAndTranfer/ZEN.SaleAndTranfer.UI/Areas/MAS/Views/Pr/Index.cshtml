@@ -1,0 +1,357 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.PrVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>
+        หน้าจอใบตลาด (PR) @*: <small>ค้นหาใบตลาด</small>*@
+    </h2>
+    <hr />
+    <div class="row">
+        <div class="col-sm-12">
+            <input type="button" class="btn btn-danger" value="เพิ่มใบตลาด" onclick="gotoCreate();" style="width: 300px;">
+        </div>
+    </div>
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+    <form class="form-horizontal" id="form1">
+        @Html.HiddenFor(m => m.prVM_MA.ST_PR_CODE)
+        <div class="panel panel-primary">
+            <div class="panel-heading">ระบุเงื่อนไขการค้นหา</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">เลขที่ใบตลาด (PR)</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.prSearchCriteriaVM.ST_PR_CODE, new { @maxlength = "20", @class = "form-control" })
+                        </div>
+                        @*<label class="col-md-2 control-label">ประเภทใบตลาด :</label>
+                            <div class="col-md-4">
+                                @if (Model.prSearchCriteriaVM.prCategoryList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.prSearchCriteriaVM.ST_PR_CATEGORY_CODE,
+                                        new SelectList(@Model.prSearchCriteriaVM.prCategoryList, "ITEM_VALUE", "ITEM_TEXT")
+                                        , new { @class = "form-control" }
+                                        )
+                                }
+                            </div>*@
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">วันที่สร้างใบตลาด จาก</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.prSearchCriteriaVM.CREATE_DATE_FROM, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;",
+                                @autocomplete = "off"
+                            })
+                        </div>
+                        <label class="col-md-2 control-label">ถึง</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.prSearchCriteriaVM.CREATE_DATE_TO, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;",
+                                @autocomplete="off"
+                            })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">วันกำหนดส่งสินค้า จาก</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.prSearchCriteriaVM.PLAN_DELIVERY_DATE_FROM, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;",
+                                autocomplete = "off"
+                            })
+                        </div>
+                        <label class="col-md-2 control-label">ถึง</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.prSearchCriteriaVM.PLAN_DELIVERY_DATE_TO, Model.DT_SHORT_FORMAT,
+                            new
+                            {
+                                @class = "form-control datepicker",
+                                @onkeypress = "return false;",
+                                autocomplete = "off"
+                            })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-primary" value="ค้นหา" onclick="gotoSearch();" />
+                            <input type="button" class="btn btn-primary hide" id="hidbtnSearch" value="ค้นหา" onclick="gotoSearch();" />
+                            &nbsp;
+                            <input type="button" class="btn btn-default" value="ล้างหน้าจอ" onclick="gotoClear();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.prSearchResultVM != null)
+        {
+            if (Model.prSearchResultVM.resultList != null)
+            {
+                <div class="panel panel-default" id="divResult">
+                    <div class="panel-heading">
+                        ผลการค้นหา
+                        <span class="pull-right">
+                            ผลการค้นหา : @Model.prSearchResultVM.countAll.ToString("#,###") รายการ
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table table-responsive">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th class="text-right">ลำดับ.</th>
+                                    <th><a onclick="gotoOrder('REQUEST_BY_BRAND_CODE');" class="normal-font">ร้านค้า</a></th>
+                                    <th><a onclick="gotoOrder('REQUEST_BY_BRAND_NAME');" class="normal-font">สาขา</a></th>
+                                    <th><a onclick="gotoOrder('ST_PR_CODE');" class="normal-font">เลขที่ใบตลาด</a></th>
+                                    <th><a onclick="gotoOrder('CREATE_DATE');" class="normal-font">วันที่สร้างใบตลาด</a></th>
+                                    <th><a onclick="gotoOrder('PLAN_DELIVERY_DATE');" class="normal-font">วันกำหนดส่งสินค้า</a></th>
+                                    <th><a onclick="gotoOrder('PR_STATUS_NAME');" class="normal-font">สถานะ</a></th>
+                                    <th></th>
+                                </tr>
+                                @for (int i = 0; i < Model.prSearchResultVM.resultList.Count; i++)
+                                {
+                                    var item = Model.prSearchResultVM.resultList[i];
+                                    <tr>
+                                        <td class="text-right" style="width:20px;">@item.ROW_NO.ToString("#,##0")</td>
+                                        <td>@item.REQUEST_BY_BRAND_CODE</td>
+                                        <td>@item.REQUEST_BY_BRANCH_NAME</td>
+                                        <td>@item.ST_PR_CODE</td>
+                                        <td>@item.CREATE_DATE.Value.ToShortDateString() @item.CREATE_DATE.Value.ToString("HH:mm")</td>
+                                        <td>@item.PLAN_DELIVERY_DATE.Value.ToShortDateString()</td>
+                                        @if (item.PR_STATUS_CODE == 7)
+                                        {
+                                            <td style="color:red;">@item.PR_STATUS_NAME</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@item.PR_STATUS_NAME</td>
+                                        }
+                                        <td style="width:250px; text-align:center;">
+                                            @if (item.PR_STATUS_CODE == 6)
+                                            {
+                                                string strSpacer = "&nbsp;|&nbsp;";
+                                                <a onclick="gotoDelete('@item.ST_PR_CODE');" style="cursor: pointer;">ลบ</a>
+                                                @Html.Raw(strSpacer);
+                                                <a onclick="gotoUpdate('@item.ST_PR_CODE');" style="cursor: pointer;">แก้ไข</a>
+                                                @Html.Raw(strSpacer);
+                                            }
+                                            <a onclick="gotodetail('@item.ST_PR_CODE');" style="cursor: pointer;">รายละเอียด</a>
+                                            &nbsp;|&nbsp;
+                                            @if (Model.FRANCHISES_FLAG)
+                                            {
+                                                @Html.ActionLink("พิมพ์", "RPT_ST_REPORT_FC", "/RPT/Report"
+                                                                         , new
+                                                                         {
+                                                                             //@P_USER_NAME = Model.USER_NAME,
+                                                                             @P_ST_PR_CODE = item.ST_PR_CODE
+                                                                         }
+                                                                         , new { @class = "reportPrDialog" })
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink("พิมพ์", "RPT_ST_REPORT_EQ", "/RPT/Report"
+                                                                         , new
+                                                                         {
+                                                                             //@P_USER_NAME = Model.USER_NAME,
+                                                                             @P_ST_PR_CODE = item.ST_PR_CODE
+                                                                         }
+                                                                         , new { @class = "reportPrDialog" })
+                                            }
+                                            
+                                            @if (Model.SessionLogin.ROLE_NAME == "Warehouse" || Model.SessionLogin.ROLE_NAME == "ADMIN")
+                                            {
+                                                if (item.PR_STATUS_CODE == 7)
+                                                {
+                                                    <span>&nbsp;|&nbsp;</span>
+                                                    <input type="button" class="btn btn-primary btn-sm hid" id="hidbtnSearch" value="เปิดให้แก้ไข" onclick="gotobacktonew('@item.ST_PR_CODE');" />
+                                                }
+                                            }
+
+
+
+                                            <div id="dialog-report-pr" style="display: none">
+                                                <input class="hide" id="btnClosePopupPr" type="button" />
+                                            </div>
+
+                                            @*<a onclick="gotoResetPassword('@item.ST_PR_CODE');" style="cursor: pointer;">พิมพ์</a>*@
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                        @Html.Partial("_PaginationSearchPartial", Model.ZenPagination)
+                    </div>
+                </div>
+            }
+        }
+    </form>
+</div>
+
+
+<style>
+    .normal-font {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+</style>
+
+<script>
+    function gotoClear() {
+        var url1 = '@Url.Action("Index")';
+        url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoSearch() {
+        var url1 = '@Url.Action("Search")';
+        url1 = url1.substring(0, url1.lastIndexOf("Search")).concat("Search");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoOrder(menu) {
+
+        var url1 = '@Url.Action("SearchOrderByMenu")';
+        url1 = url1.substring(0, url1.lastIndexOf("SearchOrderByMenu")).concat("SearchOrderByMenu/");
+
+        var vform = $('#form1');
+        vform.attr("action", url1.concat(menu));
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotodetail(prCode) {
+        $('#prVM_MA_ST_PR_CODE').val(prCode);
+
+        var url1 = '@Url.Action("PrViewDetail")';
+        url1 = url1.substring(0, url1.lastIndexOf("PrViewDetail")).concat("PrViewDetail/");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoCreate() {
+        var url1 = '@Url.Action("CreatePR")';
+        url1 = url1.substring(0, url1.lastIndexOf("CreatePR")).concat("CreatePR");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoUpdate(prCode) {
+        var url1 = '/MAS/Pr/ItemCartUpdate/';
+        var vform = $('#form1');
+        vform.attr("action", url1.concat(prCode));
+        vform.attr("method", "post");
+        vform.submit();
+
+    }
+
+    function gotoDelete(prCode) {
+        if (confirm('@ViewBag.msgConfirmDelete')) {
+            prCode = prCode + '|PR';
+            var url1 = '/MAS/Pr/PrDelete/';
+            var vform = $('#form1');
+            vform.attr("action", url1.concat(prCode));
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////
+
+    // Start PR Dialog //
+    $(document).on("click", "#btnClosePopupPr", function (e) {
+
+        $("#dialog-report-pr").dialog('close');
+
+    });
+
+    $(document).on("click", ".reportPrDialog", function (e) {
+
+        var url = $(this).attr('href');
+        url = url.replace("/MAS", "");
+        url = url.replace("?P_ST_PR_CODE=", "/");
+        var url1 = url;
+
+        var weightDocument = ($(window).width() * 0.99);
+        var higghtDocument = ($(window).height() * 0.8);
+
+        var theDialog = $("#dialog-report-pr").dialog({
+            title: 'ตัวอย่างก่อนพิมพ์',
+            autoOpen: false,
+            resizable: false,
+            height: higghtDocument,
+            width: weightDocument,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            open: function (event, ui) {
+                $(this).load(url1);
+            },
+            close: function (event, ui) {
+                $('#ifrReport').remove();
+                $(this).dialog('close');
+            },
+            buttons: [
+                 {
+                     text: "ปิด",
+                     "class": 'ClossButtonClass',
+                     click: function () {
+                         $('#ifrReport').remove();
+                         $(this).dialog('close');
+                     }
+                 }
+            ]
+        });
+
+        theDialog.dialog("open");
+        return false;
+    });
+    // End PR Dialog //
+
+    /////////////////////////////////////////////////////////////////////////
+
+    function gotobacktonew(prCode) {
+        if (confirm('@ViewBag.msgConfirmBackToNew')) {
+            //prCode = prCode + '|PR';
+            var url1 = '/MAS/Pr/PrBackToNew/';
+            var vform = $('#form1');
+            vform.attr("action", url1.concat(prCode));
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+
+    }
+
+</script>

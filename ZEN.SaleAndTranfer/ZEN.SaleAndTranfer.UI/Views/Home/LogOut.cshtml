@@ -1,0 +1,17 @@
+﻿<script>
+    $(document).ready(function ($) {
+        $('body').hide();
+
+        // Session Expire
+        var sessionExpireFlag = '@ViewBag.sessionExpireFlag';
+        var sessionExpireMessage = '@ViewBag.sessionExpireMessage';
+
+        if (sessionExpireFlag == "1") {
+            alert(sessionExpireMessage)
+            window.location = "/AUT/Login/Index";
+        } else {
+            window.location = "/AUT/Login/Index";
+        }
+
+    });
+</script>

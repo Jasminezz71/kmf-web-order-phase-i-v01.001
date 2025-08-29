@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://10.10.8.46:2012/LogService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/ZEN.ZenCommon.WcfServices.ET.LOG" />
+  <xs:element name="InsertLogLogin">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="logDate" type="xs:dateTime" />
+        <xs:element minOccurs="0" name="appID" type="xs:int" />
+        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="accessType" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="actionControl" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="pageName" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="clientBrowser" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="logDesc" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="remark" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="InsertLogLoginResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="InsertLog">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/ZEN.ZenCommon.WcfServices.ET.LOG" minOccurs="0" name="logMAET" nillable="true" type="q1:LogMAET" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="InsertLogResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

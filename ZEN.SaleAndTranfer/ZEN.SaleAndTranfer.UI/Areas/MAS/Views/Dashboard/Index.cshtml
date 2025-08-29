@@ -1,0 +1,204 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.DashboardVM
+@using ZEN.SaleAndTranfer.VM.MAS
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>
+        หน้าแรก
+@if (Model.dashboardVM_MA.AlreadyCount == 0)
+{
+   <span class="label label-danger"><small style="color:white">@Model.dashboardVM_MA.MsgAlert</small></span>
+}
+        @*<small style="color:red">เดือนนี้ท่านยังไม่ได้ทำการนับสต๊อก กรุณาทำการนับสต๊อกให้เรียบร้อยค่ะ</small>*@
+        @*<marquee direction="left" style="color:red">เดือนนี้ท่านยังไม่ได้ทำการนับสต๊อก กรุณาทำการนับสต๊อกให้เรียบร้อยค่ะ</marquee>*@
+    </h2>
+    
+    <hr />
+    <form id="form1">
+        <div class="panel panel-primary" id="divResultPR">
+            <div class="panel-heading">รายการใบตลาด</div>
+            <div class="panel-body">
+                @if (Model.dashboardSearchResultVM.resultPRList != null)
+                {
+                    <div class="table table-responsive">
+                        <table class="table table-hover">
+                            <tr>
+                                <th class="text-right">ลำดับ</th>
+                                <th>ร้านค้า</th>
+                                <th>สาขา</th>
+                                <th>เลขที่ใบตลาด</th>
+                                <th>วันที่สร้างใบตลาด</th>
+                                <th>วันกำหนดส่งสินค้า</th>
+                                <th>สถานะ</th>
+                                <th style="max-width:150px;"></th>
+                            </tr>
+                            @if (Model.dashboardSearchResultVM.resultPRList != null)
+                            {
+                                for (int i = 0; i < Model.dashboardSearchResultVM.resultPRList.Count; i++)
+                                {
+                                    var item = Model.dashboardSearchResultVM.resultPRList[i];
+                                    <tr>
+                                        <td class="text-right" style="width:20px;">@item.ROW_NO.ToString("#,##0")</td>
+                                        <td>@item.REQUEST_BY_BRAND_CODE</td>
+                                        <td>@item.REQUEST_BY_BRANCH_NAME</td>
+                                        <td>@item.ST_PR_CODE</td>
+                                        <td>@item.CREATE_DATE.Value.ToShortDateString() @item.CREATE_DATE.Value.ToString("HH:mm")</td>
+                                        <td>@item.PLAN_DELIVERY_DATE.Value.ToShortDateString()</td>
+                                        @if (item.PR_STATUS_CODE == 7)
+                                        {
+                                            <td style="color:red;">@item.PR_STATUS_NAME</td>
+                                            <td>
+                                                <a onclick="gotodetail('@item.ST_PR_CODE');" style="cursor: pointer;">รายละเอียด</a>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>@item.PR_STATUS_NAME</td>
+                                            <td>
+                                                @if (item.PR_STATUS_CODE == 6)
+                                                {
+                                                    string strSpacer = "&nbsp;|&nbsp;";
+                                                    <a onclick="gotoDelete('@item.ST_PR_CODE');" style="cursor: pointer;">ลบ</a>
+                                                    @Html.Raw(strSpacer);
+                                                }
+                                                <a onclick="gotoUpdate('@item.ST_PR_CODE');" style="cursor: pointer;">แก้ไข</a>
+                                                &nbsp;|&nbsp;
+                                                <a onclick="gotodetail('@item.ST_PR_CODE');" style="cursor: pointer;">รายละเอียด</a>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </div>
+                    @Html.Partial("_PaginationDashBoardTopPartial", Model.ZenPagination)
+                }
+                else
+                {
+                    if (Model.dashboardSearchResultVM.messagePRList != null)
+                    {
+                        foreach (var item in Model.dashboardSearchResultVM.messagePRList)
+                        {
+                            <div class="alert alert-warning" role="alert">
+                                <div class="alert-link" style="text-align:center;">
+                                    <strong>@item.MESSAGE_CODE :</strong> @item.MESSAGE_TEXT_FOR_DISPLAY <br />
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+
+
+        <div class="panel panel-danger" id="divResultDO">
+            <div class="panel-heading">รายการรอรับสินค้า</div>
+            <div class="panel-body">
+                @if (Model.dashboardSearchResultVM.resultDOList != null)
+                {
+                    <div class="table table-responsive">
+                        <table class="table table-hover">
+                            <tr>
+                                <th class="text-right">ลำดับ</th>
+                                <th>ร้านค้า</th>
+                                <th>สาขา</th>
+                                <th>เลขที่ใบตลาด</th>
+                                <th>เลขที่ใบเตรียมรับสินค้า</th>
+                                <th>วันกำหนดส่งสินค้า</th>
+                                <th>สถานะ</th>
+                                <th>Location</th>
+                                <th style="max-width:150px;"></th>
+                            </tr>
+                            @if (Model.dashboardSearchResultVM.resultDOList != null)
+                            {
+                                for (int i = 0; i < Model.dashboardSearchResultVM.resultDOList.Count; i++)
+                                {
+                                    var item = Model.dashboardSearchResultVM.resultDOList[i];
+                                    <tr>
+                                        <td class="text-right" style="width:20px;">@item.ROW_NO.ToString("#,##0")</td>
+                                        <td>@item.REQUEST_BY_BRAND_CODE</td>
+                                        <td>@item.REQUEST_BY_BRANCH_NAME</td>
+                                        <td><a onclick="gotodetail('@item.ST_PR_CODE');">@item.ST_PR_CODE</a></td>
+                                        <td>@item.ST_DO_CODE</td>
+                                        <td>@item.PLAN_DELIVERY_DATE.Value.ToShortDateString()</td>
+                                        <td>@item.DO_STATUS_NAME</td>
+                                        <td>@item.LOCATION_CODE</td>
+                                        <td>
+                                            <a onclick="gotoReceiveItem('@item.ST_DO_CODE|@item.ST_PR_CODE');" style="cursor: pointer;">รับสินค้า</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </div>
+                    @Html.Partial("_PaginationDashBoardBottomPartial", Model.ZenPagination)
+                }
+                else
+                {
+                    if (Model.dashboardSearchResultVM.messageDOList != null)
+                    {
+                        foreach (var item in Model.dashboardSearchResultVM.messageDOList)
+                        {
+                            <div class="alert alert-warning" role="alert">
+                                <div class="alert-link" style="text-align:center;">
+                                    <strong>@item.MESSAGE_CODE :</strong> @item.MESSAGE_TEXT_FOR_DISPLAY <br />
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    td a {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    function gotodetail(prCode) {
+        var url1 = '/MAS/Pr/PrViewDetail/';
+        var vform = $('#form1');
+        vform.attr("action", url1.concat(prCode));
+        vform.attr("method", "post");
+        vform.submit();
+
+    }
+    function gotoUpdate(prCode) {
+        //var url1 = '/MAS/Pr/ItemCartUpdate/';
+        var url1 = '/MAS/Pr/UpdatePR/';
+        var vform = $('#form1');
+        vform.attr("action", url1.concat(prCode));
+        vform.attr("method", "post");
+        vform.submit();
+
+    }
+    function gotoReceiveItem(doCode) {
+        var url1 = '/MAS/Do/ReceiveItem/';
+        var vform = $('#form1');
+        vform.attr("action", url1.concat(doCode));
+        vform.attr("method", "post");
+        vform.submit();
+
+    }
+
+    function gotoDelete(prCode) {
+        if (confirm('@ViewBag.msgConfirmDelete')) {
+            prCode = prCode + '|dashboard';
+            var url1 = '/MAS/Pr/PrDelete/';
+            var vform = $('#form1');
+            vform.attr("action", url1.concat(prCode));
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+</script>

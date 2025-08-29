@@ -1,0 +1,131 @@
+﻿
+@using ZEN.SaleAndTranfer.UI.Util
+@model ZEN.SaleAndTranfer.UI.VM2.Prq.IndexVM
+
+@{
+    ViewBag.Title = "หน้าแรก";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var pageSize = PagingHelper.PageSize(PagingHelper.HomePage);
+}
+
+<div class="page-header hide">
+    <h2>@ViewBag.Title <small></small></h2>
+</div>
+
+<div class="row" style="padding-top: 15px;">
+    <form id="formSearchPromotion">
+        @Html.AntiForgeryToken()
+        <input type="hidden" id="Pet_OrderByList" name="Pet.OrderByList" value="" />
+        <input type="hidden" id="Pet_PageSize" name="Pet.PageSize" value='@pageSize' />
+        <input type="hidden" id="Pet_CurrentPageId" name="Pet.CurrentPageId" value="1" />
+        <input type="hidden" id="Pet_FormID" name="Pet.FormID" value="#formSearchPromotion" />
+        <input type="hidden" id="Pet_DivSearchResultID" name="Pet.DivSearchResultID" value="#divPromotionSearchResult" />
+        <input type="hidden" id="Pet_StPrCateogryID" name="Pet.StPrCateogryID" value='@PrCategoryIDConst.Promotion' />
+        <input type="hidden" id="Pet_HideResultCountFlag" name="Pet.HideResultCountFlag" value="True" />
+    </form>
+    <div class="col-xs-12 col-md-12">
+        <h4 class="text-primary"><strong>โปรโมชั่น</strong></h4>
+    </div>
+    <div class="col-xs-12 col-md-12" id="divPromotionSearchResult"></div>
+
+    <form id="formSearchHistory">
+        @Html.AntiForgeryToken()
+        <input type="hidden" id="Pet_OrderByList" name="Pet.OrderByList" value="" />
+        <input type="hidden" id="Pet_PageSize" name="Pet.PageSize" value='@pageSize' />
+        <input type="hidden" id="Pet_CurrentPageId" name="Pet.CurrentPageId" value="1" />
+        <input type="hidden" id="Pet_FormID" name="Pet.FormID" value="#formSearchHistory" />
+        <input type="hidden" id="Pet_DivSearchResultID" name="Pet.DivSearchResultID" value="#divHistorySearchResult" />
+        <input type="hidden" id="Pet_StPrCateogryID" name="Pet.StPrCateogryID" value='@PrCategoryIDConst.History' />
+        <input type="hidden" id="Pet_HideResultCountFlag" name="Pet.HideResultCountFlag" value="True" />
+    </form>
+    <div class="col-xs-12 col-md-12">
+        <h4 class="text-primary"><strong>รายการที่เคยสั่ง</strong></h4>
+    </div>
+    <div class="col-xs-12 col-md-12" id="divHistorySearchResult"></div>
+
+    <form id="formSearchAll">
+        @Html.AntiForgeryToken()
+        <input type="hidden" id="Pet_OrderByList" name="Pet.OrderByList" value="" />
+        <input type="hidden" id="Pet_PageSize" name="Pet.PageSize" value='@pageSize' />
+        <input type="hidden" id="Pet_CurrentPageId" name="Pet.CurrentPageId" value="1" />
+        <input type="hidden" id="Pet_FormID" name="Pet.FormID" value="#formSearchAll" />
+        <input type="hidden" id="Pet_DivSearchResultID" name="Pet.DivSearchResultID" value="#divAllSearchResult" />
+        <input type="hidden" id="Pet_StPrCateogryID" name="Pet.StPrCateogryID" value='@PrCategoryIDConst.All' />
+        <input type="hidden" id="Pet_HideResultCountFlag" name="Pet.HideResultCountFlag" value="True" />
+    </form>
+    <div class="col-xs-12 col-md-12">
+        <h4 class="text-primary"><strong>รายการทั้งหมด</strong></h4>
+    </div>
+    <div class="col-xs-12 col-md-12" id="divAllSearchResult">
+
+    </div>
+</div>
+
+
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            debugger;
+
+            //$('#modalPromotion').modal('show');
+            //var hasValue = hasPopupPromotionItem();
+            //if (hasValue) {
+
+            //}
+
+            //showPopupPromotionItem('');
+
+            showPromotion();
+
+            searchItem('#formSearchPromotion', 1, '#divPromotionSearchResult');
+            searchItem('#formSearchHistory', 1, '#divHistorySearchResult');
+            searchItem('#formSearchAll', 1, '#divAllSearchResult');
+        });
+
+        function showPromotion() {
+            //debugger;
+            var url1 = '@Url.Action("hasPopupPromotionItem", "Promotion", new { Area = "" })';
+
+            //$(document.body).css({ 'cursor': 'wait' });
+
+            //var obj = new Object();
+            //obj.mode = mode;
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                //data: JSON.stringify(obj), //data: dataForm
+                //processData: false,
+                //contentType: false,
+                dataType: "json", //dataType: "html",
+                contentType: 'application/json; charset=utf-8', //'application/x-www-form-urlencoded; charset=UTF-8'
+                success: function (response) {
+                    debugger;
+                    if (response.SuccessFlag) {
+                        if (response.Data) {
+                            showPopupPromotionItem();
+                        }
+                        else {
+                            //alert("ไม่พบข้อมูล Popup Promotion");
+                        }
+                    }
+                    else {
+                        alert(response.Msg);
+                        return false;
+                    }
+                    //$(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error occured!!")
+                    alert(response.responseText);
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+</script>
+}

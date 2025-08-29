@@ -1,0 +1,628 @@
+﻿@using ZEN.SaleAndTranfer.ET.AUT;
+
+@{
+    var appName = "KMF Order";
+    var year = DateTime.Now.Year.ToString();
+    var version = "V.01.001";
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@appName</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+        @{
+            string shortDate = "";
+            shortDate = System.Configuration.ConfigurationManager.AppSettings["CULTER_INFO_ShortDatePattern_Datepicker"];
+        }
+
+    $(document).ready(function ($) {
+        // Code using $ as usual goes here.
+        $(".datepicker").datepicker({
+            format: "@shortDate",
+            maxViewMode: 2,
+            orientation: "bottom auto",
+            todayBtn: "linked",
+            language: "th",
+            autoclose: true,
+            todayHighlight: true
+        })
+
+        $(".datepickerMonth").datepicker({
+            format: "mm/yyyy",
+            minViewMode: 1,
+            maxViewMode: 2,
+            orientation: "bottom auto",
+            language: "th",
+            autoclose: true
+        })
+
+        // ToolTip
+        $('[data-toggle="tooltip"]').tooltip();
+
+        //check brand branch in session
+        var needChooseBrand = '@ViewBag.needChooseBrand';
+        var InventoryStock = '@ViewBag.InventoryStock';
+            if (needChooseBrand == '1') {
+                if (InventoryStock == '1') {
+                    alert('@ViewBag.msgAlertNobranchStockInSession');
+                    window.location = '/Home/ChangeBranch/';
+            }
+            else {
+                    alert('@ViewBag.msgAlertNobranchInSession');
+                    window.location = '/Home/ChangeBranch/';
+            }
+        }
+
+        // Detect Ctrl+C and Ctrl+V
+        var ctrlDown = false,
+            ctrlKey = 17,
+            cmdKey = 91,
+            vKey = 86,
+            cKey = 67;
+
+        $(document).keydown(function (e) {
+            if (e.keyCode == ctrlKey || e.keyCode == cmdKey) ctrlDown = true;
+        }).keyup(function (e) {
+            if (e.keyCode == ctrlKey || e.keyCode == cmdKey) ctrlDown = false;
+        });
+
+        $(".no-copy-paste").keydown(function (e) {
+            if (ctrlDown && (e.keyCode == vKey || e.keyCode == cKey)) return false;
+        });
+
+        // Detact 0 - 9 , .
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            var keycode = String.fromCharCode(charCode);
+            if (keycode == ".") return true
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+        //NUMBER
+        $('body').on('keypress', '.numberOnly', function (event) {
+            return isNumberKey(event);
+        });
+        $('body').on('change', '.numberOnly', function (event) {
+            var temp = accounting.formatMoney($(this).val(), "", 2, "", ".");
+            if (parseFloat(temp) > 0) {
+                $(this).val(temp);
+            }
+            else {
+                $(this).val(temp);
+            }
+        });
+
+        //NUMBER
+        $('body').on('keypress', '.numberOnlyPr', function (event) {
+            return isNumberKey(event);
+        });
+        $('body').on('change', '.numberOnlyPr', function (event) {
+            var temp = accounting.formatMoney($(this).val(), "", 2, "", ".");
+            if (parseFloat(temp) > 0) {
+                $(this).val(temp);
+            }
+            else {
+                $(this).val('');
+            }
+        });
+
+        //NUMBER CAN ZERO
+        $('body').on('keypress', '.numberOnlyCanZero', function (event) {
+            return isNumberKey(event);
+        });
+        $('body').on('change', '.numberOnlyCanZero', function (event) {
+            if ($(this).val() == '') {
+                $(this).val('');
+                return;
+            }
+
+            var temp = accounting.formatMoney($(this).val(), "", 2, "", ".");
+            if (parseFloat(temp) >= 0) {
+                $(this).val(temp);
+            }
+            else {
+                $(this).val('');
+            }
+        });
+
+
+    });
+
+
+    </script>
+
+    <style type="text/css">
+        #divNavbarTop {
+            margin-left: 0px;
+            max-width: 1400px;
+        }
+
+        .img-loading {
+            opacity: 0.3;
+            background-image: url("/images/loading.gif");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            pointer-events: none;
+        }
+
+        .navbar-nav li a {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        @*Supaneej, 2018-10-11, Style for zoom item image*@
+        * {
+            box-sizing: border-box;
+        }
+
+        .zoom {
+            transition: transform .2s;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+            .zoom:hover {
+                -ms-transform: scale(1.5); /* IE 9 */
+                -webkit-transform: scale(1.5); /* Safari 3-8 */
+                transform: scale(8.0);
+        }
+    </style>
+
+    @{
+        UserLoginInfoET sessionLogin = new UserLoginInfoET();
+        sessionLogin = (UserLoginInfoET)Session[SessionConst.CURRENT_USER_LOGIN];
+    }
+
+<script type="text/javascript">
+        function showBasketModal() {
+            // call api เพื่อแสดง รายละเอียดสินค้าในตะกร้า
+
+            //$('#basketModal').modal('toggle');
+            //$('#basketModal').modal('show');
+
+            var url1 = '@Url.Action("Basket", "Prq", new { Area = "" })';
+
+            //$(document.body).css({ 'cursor': 'wait' });
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                //data: dataForm, //data: JSON.stringify(obj),
+                //processData: false,
+                //contentType: false,
+                dataType: "html", //dataType: "json",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType:'application/json;       charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    $('#basketModelBody').empty();
+                    $('#basketModelBody').append(response);
+                    $('#basketModal').modal('show');
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error occured!!")
+                    alert(response.responseText);
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+
+        function saveOrderOnBasket(formID,stMapWhItemID) {
+            var dataForm = $('#' + formID).serialize();
+
+            var url1 = '@Url.Action("SaveOrderOnBasket", "Prq", new { Area = "" })';
+
+            //$(document.body).css({ 'cursor': 'wait' });
+
+            var newQty = $("input[basket-qty-key='" + stMapWhItemID + "']").val();
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                data: dataForm, //data: JSON.stringify(obj),
+                //processData: false,
+                //contentType: false,
+                dataType: "json", //dataType: "html",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //debugger;
+                    if (response.SuccessFlag) {
+                        if ($("input[search-result-key='" + stMapWhItemID + "']") != null) {
+                            $("input[search-result-key='" + stMapWhItemID + "']").val(newQty);
+                        }
+                    } else {
+                        alert(response.Msg);
+                    }
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error | Save Order On Basket")
+                    alert(response.responseText);
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+
+        function deleteOrderOnBasket(formID, stMapWhItemID) {
+            if (!confirm('ยืนยันการลบ?')) {
+                return;
+            }
+
+            var dataForm = $('#' + formID).serialize();
+            var url1 = '@Url.Action("DeleteOrderOnBasket", "Prq", new { Area = "" })';
+
+            //$(document.body).css({ 'cursor': 'wait' });
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                data: dataForm, //data: JSON.stringify(obj),
+                //processData: false,
+                //contentType: false,
+                dataType: "json", //dataType: "html",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //debugger;
+                    if (response.SuccessFlag) {
+                        showBasketList();
+                        getItemCountInBasket();
+                        //btnSearch_onclick(null);
+
+                        debugger;
+                        $("input[search-result-key='" + stMapWhItemID + "']").val('');
+                    } else {
+                        alert(response.Msg);
+                    }
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error | Save Order On Basket")
+                    alert(response.responseText);
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+
+        function goToPrqSummary() {
+            $('#basketModal').modal('hide');
+            window.location = '@Url.Action("Summary", "Prq", new { Area = "" })';
+        }
+
+        function showBasketList() {
+            //debugger;
+            var url1 = '@Url.Action("Basket", "Prq", new { Area = "" })';
+
+            //$(document.body).css({ 'cursor': 'wait' });
+
+            //var obj = new Object();
+            //obj.mode = mode;
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                //data: JSON.stringify(obj), //data: dataForm
+                //processData: false,
+                //contentType: false,
+                dataType: "html", //dataType: "json",
+                contentType: 'application/json; charset=utf-8', //'application/x-www-form-urlencoded; charset=UTF-8'
+                success: function (response) {
+                    //debugger;
+                    $('#divBasket').empty();
+                    $('#divBasket').append(response);
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error occured!!")
+                    alert(response.responseText);
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+
+        function getItemCountInBasket() {
+            var url1 = '@Url.Action("GetItemCountInBasket", "Prq", new { Area = "" })';
+            //$(document.body).css({ 'cursor': 'wait' });
+            $.ajax({
+                type: "POST",
+                url: url1,
+                //data: dataForm, //data: JSON.stringify(obj),
+                //processData: false,
+                //contentType: false,
+                dataType: "json", //dataType: "html",
+                contentType: 'application/json; charset=utf-8', // 'application/x-www-form-rlencoded; charset=UTF-8',
+                success: function (response) {
+                    //debugger;
+                    if (response.SuccessFlag && response.Data > 0) {
+                        $("#badgeQtyInBasket").html(response.Data);
+                    }
+                    else {
+                        $("#badgeQtyInBasket").html('0');
+                    }
+                    //$(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error occured!!")
+                    alert(response.responseText);
+                    //$(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+
+        function searchItem(formID, pageId, divSearchResultID) {
+            var formIDWithOutSharp = formID.replace("#", "");
+            if (!$(formID).valid()) {
+                return false;
+            }
+
+            //debugger;
+            if (pageId != null) {
+                $("form[id='" +formIDWithOutSharp + "'] > input[id='Pet_CurrentPageId']").val(pageId);
+            }
+
+            var dataForm = $(formID).serialize();
+
+            var url1 = '@Url.Action("SearchItem", "Prq", new { Area = "" })';
+
+            //$(document.body).css({ 'cursor': 'wait' });
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                data: dataForm, //data: JSON.stringify(obj),
+                //processData: false,
+                //contentType: false,
+                dataType: "html", //dataType: "json",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //debugger;
+                    //$('#divSearchResult').empty();
+                    //$('#divSearchResult').append(response);
+                    $(divSearchResultID).empty();
+                    $(divSearchResultID).append(response);
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    debugger;
+                    alert("Error occured!!")
+                    alert(response.responseText);
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+
+        function addItemToBasket(formID) {
+            if (!$('#' + formID).valid()) {
+                return false;
+            }
+
+            var orderQty = $("form[id='" + formID + "'] > div > input[id='OrderQty']").val();
+            //alert(orderQty);
+            if (orderQty == null || orderQty == "") {
+                alert("โปรดระบุจำนวนที่ต้องการสั่งซื้อ");
+                return;
+            }
+
+            var dataForm = $('#' + formID).serialize();
+
+            var url1 = '@Url.Action("AddItemToBasket", "Prq", new { Area = "" })';
+
+            $(document.body).css({ 'cursor': 'wait' });
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                data: dataForm, //data: JSON.stringify(obj),
+                //processData: false,
+                //contentType: false,
+                dataType: "json", //dataType: "html",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //debugger;
+                    if (response.SuccessFlag) {
+                        $('#badgeQtyInBasket').html(response.Data);
+                        //alert("เพิ่มลงตะกร้าเรียบร้อย");
+                        showBasketList();
+                    }
+                    else {
+                        alert(response.Msg);
+                    }
+
+                    $(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error occured!!")
+                    alert(response.responseText);
+
+                    $(document.body).css({ 'cursor': 'default' });
+                }
+            });
+    }
+
+        function showPopupPromotionItem(mode) {
+            //debugger;
+            var url1 = '@Url.Action("GetPopupPromotionItem", "Promotion", new { Area = "" })';
+
+            //$(document.body).css({ 'cursor': 'wait' });
+
+            var obj = new Object();
+            obj.mode = mode;
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                data: JSON.stringify(obj), //data: dataForm
+                //processData: false,
+                //contentType: false,
+                dataType: "html", //dataType: "json",
+                contentType: 'application/json; charset=utf-8', //'application/x-www-form-urlencoded; charset=UTF-8'
+                success: function (response) {
+                    //debugger;
+                    $('#modalPromotionBody').empty();
+                    $('#modalPromotionBody').append(response);
+                    $('#modalPromotion').modal('show');
+                    //$(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error occured!!")
+                    alert(response.responseText);
+
+                    //$(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+
+</script>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container" id="divNavbarTop">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @*<span class="navbar-brand" style="font-size:14px">
+                       @appName
+                    </span>*@
+                <a class="navbar-brand" style="padding: 10px;">
+                    <img src="~/images/kingmarine_logo.png" style="width: 25px; height: 25px;" />
+                </a>
+                @*@Html.ActionLink("Application name", "Index", "Home", null, new { @class = "navbar-brand" })*@
+            </div>
+            <div class="navbar-collapse collapse">
+                @if (sessionLogin != null)
+                {
+                    string p_role_sess = sessionLogin.ROLE_NAME.ToLower().ToString();
+                    List<string> p_role_list = p_role_sess.Split(',').ToList();
+                    foreach (var item in p_role_list)
+                    {
+                        var item2 = item.ToLower();
+
+                        if (item2.Equals("admin"))
+                        {
+                            @Html.Partial("_MenuAdminPartial")
+                        }
+                        else if (item2.Equals("saleadmin"))
+                        {
+                            @Html.Partial("_MenuSaleAdmin")
+                        }
+                        else if (item2.Equals("saleadminc"))
+                        {
+                            @Html.Partial("_MenuSaleAdminPartial")
+                        }
+                        else if (item2.Equals("warehouse"))
+                        {
+                            @Html.Partial("_MenuWareHousePartial")
+                        }
+                        else if (item2.Equals("brand-admin"))
+                        {
+                            @Html.Partial("_MenuBrandAdminPartial")
+                        }
+                        else if (item2.Equals("rest-admin"))
+                        {
+                            @Html.Partial("_MenuRestAdminPartial")
+                        }
+                        else if (item2.Equals("audit"))
+                        {
+                            @Html.Partial("_MenuAuditPartial")
+                        }
+                        else if (item2.Equals("accounting"))
+                        {
+                            @Html.Partial("_MenuAccountPartial")
+                        }
+                        else if (item2.Equals("purchasing"))
+                        {
+                            @Html.Partial("_menuPurchasingPartial")
+                        }
+                        else
+                        {
+                            @Html.Partial("_MenuUserPartial")
+                        }
+                    }
+
+                }
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+
+    <div class="container body-content">
+        <hr />
+        <footer>
+            <p>&copy; @year King Marine Foods Co., Ltd. All Rights Reserved Version @version</p>
+        </footer>
+    </div>
+
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)*@
+
+    <!-- Modal : Basket -->
+    <div class="modal fade" id="basketModal" tabindex="-1" role="dialog" aria-labelledby="BasketModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="basketModalTiele"><span class="text-primary">ตะกร้า</span></h4>
+                </div>
+                <div class="modal-body" id="basketModelBody">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="return goToPrqSummary();">สรุปการสั่งซื้อ</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">ปิดหน้าต่าง</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal : Promotion -->
+    <div class="modal fade" id="modalPromotion" tabindex="-1" role="dialog" aria-labelledby="promotionModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-danger" id="promotionModalLabel">Promotion</h4>
+                </div>
+                <div class="modal-body" id="modalPromotionBody">
+                    
+                </div>
+                <div class="modal-footer hide">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

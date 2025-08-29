@@ -1,0 +1,82 @@
+﻿@using ZEN.SaleAndTranfer.UI.Util
+@model ZEN.SaleAndTranfer.UI.VM2.ManualBatch.RunVM2
+
+
+@{
+    ViewBag.Title = "ส่งข้อมูลใบสั่งซื้อไป Nav";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <h2>@ViewBag.Title <small></small></h2>
+</div>
+
+<form id="formRunBatch" class="form-horizontal">
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="BatchName" name="BatchName" value="Master" />    
+    <div class="form-group">
+        <label class="col-md-2 control-label">เลขที่ใบสั่งซื้อ</label>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.PRNo, new { @class = "form-control", @placeholder = "เลขที่สั่งซื้อ" })
+            @Html.ValidationMessageFor(m => m.PRNo, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    @*Button*@
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="button" class="btn btn-primary" onclick="return runBatch('#formRunBatch');">ส่งข้อมูลไป NAV</button>
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+        });
+
+        function runBatch(formId) {
+            if (!$(formId).valid()) {
+                return false;
+            }
+
+            if (!confirm('ยืนยันการส่งข้อมูลไป NAV ?')) {
+                return false;
+            }
+
+            var dataForm = $(formId).serialize();
+
+            var url1 = '@Url.Action("Run", "ManualBatch", new { Area = "" })';
+
+            $(document.body).css({ 'cursor': 'wait' });
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                data: dataForm, //data: JSON.stringify(obj),
+                //processData: false,
+                //contentType: false,
+                dataType: "json", //dataType: "html",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //debugger;
+                    if (response.SuccessFlag) {
+                        alert(response.Msg);
+                    }
+                    else {
+                        alert(response.Msg);
+                    }
+                    $(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error occured!!")
+                    alert(response.responseText);
+
+                    $(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+    </script>
+}

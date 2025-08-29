@@ -1,0 +1,128 @@
+﻿@model ZEN.SaleAndTranfer.VM.IMPORTANDEXPORT.ItemAndItemCategoryVM
+
+@{
+    ViewBag.Title = "จัดการ " + ViewBag.ImportAndExportTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>จัดการ @ViewBag.ImportAndExportTitle</h2>
+<hr />
+
+@Html.Partial("_MessagePartial", Model.MessageList)
+
+<form id="form1" enctype="multipart/form-data">
+    <div class="container">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    <span><b>ขั้นตอนการ ดาวน์โหลด และ อัพโหลด</b></span>
+                </div>
+                <div class="col-sm-12">
+                    <span style="padding-left: 20px;">1. คลิกปุ่ม "ดาวน์โหลด" เพื่อดาวน์โหลดข้อมูล ที่มีอยู่ในระบบ ออกมาในรูปแบบของไฟล์ Excel</span>
+                    <br />
+                    <span style="padding-left: 20px;">2. แก้ไขข้อมูลในไฟล์ Excel ให้ถูกต้อง โดยระบุ ACTION ที่ต้องการกระทำกับข้อมูลในแถวนั้นๆ</span>
+                    <br />
+                    <span style="padding-left: 40px;">คำอธิบาย ACTION มีรายละเอียดดังนี้</span>
+                    <br />
+                    <span style="padding-left: 60px;">UPDATE = ข้อมูลที่มีอยู่แล้วในระบบ และต้องการแก้ไข</span>
+                    <br />
+                    <span style="padding-left: 60px;">INSERT = ข้อมูลที่ต้องการเพิ่มเข้าไปในระบบ</span>
+                    <br />
+                    <span style="padding-left: 60px;">DELETE = ข้อมูลที่ต้องการยกเลิกออกจากระบบ</span>
+                    <br />
+                    <span style="padding-left: 20px;">3. เมื่อแก้ไขไฟล์เสร็จเรียบร้อยแล้ว ให้เลือกไฟล์ Excel ที่ต้องการจะอัพโหลด</span>
+                    <br />
+                    <span style="padding-left: 20px;">4. คลิกปุ่ม "อัพโหลดไฟล์"</span>
+                    <br />
+                    <span style="padding-left: 20px;">5. เมื่ออัพโหลดสำเร็จ ระบบจะแสดงข้อความ บันทึกข้อมูลสำเร็จ</span>
+                    <br />
+                    <span style="padding-left: 20px;">6. จบกระบวนการ</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        Download ข้อมูลมาสเตอร์ @ViewBag.ImportAndExportTitle
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <input type="button" class="btn btn-primary" value="ดาวน์โหลด" onclick="gotoExport();" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        นำเข้าข้อมูลมาสเตอร์ @ViewBag.ImportAndExportTitle เข้าสู่ระบบ
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        *อัพโหลดไฟล์ :
+                    </div>
+                    <div class="col-sm-10">
+                        <input type="file" name="file" class="form-control" />
+                        <p class="help-block">* อัพโหลดได้ไม่เกิน @ViewBag.uploadFileMaxSize MB</p>
+                        <p class="help-block">* อัพโหลดได้เฉพาะไฟล์ @ViewBag.uploadFileType เท่านั้น </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10 col-md-push-2">
+                        <input type="button" class="btn btn-primary" value="อัพโหลดไฟล์" onclick="gotoImport();" />
+                        <input type="button" class="btn btn-primary" value="ล้างหน้าจอ" onclick="gotoClear();" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        var ExportFileFlag = '@ViewBag.ExportFileFlag';
+        if (ExportFileFlag == '1') {
+            var url1 = '@Url.Action("ExportFile")';
+            url1 = url1.substring(0, url1.lastIndexOf("ExportFile")).concat("ExportFile");
+
+            window.location = url1;
+        }
+    });
+
+    function gotoExport() {
+        var url1 = '@Url.Action("ExportFile")';
+        url1 = url1.substring(0, url1.lastIndexOf("ExportFile")).concat("ExportFile");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoImport() {
+        var url1 = '@Url.Action("ImportFile")';
+        url1 = url1.substring(0, url1.lastIndexOf("ImportFile")).concat("ImportFile");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoClear() {
+        var url1 = '@Url.Action("Index")';
+        url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+</script>

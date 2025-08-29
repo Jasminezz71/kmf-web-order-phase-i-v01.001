@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2489CC8D-D9D5-4205-A875-276C1D995427}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ZEN.SaleAndTranfer.ET</RootNamespace>
+    <AssemblyName>ZEN.SaleAndTranfer.ET</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccressTypeConst.cs" />
+    <Compile Include="ADMIN\BatchET.cs" />
+    <Compile Include="ADMIN\BatchHaviET.cs" />
+    <Compile Include="ADMIN\BatchHaviSearchCriteriaET.cs" />
+    <Compile Include="ADMIN\BatchSearchCriteriaET.cs" />
+    <Compile Include="ADMIN\UserBatchHaviInfoET.cs" />
+    <Compile Include="ADMIN\UserBatchInfoET.cs" />
+    <Compile Include="AppIDConst.cs" />
+    <Compile Include="AUT\LoginET.cs" />
+    <Compile Include="AUT\LoginSearchCriteriaET.cs" />
+    <Compile Include="AUT\UserLoginInfoET.cs" />
+    <Compile Include="BaseET.cs" />
+    <Compile Include="CheckPRDupplicateUET.cs" />
+    <Compile Include="CNF\CategoryConfigEnum.cs" />
+    <Compile Include="CNF\ConfigET.cs" />
+    <Compile Include="CNF\ConfigNameEnum.cs" />
+    <Compile Include="CNF\SubCategoryConfigEnum.cs" />
+    <Compile Include="DDL\CBXItemET.cs" />
+    <Compile Include="DDL\DDLItemET.cs" />
+    <Compile Include="DDL\DDLModeEnumET.cs" />
+    <Compile Include="ExportFileConst.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndBrandCategoryET.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndBrandCategorySearchCriteriaET.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndBrandCategorySearchResultET.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndItemCategoryET.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndItemCategorySearchCriteriaET.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndItemCategorySearchResultET.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndLocationET.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndLocationSearchCriteriaET.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndLocationSearchResultET.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemCategoryET.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemCategorySearchCriteriaET.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemCategorySearchResultET.cs" />
+    <Compile Include="IMPORTANDEXPORT\LocationET.cs" />
+    <Compile Include="IMPORTANDEXPORT\LocationSearchCriteriaET.cs" />
+    <Compile Include="IMPORTANDEXPORT\LocationSearchResultET.cs" />
+    <Compile Include="IMPORTANDEXPORT\PrCategoryET.cs" />
+    <Compile Include="IMPORTANDEXPORT\PrCategorySearchCriteriaET.cs" />
+    <Compile Include="IMPORTANDEXPORT\PrCategorySearchResultET.cs" />
+    <Compile Include="IMPORTANDEXPORT\PrWhPickupET.cs" />
+    <Compile Include="IMPORTANDEXPORT\PrWhPickupSearchCriteriaET.cs" />
+    <Compile Include="IMPORTANDEXPORT\PrWhPickupSearchResultET.cs" />
+    <Compile Include="IMPORTANDEXPORT\UnitConversionET.cs" />
+    <Compile Include="IMPORTANDEXPORT\UnitConversionSearchCriteriaET.cs" />
+    <Compile Include="IMPORTANDEXPORT\UnitConversionSearchResultET.cs" />
+    <Compile Include="IMPORTANDEXPORT\UnitET.cs" />
+    <Compile Include="IMPORTANDEXPORT\UnitSearchCriteriaET.cs" />
+    <Compile Include="IMPORTANDEXPORT\UnitSearchResultET.cs" />
+    <Compile Include="LangEnumET.cs" />
+    <Compile Include="MAS\DashboardET.cs" />
+    <Compile Include="MAS\DashboardSearchCriteriaET.cs" />
+    <Compile Include="MAS\DashboardSearchResultET.cs" />
+    <Compile Include="MAS\DoET.cs" />
+    <Compile Include="MAS\DoSearchCriteriaET.cs" />
+    <Compile Include="MAS\DoSearchResultET.cs" />
+    <Compile Include="MAS\DownloadET.cs" />
+    <Compile Include="MAS\DownloadSearchCriteriaET.cs" />
+    <Compile Include="MAS\DownloadSearchResultET.cs" />
+    <Compile Include="MAS\GrET.cs" />
+    <Compile Include="MAS\GrSearchCriteriaET.cs" />
+    <Compile Include="MAS\GrSearchResultET.cs" />
+    <Compile Include="MAS\HttpPostedFileBase.cs" />
+    <Compile Include="MAS\ItemStockET.cs" />
+    <Compile Include="MAS\ItemStockSearchCriteriaET.cs" />
+    <Compile Include="MAS\ItemStockSearchResultET.cs" />
+    <Compile Include="MAS\DeliveryScheduleET.cs" />
+    <Compile Include="MAS\PrET.cs" />
+    <Compile Include="MAS\PrSearchCriteriaET.cs" />
+    <Compile Include="MAS\PrSearchResultET.cs" />
+    <Compile Include="MAS\RecTransferET.cs" />
+    <Compile Include="MAS\RecTransferSearchCriteriaET.cs" />
+    <Compile Include="MAS\RecTransferSearchResultET.cs" />
+    <Compile Include="MAS\SignatureET.cs" />
+    <Compile Include="MAS\SignatureSearchCriteriaET.cs" />
+    <Compile Include="MAS\SignatureSearchResultET.cs" />
+    <Compile Include="MAS\UnitConvertET.cs" />
+    <Compile Include="MAS\UnitConvertSearchCriteriaET.cs" />
+    <Compile Include="MAS\UnitConvertSearchResultET.cs" />
+    <Compile Include="MessageCodeConst.cs" />
+    <Compile Include="MessageET.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RPT\InvoiceSearchCriteriaET.cs" />
+    <Compile Include="RPT\ReportET.cs" />
+    <Compile Include="RPT\statusDoGrSearchCriteriaET.cs" />
+    <Compile Include="RPT\statusDoGrSearchResultET.cs" />
+    <Compile Include="RPT\stockSearchCriteriaET.cs" />
+    <Compile Include="RPT\stockSearchResultET.cs" />
+    <Compile Include="SortingInfoET.cs" />
+    <Compile Include="TB_M_END_DAY_DOC_TYPE_RET.cs" />
+    <Compile Include="USP_M_COMPLAIN_GetByType_PET.cs" />
+    <Compile Include="USP_M_COMPLAIN_GetByType_RET.cs" />
+    <Compile Include="USP_R_END_DAY_DOC_Delete_PET.cs" />
+    <Compile Include="USP_R_END_DAY_DOC_GetByEndDayDate_RET.cs" />
+    <Compile Include="USP_R_END_DAY_DOC_GetDataByPK_RET.cs" />
+    <Compile Include="USP_R_END_DAY_DOC_InsertData_PET.cs" />
+    <Compile Include="USP_R_RESULT_COMPLAIN_GetByGrCode_RET.cs" />
+    <Compile Include="USP_R_ST_PR_D_GetByPRCode_200_RET.cs" />
+    <Compile Include="USP_R_ST_PR_GetAlertAvgPRQty__PET.cs" />
+    <Compile Include="USP_R_ST_PR_GetAlertAvgPRQty__RET.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

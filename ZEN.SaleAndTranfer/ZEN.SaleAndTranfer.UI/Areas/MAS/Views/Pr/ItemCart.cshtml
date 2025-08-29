@@ -1,0 +1,532 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.PrVM
+
+@{
+    ViewBag.Title = "ItemCart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var url1 = string.Empty;
+}
+
+<div class="container">
+    <h2>
+        หน้าจอใบตลาด (PR) : <small>ตะกร้าสินค้า</small>
+    </h2>
+
+    <hr />
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+
+    <form class="form-horizontal" id="form1">
+        @Html.HiddenFor(m => m.showImageFlag)
+        @Html.HiddenFor(m => m.SessionLogin.FRANCHISES_FLAG)
+        @Html.HiddenFor(m => m.mode)
+        @Html.HiddenFor(m => m.prVM_MA.ITEM_CODE)
+        @Html.HiddenFor(m => m.RESULT_DUPPLICATE)
+        @Html.HiddenFor(m => m.CHECK_DUPPLICATE_FLAG)
+        @Html.HiddenFor(m => m.prVM_MA.ST_PR_CODE)
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">รายชื่อสินค้า</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" style="text-align:left;">*Location</label>
+                                <div class="col-md-8">
+                                    @if (Model.prVM_MA.fcLocation != null)
+                                    {
+                                        @Html.DropDownListFor(m => m.prVM_MA.FC_LOCATION,
+                                new SelectList(@Model.prVM_MA.fcLocation, "ITEM_VALUE", "ITEM_TEXT")
+                                , new { @class = "form-control" }
+                                )
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" style="text-align:left;">*วันกำหนดส่งสินค้า</label>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(m => m.prVM_MA.PLAN_DELIVERY_DATE, Model.DT_SHORT_FORMAT, new
+                                       {
+                                           @class = "form-control datepicker",
+                                           @onkeypress = "return false;",
+                                           @autocomplete = "off"
+                                           //@onChange = "gotoDAY_OF_DELIVERY();"
+                                           //@onblur = "gotoDAY_OF_DELIVERY();"
+                                       })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="pull-left">
+                                <p id="DAY_OF_DELIVERY"></p>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" style="text-align:left;">*ชื่อผู้สั่งสินค้า</label>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(m => m.prVM_MA.REMARK, new
+                               {
+                                   @class = "form-control addCookies" @*,@onblur = "gotoAddValue()"*@ })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="pull-right">
+                                <input type="button" class="btn btn-success" value="เลือกสินค้าเพิ่ม" onclick="gotoAddItem();" />
+                                &nbsp;
+                                <input type="button" class="btn btn-danger" value="ยืนยันการสั่ง" onclick="gotoSave();" id="btnSave" />
+                                &nbsp;
+                                <input type="button" class="btn btn-default" value="ล้างหน้าจอ" onclick="gotoClear();" />
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">รายชื่อสินค้า</div>
+                        <div class="panel-body">
+                            @if (Model.prVM_MA != null)
+                            {
+                                if (Model.prVM_MA.itemCartList != null)
+                                {
+                                    <div class="table table-responsive">
+                                        <table class="table table-hover">
+                                            <tr>
+                                                <th class="text-right">ลำดับ</th>
+                                                @* <th><a onclick="gotoOrder('USER_NAME');" class="normal-font">Username</a></th>*@
+                                                <th>ประเภทสินค้า</th>
+                                                @*<th>สั่งจากแบรนด์</th>*@
+                                                <th>รหัสสินค้า</th>
+                                                <th>ชื่อสินค้า</th>
+                                                <th>รายละเอียดอื่นๆ</th>
+                                                @if (Model.showImageFlag)
+                                                {
+                                                    <th>รูปภาพ</th>
+                                                }
+                                                <th>จำนวนที่สั่ง</th>
+                                                <th>หน่วยสั่ง</th>
+                                                @if (Model.FRANCHISES_FLAG)
+                                                {
+                                                    <th>ราคา/หน่วย</th>
+                                                    <th>ราคารวม</th>
+                                                }
+                                                else
+                                                {
+                                                    <th>Stock</th>
+                                                }
+                                                <th></th>
+                                            </tr>
+                                            @for (int i = 0; i < Model.prVM_MA.itemCartList.Count; i++)
+                                            {
+                                                var item = Model.prVM_MA.itemCartList[i];
+                                                url1 = string.Format("{0}://{1}/{2}", this.Request.Url.Scheme, this.Request.Url.Authority, item.FILE_PATH);
+                                                @Html.HiddenFor(m => m.prVM_MA.itemCartList[i].ITEM_CODE)
+                                                @Html.HiddenFor(m => m.prVM_MA.itemCartList[i].REQUEST_UOM_CODE)
+                                                @Html.HiddenFor(m => m.prVM_MA.itemCartList[i].ITEM_QTY_AVG)
+                                                @Html.HiddenFor(m => m.prVM_MA.itemCartList[i].WH_UOM_CODE)
+                                                @*@Html.HiddenFor(m => m.prVM_MA.itemCartList[i].FILE_PATH)
+                                                    @Html.HiddenFor(m => m.prVM_MA.itemCartList[i].FULL_PATH)
+                                                    @Html.HiddenFor(m => m.prVM_MA.itemCartList[i].SALE_PRICE)
+                                                    @Html.HiddenFor(m => m.prVM_MA.itemCartList[i].REMAIN_QTY)*@
+                                                <tr>
+                                                    <td class="text-right" style="width:20px;">@item.ROW_NO.ToString("#,##0")</td>
+                                                    <td>@item.ST_PR_CATEGORY_NAME</td>
+                                                    @*<td>@item.REQUEST_TO_BRAND_CODE</td>*@
+                                                    @*<td>@item.REQUEST_TO_BRAND_NAME</td>*@
+                                                    <td>@item.ITEM_CODE</td>
+                                                    <td>@item.ITEM_NAME</td>
+                                                    <td>@item.ITEM_DETAIL</td>
+                                                    @if (Model.showImageFlag)
+                                                    {
+                                                        <td><img class="zoom" src="@url1" onclick="window.open(src);" border="0" style="width:40px; height:40px;" alt=""></td>
+                                                    }
+                                                    <td>
+                                                        @{
+                                                    var callCalItemPriceFunction = " calItemPrice(this,{0},{1},{2});";
+                                                    callCalItemPriceFunction = callCalItemPriceFunction.Replace("{0}", item.ITEM_QTY.ToString());
+                                                    callCalItemPriceFunction = callCalItemPriceFunction.Replace("{1}", item.UNIT_PRICE.ToString());
+                                                    //callCalItemPriceFunction = callCalItemPriceFunction.Replace("{2}", item.SALE_PRICE.ToString());
+                                                    callCalItemPriceFunction = callCalItemPriceFunction.Replace("{2}", i.ToString());
+
+                                                    //callCalItemPriceFunction = callCalItemPriceFunction.Replace("{3}", i.ToString());
+                                                        }
+                                                        @Html.TextBoxFor(m => m.prVM_MA.itemCartList[i].ITEM_QTY,
+                                                        new
+                                                        {
+                                                            @class = "form-control numberOnlyPr"
+                                                            ,
+                                                            maxlength = 10
+                                                            ,
+                                                            //@onBlur = "checkItemAvg(" + @i + "); checkItemPrice(" + @i +","@Model.prVM_MA.itemPrice.PRICE_BEFORE_VAT")"
+                                                            @onBlur = "checkItemAvg(" + @i + ");" + @callCalItemPriceFunction
+                                                        })
+                                                    </td>
+                                                    @*<td>@item.ITEM_QTY</td>*@
+                                                    <td>@item.ITEM_UNIT</td>
+                                                    @if (Model.FRANCHISES_FLAG)
+                                                    {
+                                                        <td class="text-right" style="width:30px;">
+                                                            @{
+                                                        item.UNIT_PRICE = item.UNIT_PRICE.HasValue ? item.UNIT_PRICE.Value : 0;
+                                                            }
+
+                                                            <span id="spnUnitPrice_@i">
+                                                                @item.UNIT_PRICE.Value.ToString("N2")
+                                                            </span>
+                                                            @Html.HiddenFor(m => m.prVM_MA.itemCartList[i].UNIT_PRICE)
+                                                        </td>
+
+                                                        <td class="text-right" style="width:30px;">
+                                                            @{
+                                                        item.SALE_PRICE = item.SALE_PRICE.HasValue ? item.SALE_PRICE.Value : 0;
+                                                            }
+                                                            <span id="spnSalePrice_@i">
+                                                                @item.SALE_PRICE.Value.ToString("N2")
+                                                            </span>
+
+                                                            @Html.HiddenFor(m => m.prVM_MA.itemCartList[i].SALE_PRICE)
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-right" style="width:30px;">
+                                                            @if (item.REMAIN_QTY.HasValue)
+                                                            {
+                                                                @item.REMAIN_QTY.Value.ToString("N2")
+                                                            }
+                                                        </td>
+                                                    }
+                                                    <td>
+                                                        <a onclick="gotoRemoveItem('@item.ITEM_CODE','@item.REQUEST_UOM_CODE');" style="cursor: pointer;">ลบ</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            @if (Model.FRANCHISES_FLAG)
+                                            {
+                                                <tr>
+                                                    <td class="text-right" colspan="8">มูลค่าสินค้า</td>
+                                                    <td class="text-right" colspan="2" id="priceBeforeVat">
+                                                        @{
+                                                Model.prVM_MA.itemPrice.PRICE_BEFORE_VAT = Model.prVM_MA.itemPrice.PRICE_BEFORE_VAT.HasValue ? Model.prVM_MA.itemPrice.PRICE_BEFORE_VAT.Value : 0;
+                                                        }
+
+                                                        <span id="spnPriceBeforeVat">
+                                                            @Model.prVM_MA.itemPrice.PRICE_BEFORE_VAT.Value.ToString("N2")
+                                                        </span>
+
+                                                        @Html.HiddenFor(m => m.prVM_MA.itemPrice.PRICE_BEFORE_VAT)
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right" colspan="8">ภาษีมูลค่าเพิ่ม</td>
+                                                    <td class="text-right" colspan="2" id="vat">
+                                                        @{
+                                                Model.prVM_MA.itemPrice.VAT = Model.prVM_MA.itemPrice.VAT.HasValue ? Model.prVM_MA.itemPrice.VAT.Value : 0;
+                                                        }
+
+                                                        <span id="spnVat">
+                                                            @Model.prVM_MA.itemPrice.VAT.Value.ToString("N2")
+                                                        </span>
+
+                                                        @Html.HiddenFor(m => m.prVM_MA.itemPrice.VAT)
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right" colspan="8">มูลค่ารวม</td>
+                                                    <td class="text-right" colspan="2" id="priceIncludeVat">
+                                                        @{
+                                                Model.prVM_MA.itemPrice.PRICE_INCLUDE_VAT = Model.prVM_MA.itemPrice.PRICE_INCLUDE_VAT.HasValue ? Model.prVM_MA.itemPrice.PRICE_INCLUDE_VAT.Value : 0;
+                                                        }
+
+                                                        <span id="spnPriceIncludeVat">
+                                                            @Model.prVM_MA.itemPrice.PRICE_INCLUDE_VAT.Value.ToString("N2")
+                                                        </span>
+
+                                                        @Html.HiddenFor(m => m.prVM_MA.itemPrice.PRICE_INCLUDE_VAT)
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </table>
+                                        @if (Model.FRANCHISES_FLAG)
+                                        {
+                                            <div>
+                                                <p>หมายเหตุ : จำนวนรายการสินค้า, ราคาในใบกำกับภาษีเปลี่ยนแปลงตามรายการสินค้าที่ส่งและรับจริง</p>
+                                            </div>
+                                        }
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-sm-12 ">
+                                        <div class="alert alert-warning" style="text-align:center; font-size: 20px;">
+                                            กรุณาเลือกรายการสินค้า
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="col-sm-12 ">
+                                    <div class="alert alert-warning" style="text-align:center; font-size: 20px;">
+                                        กรุณาเลือกรายการสินค้า
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <a href="/MAS/Pr/Index/">กลับไปยังหน้าค้นหา</a>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        var checkSessionHasBranch = '@ViewBag.checkSessionHasBranch';
+        if (checkSessionHasBranch == '1') {
+            alert('@ViewBag.msgAlertNobranchInSession');
+            window.location = '/Home/ChangeBranch/';
+        }
+
+        @*var CheckPRDupplicate = '@ViewBag.CheckPRDupplicate';
+        var ST_PR_CODE = '@Model.prVM_MA.ST_PR_CODE';
+        var PLAN_DELIVERY_DATE = $('#prVM_MA_PLAN_DELIVERY_DATE').val();
+        if (CheckPRDupplicate == '1') {
+            alert('วันกำหนดส่งสินค้าดังกล่าวเคยมีการเปิด PR แล้ว ระบบจะนำไปยังหน้าแก้ไขของ PR ใบนั้น');
+            gotoUpdate(ST_PR_CODE);
+        } else {
+            gotoAddValue();
+        }*@
+
+        var PLAN_DELIVERY_DATE = $('#prVM_MA_PLAN_DELIVERY_DATE').val();
+        if (PLAN_DELIVERY_DATE != null || PLAN_DELIVERY_DATE != "") gotoDAY_OF_DELIVERY();
+
+        $('#prVM_MA_REMARK').on("change", function () {
+            gotoAddValue();
+        });
+
+        $('#prVM_MA_PLAN_DELIVERY_DATE').on("change", function () {
+            gotoDAY_OF_DELIVERY();
+            //debugger;
+            //var orderConfirm = confirm("คลิก OK เพื่อสั่งสินค้าใบตลาด\r\nคลิก Cancel เพื่อสั่ง Stationery");
+            //if (orderConfirm) {
+            //    GetCheckPRDupplicate();
+            //}
+            //debugger;
+            GetCheckPRDupplicate();
+            //gotoAddValue();
+        });
+    });
+
+    function checkItemAvg(row) {
+        var itemQty = $('#prVM_MA_itemCartList_' + row + '__ITEM_QTY').val();
+        console.log('itemQty : ' + itemQty);
+        var itemUomCode = $('#prVM_MA_itemCartList_' + row + '__REQUEST_UOM_CODE').val();
+        var itemQtyAvg = $('#prVM_MA_itemCartList_' + row + '__ITEM_QTY_AVG').val();
+        var itemWhUomCode = $('#prVM_MA_itemCartList_' + row + '__WH_UOM_CODE').val();
+        var itemCode = $('#prVM_MA_itemCartList_' + row + '__ITEM_CODE').val();
+
+        var messageText = '@ViewBag.msgAlertTotalItemAvg';
+        messageText = messageText.replace("{0}", itemCode);
+        messageText = messageText.replace("{1}", parseFloat(itemQtyAvg));
+        messageText = messageText.replace("{2}", itemWhUomCode);
+        messageText = messageText.replace("{3}", parseFloat(itemQty));
+        messageText = messageText.replace("{4}", itemUomCode);
+
+        if (itemQty != null && itemQty != "") {
+            if ((parseFloat(itemQty) > parseFloat(itemQtyAvg)) && (itemQtyAvg) > 0) {
+                alert("คำเตือน : " + messageText);
+            }
+        }
+
+        if (itemQty == "") {
+            $('#prVM_MA_itemCartList_' + row + '__ITEM_QTY').val("0.00");
+        }
+    }
+
+    function calItemPrice(sender, qtyCurr, unitPriceCurr, i) {
+        var qtyNew = $("#" + sender.id).val();
+        var tempqtyNew = this.parseFloat(qtyNew);
+        var check = Number.isInteger(tempqtyNew);
+        if (check == false) {
+            qtyNew = 0;
+        } else {
+            qtyNew = tempqtyNew;
+        }
+        var salePriceCurr = $("#prVM_MA_itemCartList_" + i + "__SALE_PRICE").val();
+        console.log('------__SALE_PRICE-------' + salePriceCurr);
+        var salePriceNew = this.parseFloat(qtyNew) * this.parseFloat(unitPriceCurr);
+        console.log('salePriceNew: ' + salePriceNew);
+        $("#spnSalePrice_" + i).html(numberWithCommas(salePriceNew.toFixed(2)));
+        $("#prVM_MA_itemCartList_" + i + "__SALE_PRICE").val(salePriceNew.toFixed(2));
+        var salePriceBeforeVatCurr = $('#prVM_MA_itemPrice_PRICE_BEFORE_VAT').val();
+        var vatCurr = $('#prVM_MA_itemPrice_VAT').val();
+        var salePriceIncludeVatCurr = $('#prVM_MA_itemPrice_PRICE_INCLUDE_VAT').val();
+        var salePriceBeforeVatNew = this.parseFloat(salePriceBeforeVatCurr) - this.parseFloat(salePriceCurr) + this.parseFloat(salePriceNew);
+        $('#prVM_MA_itemPrice_PRICE_BEFORE_VAT').val(salePriceBeforeVatNew.toFixed(2));
+        $('#spnPriceBeforeVat').html(numberWithCommas(salePriceBeforeVatNew.toFixed(2)));
+        var vatNew = salePriceBeforeVatNew * (7 / 100);
+        $('#prVM_MA_itemPrice_VAT').val(vatNew.toFixed(2));
+        $('#spnVat').html(numberWithCommas(vatNew.toFixed(2)));
+        var salePriceIncludeVatNew = salePriceBeforeVatNew + vatNew;
+        $('#prVM_MA_itemPrice_PRICE_INCLUDE_VAT').val(salePriceIncludeVatNew.toFixed(2));
+        $('#spnPriceIncludeVat').html(numberWithCommas(salePriceIncludeVatNew.toFixed(2)));
+    }
+
+    function gotoDAY_OF_DELIVERY() {
+        if (document.getElementById("prVM_MA_PLAN_DELIVERY_DATE").value != "") {
+            var gsDayNames = new Array('อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์');
+            var p_day = document.getElementById("prVM_MA_PLAN_DELIVERY_DATE").value;
+            var p_day_split = p_day.split("/");
+            var d = new Date(p_day_split[2] + "-" + p_day_split[1] + "-" + p_day_split[0]);
+            var dayName = gsDayNames[d.getDay()];
+            document.getElementById("DAY_OF_DELIVERY").innerHTML = dayName;
+        }
+    }
+
+    function gotoAddItem() {
+        var fcLocation = $('#prVM_MA_FC_LOCATION').val();
+        if (fcLocation == "") {
+            alert("กรุณาเลือก Location ก่อน");
+            return false;
+        }
+        var planDeliveryDate = $('#prVM_MA_PLAN_DELIVERY_DATE').val();
+        if (planDeliveryDate == "") {
+            alert("กรุณาเลือกวันกำหนดส่งสินค้าก่อน");
+            return false;
+        }
+
+        //var orderConfirm = confirm("คลิก OK เพื่อสั่งสินค้าใบตลาด\r\nคลิก Cancel เพื่อสั่ง Stationery");
+        //if (orderConfirm) {
+        //    GetCheckPRDupplicate();
+        //}
+
+        var url1 = '@Url.Action("AddItemCart")';
+        url1 = url1.substring(0, url1.lastIndexOf("AddItemCart")).concat("AddItemCart");
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+
+    }
+
+    function gotoRemoveItem(itemCode, uomCode) {
+        $('#prVM_MA_ITEM_CODE').val(itemCode);
+        $('#prVM_MA_REQUEST_UOM_CODE').val(uomCode);
+        if (confirm('คุณต้องการลบสินค้าใช่หรือไม่')) {
+            var url1 = '@Url.Action("ItemCartRemove")';
+            url1 = url1.substring(0, url1.lastIndexOf("ItemCartRemove")).concat("ItemCartRemove");
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+    function gotoSave() {
+        if (confirm('@ViewBag.msgConfirmSaveCart')) {
+            $('#btnSave').prop("disabled", true); // ปิดการใช้งานปุ่ม Save
+            $('body').addClass("img-loading"); // เพิ่มรูปขึ้นที่หน้าจอ
+            var url1 = '@Url.Action("ItemCartSave")';
+            url1 = url1.substring(0, url1.lastIndexOf("ItemCartSave")).concat("ItemCartSave");
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+    function gotoClear() {
+        if (confirm('@ViewBag.msgConfirmClearCart')) {
+            var url1 = '@Url.Action("ItemCartClear")';
+            url1 = url1.substring(0, url1.lastIndexOf("ItemCartClear")).concat("ItemCartClear");
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+
+    function gotoAddValue() {
+        var url1 = '@Url.Action("AddValue")';
+        url1 = url1.substring(0, url1.lastIndexOf("AddValue")).concat("AddValue");
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    @*function GetCheckPRDupplicate() {
+        var url1 = '@Url.Action("GetCheckPRDupplicate")';
+        url1 = url1.substring(0, url1.lastIndexOf("GetCheckPRDupplicate")).concat("GetCheckPRDupplicate");
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }*@
+
+    function GetCheckPRDupplicate() {
+        var planDeliveryDate = $('#prVM_MA_PLAN_DELIVERY_DATE').val();
+        var pdelDate = planDeliveryDate.substring(6, 10) + '-' + planDeliveryDate.substring(3, 5) + '-' + planDeliveryDate.substring(0, 2);
+        var fcLocation = $('#prVM_MA_FC_LOCATION').val();
+        var fcl = fcLocation;
+        debugger;
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetCheckPRDupplicate")',
+            datatype: JSON,
+            data: {
+                'planDeliveryDate': pdelDate, fcLocation: fcl
+            },
+            success: function (response) {
+                debugger;
+                if (response.SuccessFlag) {
+                    alert('วันกำหนดส่งสินค้าดังกล่าวเคยมีการเปิด PR แล้ว ระบบจะนำไปยังหน้าแก้ไขของ PR ใบนั้น');
+                    gotoUpdate(response.StPrCode);
+                }
+            },
+            error: function (response) {
+                debugger;
+                alert('Error EX: ' + respond.responseText);
+            }
+        });
+    }
+
+
+    function gotoUpdate(prCode) {
+        var url1 = '/MAS/Pr/UpdatePR/';
+        var vform = $('#form1');
+        vform.attr("action", url1.concat(prCode));
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+</script>

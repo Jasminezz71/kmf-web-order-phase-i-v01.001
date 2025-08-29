@@ -1,0 +1,44 @@
+﻿@model ZEN.SaleAndTranfer.VM.ACC.IndexEndDayDocVM
+
+@if (Model != null && Model.RETs != null && Model.RETs.Count > 0)
+{
+    <div class="row">
+        @foreach (var item in Model.RETs)
+        {
+
+            <div class="col-md-4">
+                <div>
+                    <div class="caption">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">@item.END_DAY_DOC_TYPE_NAME</div>
+                            <div class="panel-body">
+                                <form>
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => item.FILE_NAME_ORI)
+                                        @Html.DisplayTextFor(m => item.FILE_NAME_ORI)
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => item.FILE_NAME_DEST)
+                                        @Html.DisplayTextFor(m => item.FILE_NAME_DEST)
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.Label("วันที่อัพโหลดไฟล์")
+                                        @*@Html.LabelFor(m => item.CREATE_DATE)*@
+                                        @Html.DisplayTextFor(m => item.CREATE_DATE)
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => item.END_DAY_DATE)
+                                        @Html.DisplayTextFor(m => item.END_DAY_DATE)
+                                    </div>
+                                    @Html.ActionLink("ลบ", "Delete", new { id = item.END_DAY_DOC_ID }, new { onclick = "return confirm('ยืนยันการลบ?')", @class = "btn btn-danger active", @role="button" })
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+    </div>
+}
+

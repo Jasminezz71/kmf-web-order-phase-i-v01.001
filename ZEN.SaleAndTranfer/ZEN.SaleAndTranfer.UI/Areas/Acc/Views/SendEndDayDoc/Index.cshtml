@@ -1,0 +1,90 @@
+﻿@model ZEN.SaleAndTranfer.VM.ACC.IndexEndDayDocVM
+
+@{
+    ViewBag.Title = "ส่งเอกสารสิ้นวันให้ฝ่ายบัญชี";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>@ViewBag.Title</h2>
+<hr />
+@Html.Partial("_MessagePartial", Model.MessageList)
+
+
+<div class="container">
+    @* Header *@
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.EndDayDate)
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.EndDayDate,
+                                new
+                                {
+                                    @type = "date",
+                                    @class = "form-control",
+                                })
+
+                    <span class="input-group-btn">
+                        <button id="btnGetData" class="btn btn-primary" type="button" onclick="getData();" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                        </button>
+                    </span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="btn-group" role="group" aria-label="...">
+                    <button id="btnUploadEndDayDoc" class="btn btn-default" type="button" onclick="onGotoUploadPage(1);">Upload เอกสารสิ้นวัน</button>
+                    @*<button id="btnUploadSCBDoc" class="btn btn-default" type="button" onclick="onGotoUploadPage(2);">Upload เอกสาร SCB</button>
+                    <button id="btnUploadKTCDoc" class="btn btn-default" type="button" onclick="onGotoUploadPage(3);">Upload เอกสาร KTC</button>
+                    <button id="btnUploadShift1Doc" class="btn btn-default" type="button" onclick="onGotoUploadPage(4);">Upload เอกสาร Shift 1</button>
+                    <button id="btnUploadShift2Doc" class="btn btn-default" type="button" onclick="onGotoUploadPage(5);">Upload เอกสาร Shift 2</button>*@
+                    <button id="btnUploadShift1Doc" class="btn btn-default" type="button" onclick="onGotoUploadPage(7);">Upload บิลน้ำมัน</button>
+                    <button id="btnUploadShift2Doc" class="btn btn-default" type="button" onclick="onGotoUploadPage(8);">Upload เอกสาร Void Bill</button>
+                    <button id="btnUploadPayInDoc" class="btn btn-default" type="button" onclick="onGotoUploadPage(6);">Upload เอกสาร Pay In</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    @* Detail *@
+    @Html.Partial("_IndexEndDayDocPartial_V01000", Model)
+</div>
+
+@*<div class="container">
+        <button type="submit" class="btn btn-primary">บันทึก</button>
+    </div>*@
+
+<script type="text/javascript">
+    function onGotoUploadPage(tid) {
+        var edd = $("#EndDayDate").val();
+        //alert(edd);
+
+        var url = "/" + edd + "?tid=" + tid;
+        //alert(url);
+
+        var goToUrl = "/Acc/SendEndDayDoc/Upload/";
+        gotoUrl = goToUrl + url;
+        //alert(gotoUrl);
+
+        location.href = gotoUrl;
+    }
+
+    function getData() {
+        var id = $("#EndDayDate").val();
+        var goToUrl = "/Acc/SendEndDayDoc/Index/" + id;
+        //alert(goToUrl);
+        location.href = goToUrl;
+    }
+
+    $(document).ready(function () {
+        $("#EndDayDate").val('@Model.EndDayDate.Value.ToString("yyyy-MM-dd")');
+    });
+</script>

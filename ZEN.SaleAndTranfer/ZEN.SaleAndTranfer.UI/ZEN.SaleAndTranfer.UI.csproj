@@ -1,0 +1,712 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BDB99938-79F2-4D0F-B8EA-D979A5A2BF50}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ZEN.SaleAndTranfer.UI</RootNamespace>
+    <AssemblyName>ZEN.SaleAndTranfer.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <Use64BitIISExpress />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLL\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebForms">
+      <HintPath>..\..\DLL\Microsoft.ReportViewer.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\packages\NPOI.2.2.1\lib\net40\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>..\packages\NPOI.2.2.1\lib\net40\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>..\packages\NPOI.2.2.1\lib\net40\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>..\packages\NPOI.2.2.1\lib\net40\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="SRVTextToImage">
+      <HintPath>..\..\DLL\SRVTextToImage.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <Private>True</Private>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Abstractions, Version=5.11.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.11.10\lib\net45\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.11.11.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.11.10\lib\net45\Unity.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mvc5, Version=1.4.0.0, Culture=neutral, PublicKeyToken=43da31bc42a85347, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Mvc5.1.4.0\lib\net45\Unity.Mvc5.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.1.0.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.1.0.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.1.0.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.2.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.0.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.2.0.0\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.0.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.0.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.2.0.0\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.2.0.0\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.2.0.0\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\DependencyConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="Areas\Acc\AccAreaRegistration.cs" />
+    <Compile Include="Areas\Acc\Controllers\SendEndDayDocController.cs" />
+    <Compile Include="Areas\ADMIN\ADMINAreaRegistration.cs" />
+    <Compile Include="Areas\ADMIN\Controllers\BatchController.cs" />
+    <Compile Include="Areas\ADMIN\Controllers\BatchHAVIController.cs" />
+    <Compile Include="Areas\ADMIN\Controllers\UserController.cs" />
+    <Compile Include="Areas\AUT\AUTAreaRegistration.cs" />
+    <Compile Include="Areas\AUT\Controllers\CaptchaController.cs" />
+    <Compile Include="Areas\AUT\Controllers\LoginController.cs" />
+    <Compile Include="Areas\IMPORTANDEXPORT\Controllers\ItemAndBrandCategoryController.cs" />
+    <Compile Include="Areas\IMPORTANDEXPORT\Controllers\ItemAndItemCategoryController.cs" />
+    <Compile Include="Areas\IMPORTANDEXPORT\Controllers\ItemAndLocationController.cs" />
+    <Compile Include="Areas\IMPORTANDEXPORT\Controllers\ItemCategoryController.cs" />
+    <Compile Include="Areas\IMPORTANDEXPORT\Controllers\LocationController.cs" />
+    <Compile Include="Areas\IMPORTANDEXPORT\Controllers\StockCardController.cs" />
+    <Compile Include="Areas\IMPORTANDEXPORT\Controllers\PrCategoryController.cs" />
+    <Compile Include="Areas\IMPORTANDEXPORT\Controllers\PrWhPickupController.cs" />
+    <Compile Include="Areas\IMPORTANDEXPORT\Controllers\UnitController.cs" />
+    <Compile Include="Areas\IMPORTANDEXPORT\Controllers\UnitConversionController.cs" />
+    <Compile Include="Areas\IMPORTANDEXPORT\IMPORTANDEXPORTAreaRegistration.cs" />
+    <Compile Include="Areas\MAS\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\MAS\Controllers\DoController.cs" />
+    <Compile Include="Areas\MAS\Controllers\DownloadController.cs" />
+    <Compile Include="Areas\MAS\Controllers\GrController.cs" />
+    <Compile Include="Areas\MAS\Controllers\ItemStockController.cs" />
+    <Compile Include="Areas\MAS\Controllers\DeliveryScheduleController.cs" />
+    <Compile Include="Areas\MAS\Controllers\PrController.cs" />
+    <Compile Include="Areas\MAS\Controllers\RecTransferController.cs" />
+    <Compile Include="Areas\MAS\Controllers\SignatureController.cs" />
+    <Compile Include="Areas\MAS\Controllers\UnitConvertController.cs" />
+    <Compile Include="Areas\MAS\MASAreaRegistration.cs" />
+    <Compile Include="Areas\RPT\Controllers\IndexController.cs" />
+    <Compile Include="Areas\RPT\Controllers\ReportController.cs" />
+    <Compile Include="Areas\RPT\RPTAreaRegistration.cs" />
+    <Compile Include="BC2\ManualBatchBC2.cs" />
+    <Compile Include="BC2\PromotionBC2.cs" />
+    <Compile Include="BC2\PrqBC2.cs" />
+    <Compile Include="BC2\UserBC2.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ManualBatchController.cs" />
+    <Compile Include="Controllers\ContactController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MaPromotionController.cs" />
+    <Compile Include="Controllers\PromotionController.cs" />
+    <Compile Include="Controllers\PrqController.cs" />
+    <Compile Include="Controllers\UsrController.cs" />
+    <Compile Include="DC2\CommonDC2.cs" />
+    <Compile Include="DC2\DdlDC2.cs" />
+    <Compile Include="DC2\ManualBatchDC2.cs" />
+    <Compile Include="DC2\PromotionDC2.cs" />
+    <Compile Include="DC2\PrqDC2.cs" />
+    <Compile Include="DC2\UserDC2.cs" />
+    <Compile Include="ET2\BasketItemET.cs" />
+    <Compile Include="ET2\JsonResultET.cs" />
+    <Compile Include="ET2\ManualBatchET.cs" />
+    <Compile Include="ET2\PopupPromotionItemRet.cs" />
+    <Compile Include="ET2\PrqHET.cs" />
+    <Compile Include="ET2\ChangePwdET.cs" />
+    <Compile Include="ET2\UserET2.cs" />
+    <Compile Include="ET2\USP_C_CONFIG__SavePopupPromotionItem__Pet.cs" />
+    <Compile Include="ET2\USP_M_USM_USER__Search_V2__Pet.cs" />
+    <Compile Include="ET2\USP_M_USM_USER__UpdatePwd__Pet.cs" />
+    <Compile Include="ET2\USP_R_BATCH_MASTER__Pet.cs" />
+    <Compile Include="ET2\USP_R_ST_MAP_WH_ITEM__Search__Pet.cs" />
+    <Compile Include="ET2\USP_R_ST_PR_Search_V2__Pet.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helper\LogHelperUI.cs" />
+    <Compile Include="Helper\LogWsHelper.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\MainModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MainModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MainModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\USP_C_CONFIG__GetPopupPromoItem_Result.cs">
+      <DependentUpon>MainModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\USP_M_USM_USER__GetByPK_V2_Result.cs">
+      <DependentUpon>MainModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\USP_M_USM_USER__Save_Result.cs">
+      <DependentUpon>MainModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\USP_M_USM_USER__Search_V2_Result.cs">
+      <DependentUpon>MainModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\USP_R_BATCH_MASTER_Result.cs">
+      <DependentUpon>MainModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\USP_R_ST_MAP_PR_CATEGORY_BRAND_GetByBrandCode_Result.cs">
+      <DependentUpon>MainModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\USP_R_ST_MAP_WH_ITEM__Search_Result.cs">
+      <DependentUpon>MainModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\USP_R_ST_PR_D__GetByPrCode_Result.cs">
+      <DependentUpon>MainModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\USP_R_ST_PR_H__GetByPK_Result.cs">
+      <DependentUpon>MainModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\USP_R_ST_PR_Search_V2_Result.cs">
+      <DependentUpon>MainModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\ReportBasePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reports\ReportView.aspx.cs">
+      <DependentUpon>ReportView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reports\ReportView.aspx.designer.cs">
+      <DependentUpon>ReportView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\LogWs\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="SessionConst.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="Util\PagingHelper.cs" />
+    <Compile Include="Util\PrCategoryIDConst.cs" />
+    <Compile Include="Util\RoleIDConst.cs" />
+    <Compile Include="Util\SessionNameConst.cs" />
+    <Compile Include="VM2\BasketVM.cs" />
+    <Compile Include="VM2\ManualBatch\IManualBatchService.cs" />
+    <Compile Include="VM2\ManualBatch\RunVM2.cs" />
+    <Compile Include="VM2\MaPromotion\DoVM.cs" />
+    <Compile Include="VM2\Prq\DetailVM.cs" />
+    <Compile Include="VM2\Prq\DoVM2.cs" />
+    <Compile Include="VM2\Prq\IndexVM.cs" />
+    <Compile Include="VM2\Prq\SearchItemVM2.cs" />
+    <Compile Include="VM2\Prq\SearchVM2.cs" />
+    <Compile Include="VM2\Prq\SummaryVM2.cs" />
+    <Compile Include="VM2\Usr\ChangePwdVM2.cs" />
+    <Compile Include="VM2\Usr\DoVM2.cs" />
+    <Compile Include="VM2\Usr\ResetPwdVM2.cs" />
+    <Compile Include="VM2\Usr\SearchVM2.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap-datepicker.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\datepicker.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="images\kingmarine_logo.png" />
+    <Content Include="images\loading.gif" />
+    <Content Include="images\loading_2.gif" />
+    <Content Include="Models\MainModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MainModel.edmx</DependentUpon>
+      <LastGenOutput>MainModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\MainModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MainModel.edmx</DependentUpon>
+      <LastGenOutput>MainModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="Reports\ReportView.aspx" />
+    <Content Include="Scripts\accounting.js" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Scripts\bootstrap-datepicker.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\jquery-ui-1.11.4.css" />
+    <Content Include="Areas\AUT\Views\web.config" />
+    <Content Include="Areas\AUT\Views\Login\Index.cshtml" />
+    <Content Include="Areas\AUT\Views\Login\ResetPassword.cshtml" />
+    <Content Include="Areas\MAS\Views\web.config" />
+    <Content Include="Areas\MAS\Views\Dashboard\Index.cshtml" />
+    <Content Include="Areas\ADMIN\Views\web.config" />
+    <Content Include="Areas\ADMIN\Views\User\Index.cshtml" />
+    <Content Include="Areas\ADMIN\Views\User\Create.cshtml" />
+    <Content Include="Areas\ADMIN\Views\User\Update.cshtml" />
+    <Content Include="Areas\MAS\Views\Pr\Index.cshtml" />
+    <Content Include="Content\bootstrap-datepicker.css.map" />
+    <Content Include="Areas\MAS\Views\Pr\ItemCart.cshtml" />
+    <Content Include="Areas\MAS\Views\Pr\AddItemCart.cshtml" />
+    <Content Include="Areas\MAS\Views\Pr\PrViewDetail.cshtml" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\web.config" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\Location\Index.cshtml" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\Shared\_ImportAndExportPatial.cshtml" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\Unit\Index.cshtml" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\UnitConversion\Index.cshtml" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\ItemAndLocation\Index.cshtml" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\ItemCategory\Index.cshtml" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\ItemAndItemCategory\Index.cshtml" />
+    <Content Include="Areas\ADMIN\Views\Batch\Index.cshtml" />
+    <Content Include="Areas\MAS\Views\Do\Index.cshtml" />
+    <Content Include="Areas\MAS\Views\Do\ReceiveItem.cshtml" />
+    <Content Include="Areas\MAS\Views\Gr\Index.cshtml" />
+    <Content Include="Areas\MAS\Views\Gr\Update.cshtml" />
+    <Content Include="Areas\MAS\Views\Gr\Detail.cshtml" />
+    <Content Include="Areas\RPT\Views\web.config" />
+    <Content Include="Areas\RPT\Views\Index\RPT_ST_REPORT.cshtml" />
+    <Content Include="Areas\RPT\Views\Report\RPT_ST_REPORT.cshtml" />
+    <Content Include="Areas\RPT\Views\Report\RPT_ST_DO_REPORT.cshtml" />
+    <Content Include="Areas\RPT\Views\Report\RPT_ST_GR_REPORT.cshtml" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\PrCategory\Index.cshtml" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\ItemAndBrandCategory\Index.cshtml" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\PrWhPickup\Index.cshtml" />
+    <Content Include="Areas\MAS\Views\Pr\ItemCartUpdate.cshtml" />
+    <Content Include="Areas\MAS\Views\Download\Index.cshtml" />
+    <Content Include="Areas\ADMIN\Views\Batch\BatchPR.cshtml" />
+    <Content Include="Areas\RPT\Views\Report\Invoice.cshtml" />
+    <Content Include="Areas\RPT\Views\Report\RPT_INVOICE.cshtml" />
+    <Content Include="Areas\RPT\Views\Report\CreditNote.cshtml" />
+    <Content Include="Areas\RPT\Views\Report\RPT_CREDITNOTE.cshtml" />
+    <Content Include="Areas\ADMIN\Views\Batch\BatchGR.cshtml" />
+    <Content Include="Areas\MAS\Views\ItemStock\Index.cshtml" />
+    <Content Include="Areas\MAS\Views\ItemStock\InventoryStock.cshtml" />
+    <Content Include="Areas\RPT\Views\Report\RPT_STOCKCARD.cshtml" />
+    <Content Include="Areas\RPT\Views\Report\StockTotal.cshtml" />
+    <Content Include="Areas\RPT\Views\Report\StatusReceiveByDoAndGr.cshtml" />
+    <Content Include="Areas\MAS\Views\Signature\Index.cshtml" />
+    <Content Include="Areas\MAS\Views\Signature\Insert.cshtml" />
+    <Content Include="Areas\MAS\Views\UnitConvert\Index.cshtml" />
+    <Content Include="Areas\MAS\Views\RecTransfer\Index.cshtml" />
+    <Content Include="Areas\MAS\Views\RecTransfer\ModalBrand.cshtml" />
+    <Content Include="Areas\ADMIN\Views\BatchHAVI\Index.cshtml" />
+    <Content Include="Areas\ADMIN\Views\BatchHAVI\BatchPO.cshtml" />
+    <Content Include="Areas\ADMIN\Views\BatchHAVI\BatchSO.cshtml" />
+    <Content Include="Areas\Acc\Views\web.config" />
+    <Content Include="Areas\Acc\Views\SendEndDayDoc\Index.cshtml" />
+    <Content Include="Areas\Acc\Views\SendEndDayDoc\_IndexEndDayDocPartial_V01000.cshtml" />
+    <Content Include="Areas\Acc\Views\SendEndDayDoc\Upload.cshtml" />
+    <Content Include="Areas\MAS\Views\Do\_GrComplainPartial.cshtml" />
+    <Content Include="Areas\MAS\Views\Pr\AddItemCart__20190109.cshtml" />
+    <Content Include="Areas\RPT\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\RPT\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\RPT\Views\Report\RPT_ST_REPORT_FC.cshtml" />
+    <Content Include="Areas\RPT\Views\Report\RPT_ST_REPORT_EQ.cshtml" />
+    <Content Include="Areas\MAS\Views\Gr\_GRComplainPartial.cshtml" />
+    <Content Include="Areas\MAS\Views\DeliverySchedule\Index.cshtml" />
+    <Content Include="Areas\ADMIN\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\ADMIN\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\ADMIN\Views\User\BlockUser.cshtml" />
+    <Content Include="Areas\ADMIN\Views\Batch\SaesTranTOERP.cshtml" />
+    <Content Include="Areas\MAS\Views\DeliverySchedule\Edit.cshtml" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\IMPORTANDEXPORT\Views\StockCard\Index.cshtml" />
+    <EntityDeploy Include="Models\MainModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>MainModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\MainModel.edmx.diagram">
+      <DependentUpon>MainModel.edmx</DependentUpon>
+    </Content>
+    <None Include="Properties\PublishProfiles\BowSupaneeJ.pubxml" />
+    <None Include="Properties\PublishProfiles\SuntichonLocal.pubxml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ar.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.az.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.bg.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.bs.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ca.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.cs.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.cy.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.da.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.de.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.el.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.en-AU.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.en-GB.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.eo.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.es.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.et.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.eu.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fa.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fi.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fo.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fr-CH.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.gl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.he.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hu.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hy.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.id.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.is.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.it-CH.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.it.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ja.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ka.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kh.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ko.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.lt.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.lv.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.me.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.mk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.mn.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ms.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nb.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nl-BE.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.no.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pt-BR.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pt.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ro.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.rs-latin.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.rs.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ru.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sq.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sr-latin.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sv.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sw.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.th.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.tr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.uk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.vi.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\_references.js" />
+    <None Include="Service References\LogWs\LogService.disco" />
+    <None Include="Service References\LogWs\configuration91.svcinfo" />
+    <None Include="Service References\LogWs\configuration.svcinfo" />
+    <None Include="Service References\LogWs\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_MessagePartial.cshtml" />
+    <Content Include="Views\Shared\_PaginationPartial.cshtml" />
+    <Content Include="Views\Shared\_PaginationDashBoardBottomPartial.cshtml" />
+    <Content Include="Views\Shared\_PaginationDashBoardTopPartial.cshtml" />
+    <Content Include="Views\Home\ChangeBranch.cshtml" />
+    <Content Include="Views\Shared\_PaginationSearchPartial.cshtml" />
+    <Content Include="Views\Home\LogOut.cshtml" />
+    <Content Include="Views\Shared\_MenuAdminPartial.cshtml" />
+    <Content Include="Views\Shared\_MenuBrandAdminPartial.cshtml" />
+    <Content Include="Views\Shared\_MenuWareHousePartial.cshtml" />
+    <Content Include="Views\Shared\_MenuAccountPartial.cshtml" />
+    <Content Include="Views\Shared\_MenuUserPartial.cshtml" />
+    <None Include="Service References\LogWs\LogService.wsdl" />
+    <None Include="Service References\LogWs\LogService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\LogWs\LogService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\LogWs\LogService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Views\Shared\_MenuRestAdminPartial.cshtml" />
+    <Content Include="Views\Shared\_MenuAuditPartial.cshtml" />
+    <Content Include="Views\Shared\_menuPurchasingPartial.cshtml" />
+    <Content Include="Views\Prq\SearchItem.cshtml" />
+    <Content Include="Views\Contact\Index.cshtml" />
+    <Content Include="Views\Prq\_Prq_SearchItemResult_Partial.cshtml" />
+    <Content Include="Views\Shared\_Basket_Partial.cshtml" />
+    <Content Include="Views\Prq\Summary.cshtml" />
+    <Content Include="Views\Prq\_Prq_Summary_Partial.cshtml" />
+    <Content Include="Views\Prq\_Prq_PrH_Partial.cshtml" />
+    <Content Include="Views\Prq\Search.cshtml" />
+    <Content Include="Views\Prq\_Prq_SearchResult_Partial.cshtml" />
+    <Content Include="Views\Prq\Index.cshtml" />
+    <Content Include="Views\Prq\Detail.cshtml" />
+    <Content Include="Views\MaPromotion\Do.cshtml" />
+    <Content Include="Views\Shared\_Promotion_Popup_Detail_Partial.cshtml" />
+    <Content Include="Views\Usr\Search.cshtml" />
+    <Content Include="Views\Usr\_Usr_CustomerResult_Partial.cshtml" />
+    <Content Include="Views\Usr\Do.cshtml" />
+    <Content Include="Views\Usr\ChangePwd.cshtml" />
+    <Content Include="Views\Shared\_Layout_ChangePwd.cshtml" />
+    <Content Include="Views\ManualBatch\Run.cshtml" />
+    <Content Include="Views\Prq\SearchCus.cshtml" />
+    <Content Include="Views\Usr\_Usr_SearchResult_Partial.cshtml" />
+    <Content Include="Views\Shared\_MenuSaleAdminPartial.cshtml" />
+    <Content Include="Views\Shared\_MenuSaleAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\AccEndDayDoc\" />
+    <Folder Include="Areas\Acc\Models\" />
+    <Folder Include="Areas\Acc\Views\Shared\" />
+    <Folder Include="Areas\ADMIN\Models\" />
+    <Folder Include="Areas\AUT\Models\" />
+    <Folder Include="Areas\AUT\Views\Captcha\" />
+    <Folder Include="Areas\AUT\Views\Shared\" />
+    <Folder Include="Areas\IMPORTANDEXPORT\Models\" />
+    <Folder Include="Areas\MAS\Models\" />
+    <Folder Include="Areas\MAS\Views\Shared\" />
+    <Folder Include="Areas\RPT\Models\" />
+    <Folder Include="images\Item\" />
+    <Folder Include="images\Promo\" />
+    <Folder Include="Views\Base\" />
+    <Folder Include="Views\Promotion\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="packages.config" />
+    <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ZEN.SaleAndTranfer.BC\ZEN.SaleAndTranfer.BC.csproj">
+      <Project>{e647c244-a3a2-43a5-83d7-2e1a5f2887eb}</Project>
+      <Name>ZEN.SaleAndTranfer.BC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ZEN.SaleAndTranfer.ET\ZEN.SaleAndTranfer.ET.csproj">
+      <Project>{2489cc8d-d9d5-4205-a875-276c1d995427}</Project>
+      <Name>ZEN.SaleAndTranfer.ET</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ZEN.SaleAndTranfer.VM\ZEN.SaleAndTranfer.VM.csproj">
+      <Project>{83a0955d-9782-43a4-92b3-7ff2b45cb9a2}</Project>
+      <Name>ZEN.SaleAndTranfer.VM</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\LogWs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>21805</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:21799/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

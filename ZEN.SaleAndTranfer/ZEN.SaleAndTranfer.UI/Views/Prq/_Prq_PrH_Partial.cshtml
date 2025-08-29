@@ -1,0 +1,97 @@
+﻿
+@model ZEN.SaleAndTranfer.UI.ET2.PrqHET
+
+<form id="formPrH">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label>*วันกำหนดส่ง</label>
+        @Html.TextBoxFor(m => m.PlanDeliveryDate, new { @class = "form-control", @type = "date", @placeholder = "*วันกำหนดส่ง" })
+        @Html.ValidationMessageFor(m => m.PlanDeliveryDate, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label>*ผู้สั่งสินค้า</label>
+        @Html.TextBoxFor(m => m.OrderBy, new { @class = "form-control", @placeholder = "*ผู้สั่งสินค้า" })
+        @Html.ValidationMessageFor(m => m.OrderBy, "", new { @class = "text-danger" })
+    </div>
+    @if (Model.CustDummy == 0)
+    {
+
+        <div class="form-group">
+            <label>Address</label>
+            @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @placeholder = "ที่อยู่", @readonly = "true" })
+            @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label>Address2</label>
+            @Html.TextBoxFor(m => m.Address2, new { @class = "form-control", @placeholder = "ที่อยู่2", @readonly = "true" })
+            @Html.ValidationMessageFor(m => m.Address2, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label>Address3</label>
+            @Html.TextBoxFor(m => m.Address3, new { @class = "form-control", @placeholder = "ที่อยู่3", @readonly = "true" })
+            @Html.ValidationMessageFor(m => m.Address3, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label>Post Code</label>
+            @Html.TextBoxFor(m => m.Postcode, new { @class = "form-control", @placeholder = "รหัสไปรษณีย์", @readonly = "true" })
+            @Html.ValidationMessageFor(m => m.Postcode, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label>City</label>
+            @Html.TextBoxFor(m => m.City, new { @class = "form-control", @placeholder = "เขต", @readonly = "true" })
+            @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger" })
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            <label>Address</label>
+            @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @placeholder = "ที่อยู่" })
+            @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label>Address2</label>
+            @Html.TextBoxFor(m => m.Address2, new { @class = "form-control", @placeholder = "ที่อยู่2" })
+            @Html.ValidationMessageFor(m => m.Address2, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label>Address3</label>
+            @Html.TextBoxFor(m => m.Address3, new { @class = "form-control", @placeholder = "ที่อยู่3" })
+            @Html.ValidationMessageFor(m => m.Address3, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label>Post Code</label>
+            @Html.TextBoxFor(m => m.Postcode, new { @class = "form-control", @placeholder = "รหัสไปรษณีย์" })
+            @Html.ValidationMessageFor(m => m.Postcode, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label>City</label>
+            @Html.TextBoxFor(m => m.City, new { @class = "form-control", @placeholder = "เขต" })
+            @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger" })
+        </div>
+    }
+    @Html.HiddenFor(m => m.isSaleAdmin, new { @class = "form-control" })
+    @Html.HiddenFor(m => m.SaleAdminCode, new { @class = "form-control"})
+    @Html.HiddenFor(m => m.ConfigValue, new { @class = "form-control" })
+
+    <div class="form-group">
+        <label>*เบอร์โทรศัพท์</label>
+        @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control", @placeholder = "*เบอร์โทรศัพท์" })
+        @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label>PO</label>
+        @Html.TextBoxFor(m => m.PoCode, new { @class = "form-control", @placeholder = "PO" })
+        @Html.ValidationMessageFor(m => m.PoCode, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label>Upload PO File</label>
+        <input type="file" />
+    </div>
+    <div class="form-group">
+        <label>หมายเหตุ</label>
+        @Html.TextAreaFor(m => m.Remark, new { @class = "form-control", @placeholder = "หมายเหตุ", rows = "3" })
+        @Html.ValidationMessageFor(m => m.Remark, "", new { @class = "text-danger" })
+    </div>
+    @*<button type="button" class="btn btn-primary">ยืนยันคำสั่งซื้อ</button>*@
+</form>

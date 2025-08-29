@@ -1,0 +1,132 @@
+﻿@model ZEN.SaleAndTranfer.VM.AUT.LoginVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function charUpperCase() {
+        $('#loginVM_MA_CAPTCHA').val($('#loginVM_MA_CAPTCHA').val().toUpperCase());
+    }
+
+    $(function () {
+        $("#loginVM_MA_CAPTCHA").keypress(function (event) {
+            var ew = event.which;
+            if (48 <= ew && ew <= 57)
+                return true;
+            if (65 <= ew && ew <= 90)
+                return true;
+            if (97 <= ew && ew <= 122)
+                return true;
+            if ($("#loginVM_MA_CAPTCHA").val().length == 5) 
+                if (ew == 13) // 13 = Key Enter
+                    return true;
+            return false;
+        });
+    });
+</script>
+
+<h2>เข้าสู่ระบบ</h2>
+<hr />
+
+@Html.Partial("_MessagePartial", Model.MessageList)
+
+<div class="col-md-9 col-md-offset-3">
+    <div class="panel panel-info" id="divLogin" style="max-width:500px;">
+        <div class="panel-heading">เข้าสู่ระบบ</div>
+        <div class="panel-body">
+            <form id="form1" class="form-horizontal" autocomplete="off">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="Username">ชื่อผู้ใช้งาน</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.loginVM_MA.USER_NAME, new { @maxlength = "50", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="Password">รหัสผ่าน</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.loginVM_MA.PASSWORD, new { @maxlength = "50", @class = "form-control", @type = "password" })
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                        <label class="col-sm-3">
+                        </label>
+                        <div class="col-sm-9">
+                            <img class="img-responsive" src="@Url.Action("GetCaptchaImage", "Captcha")" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3">
+                        </label>
+                        <div class="col-sm-9">
+                            <p class="help-block">* โปรดระบุตัวอักษร เพื่อความปลอดภัยของระบบ</p>
+                            @Html.TextBoxFor(m => m.loginVM_MA.CAPTCHA,
+                            new
+                            {
+                                @class = "form-control",
+                                @maxlength = 5,
+                                @onkeyup = "charUpperCase()"
+                            })
+                        </div>
+                    </div>*@
+                    <div class="form-group">
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-9">
+                            <input type="button" value="เข้าสู่ระบบ" class="btn btn-primary" onclick="gotoLogin();">
+                            &nbsp;
+                            <input type="button" value="ล้างหน้าจอ" class="btn btn-default" onclick="gotoClear();">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        if ('@ViewBag.notHaveSession') {
+            $('body').addClass("bg-blur");
+            //alert('ระยะเวลาการทำงานของคุณสิ้นสุด กรุณาเข้าระบบใหม่อีกครั้ง');
+            $('body').removeClass("bg-blur");
+        }
+
+        // ใช้สำหรับตรวจจับการกดปุ่ม Enter
+        // เพื่อใช้ในการ Post ไป Function Login
+        $('#divLogin').on('keypress', function (e) {
+            var keyEnterCode = 13;
+            var onkeyCode = e.keyCode;
+            if (onkeyCode == keyEnterCode) {
+                gotoLogin();
+            }
+        });
+    });
+
+    function gotoLogin() {
+        var url1 = '@Url.Action("Login")';
+        url1 = url1.substring(0, url1.lastIndexOf("Login")).concat("Login");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoClear() {
+        var url1 = '@Url.Action("Index")';
+        url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+</script>
+<style>
+    .bg-blur {
+        opacity: 0.3;
+    }
+</style>

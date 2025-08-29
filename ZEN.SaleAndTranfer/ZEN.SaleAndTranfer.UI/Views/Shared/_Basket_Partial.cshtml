@@ -1,0 +1,84 @@
+﻿@using ZEN.SaleAndTranfer.UI.Util
+@model ZEN.SaleAndTranfer.UI.VM2.BasketVM
+
+@* Header *@
+
+@{
+    decimal? sumTotal = 0;
+
+    var col1 = string.Empty;
+    col1 = "col-xs-12 col-md-12";
+}
+
+@if (Model.Detail != null && Model.Detail.Count > 0)
+{
+    foreach (var ret in Model.Detail)
+    {
+        sumTotal = sumTotal + (ret.UnitPrice * ret.OrderQty);
+    }
+
+    //var sum1 = Model.Detail.Sum(m => m.UnitPrice);
+    //var sum2 = Model.Detail.Where(m => m.UnitPrice != null && m.UnitPrice.HasValue).Sum(m => m.OrderQty);
+    //sumTotal = sum1.Value * Convert.ToDecimal(sum2);
+    //sumTotal = sum1.Value * Convert.ToDecimal(sum2);
+}
+
+
+<h4><strong>รายการในตะกร้า</strong></h4>
+
+@* Detail *@
+<div class="row" style="padding: 0px 15px 15px 15px;">
+    @if (Model.Detail != null && Model.Detail.Count > 0)
+    {
+        <div class="row" style="padding: 0px 15px 0px 15px;">
+            <span style="font-size: small; font-weight: bold; color: red;">รวมทั้งสิ้น @sumTotal.Value.ToString("N2") &#3647;</span>
+        </div>
+
+        foreach (var det in Model.Detail)
+        {
+            var priceDisp = det.UnitPrice != null && det.UnitPrice.HasValue ? det.UnitPrice.Value.ToString("N2") : "N/A";
+            var price = det.UnitPrice != null && det.UnitPrice.HasValue ? det.UnitPrice.Value : 0;
+            var formID = string.Format("formAddItemToBasketOnBasket{0}", det.ItemCode);
+            var divID = string.Format("divAddItemToBasketOnBasket{0}", det.StMapWhItemID);
+            var totalPrice = price * det.OrderQty;
+            var totalPriceDisp = totalPrice.Value.ToString("N2");
+            <div class="@col1" style="padding: 0px;" id="@divID">
+                <div class="thumbnail">
+                    @*<div class="text-center"><img src="..." alt="..." style="width: 40px; height: 40px;"></div>*@
+                    <div class="caption">
+                        <p style="font-size: small; font-weight: bold;">
+                            @det.ItemName
+                            <br />
+                            <span style="font-size: x-small; color: #808080">รหัสสินค้า @det.ItemCode</span>                            
+                        </p>
+                        <p>
+                            <span style="font-size: smaller;">@priceDisp &#3647;</span>
+                            <span style="font-size: smaller;">@string.Format("ราคาต่อ{0}", det.RequestUomCode)</span>
+                        </p>
+                        <form class="form-inline" id="@formID" biz-key="@det.ItemCode">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" id="StMapWhItemID" name="StMapWhItemID" value="@det.StMapWhItemID" />
+                            <input type="hidden" id="ItemCode" name="ItemCode" value="@det.ItemCode" />
+                            <input type="hidden" id="RequestUomCode" name="RequestUomCode" value="@det.RequestUomCode" />
+                            <input type="hidden" id="ItemName" name="ItemName" value="@det.ItemName" />
+                            <input type="hidden" id="UnitPrice" name="UnitPrice" value="@det.UnitPrice" />
+                            <div class="input-group input-group-sm">
+                                <input type="number" class="form-control text-right" min="1" id="OrderQty" name="OrderQty" placeholder="จำนวน" value="@det.OrderQty" style="width: 50%;" onblur="return saveOrderOnBasket('@formID',@det.StMapWhItemID);" basket-qty-key="@det.StMapWhItemID" />
+                                <input type="text" class="form-control text-right" min="1" id="Remark" name="Remark" placeholder="หมายเหตุ" value="@det.Remark" style="width: 50%;" onblur="return saveOrderOnBasket('@formID');" />
+                            </div>
+                        </form>
+                        <p style="margin-top: 5px;">
+                            <span style="font-size: smaller; font-weight: bold; " class="text-danger">@totalPriceDisp &#3647;</span> 
+                            <span style="cursor: pointer; color: red;" class="glyphicon glyphicon-remove-circle pull-right" aria-hidden="true" onclick="return deleteOrderOnBasket('@formID','@det.StMapWhItemID');"></span>
+                               
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-warning" role="alert">ไม่พบข้อมูล</div>
+    }
+</div>

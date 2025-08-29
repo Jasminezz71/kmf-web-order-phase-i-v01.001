@@ -1,0 +1,247 @@
+﻿@using ZEN.SaleAndTranfer.UI.Util
+@model ZEN.SaleAndTranfer.UI.VM2.Usr.DoVM2
+
+
+@{
+    ViewBag.Title = "จัดการ User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var subTitle = Model.Pet.Mode == "Insert" ? "เพิ่ม User" : "แก้ไข User";
+}
+
+<div class="page-header">
+    <h2>@ViewBag.Title <small>@subTitle</small></h2>
+</div>
+
+<form id="formSave" class="form-horizontal">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Pet.Mode)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">*Role</label>
+        <div class="col-md-4">
+            <select id="Pet_Role" name="Pet.Role" class="form-control" onchange="return changeRole();">
+                @if (Model.Pet.Role == "ADMIN")
+                {
+                    <option value="Order">Customer</option>
+                    <option value="ADMIN" selected="selected">Admin</option>
+                    <option value="SALEADMIN">Sale Admin</option>
+                }
+                else if (Model.Pet.Role == "SALE")
+                {
+                    <option value="Order">Customer</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="SALEADMIN" selected="selected">Sale Admin</option>
+                }
+                else
+                {
+                    <option value="Order" selected="selected">Customer</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="SALEADMIN">Sale Admin</option>
+
+                }
+            </select>
+            @Html.ValidationMessageFor(m => m.Pet.Role, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">*Username</label>
+        <div class="col-md-4">
+            @if (Model.Pet.Mode == "Insert")
+            {
+                @Html.TextBoxFor(m => m.Pet.Username, new { @class = "form-control", @placeholder = "Username", @style = "text-transform: lowercase;" })
+            }
+            else
+            {
+                @Html.TextBoxFor(m => m.Pet.Username, new { @class = "form-control", @placeholder = "Username", @readonly = "readonly", @style = "text-transform: lowercase;" })
+            }
+            @Html.ValidationMessageFor(m => m.Pet.Username, "", new { @class = "text-danger" })
+        </div>
+        <label class="col-md-2 control-label">*Email</label>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.Pet.Email, new { @class = "form-control", @placeholder = "Email", @type = "email", @style = "text-transform: lowercase;" })
+            @Html.ValidationMessageFor(m => m.Pet.Email, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">*First Name</label>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.Pet.FirstNameTh, new { @class = "form-control", @placeholder = "First Name" })
+            @Html.ValidationMessageFor(m => m.Pet.FirstNameTh, "", new { @class = "text-danger" })
+        </div>
+        <label class="col-md-2 control-label">*Last Name</label>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.Pet.LastNameTh, new { @class = "form-control", @placeholder = "Last Name" })
+            @Html.ValidationMessageFor(m => m.Pet.LastNameTh, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">*Status</label>
+        <div class="col-md-4">
+            <select id="Pet_ActiveFlag" name="Pet.ActiveFlag" class="form-control">
+                <option value="True">Active</option>
+                <option value="False">Inactive</option>
+            </select>
+            @Html.ValidationMessageFor(m => m.Pet.ActiveFlag, "", new { @class = "text-danger" })
+        </div>
+        <div id="divEmployeeID">
+            <label class="col-md-2 control-label">*Employee ID</label>
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.Pet.EmployeeID, new { @class = "form-control", @placeholder = "Employee ID" })
+                @Html.ValidationMessageFor(m => m.Pet.EmployeeID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group" id="divBranch">
+        <label class="col-md-2 control-label">*Branch Code</label>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.Pet.Branch, new { @class = "form-control", @placeholder = "รหัสสาขาของลูกค้า" })
+            @Html.ValidationMessageFor(m => m.Pet.Branch, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    @*Button*@
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="button" id="btnSave" class="btn btn-primary" onclick="return btnSave_onclick('#formSave');">บันทึก</button>
+            <a href='@Request.Url.LocalPath' id="btnClear" class="btn btn-default" role="button">ล้างหน้าจอ</a>
+            @if (Model.Pet.Mode == "Update")
+            {
+                <button type="button" id="btnDelete" class="btn btn-danger" onclick="return deleteUser();">ลบ</button>
+            }
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            changeRole();
+        });
+
+        function deleteUser() {
+            if (!confirm('ยืนยันการลบ?')) {
+                return false;
+            }
+
+            var url1 = '@Url.Action("Delete", "Usr", new { Area = "", id=Model.Pet.Username })';
+
+            $(document.body).css({ 'cursor': 'wait' });
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                //data: dataForm, //data: JSON.stringify(obj),
+                //processData: false,
+                //contentType: false,
+                dataType: "json", //dataType: "html",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //debugger;
+                    if (response.SuccessFlag) {
+                        alert('ลบเรียบร้อย');
+                        window.location = '@Url.Action("Search", "Usr", new { Area = "" })' + '?username=@Model.Pet.Username';
+                    }
+                    else {
+                        alert(response.Msg);
+                    }
+                    $(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error occured!!")
+                    alert(response.responseText);
+
+                    $(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+
+        function changeRole() {
+            var selectedValue = $("#Pet_Role option:selected").val();
+            if (selectedValue == "Order") {
+                $('#Pet_Branch').prop("disabled", false);
+                $("#divBranch").show();
+
+                $('#Pet_EmployeeID').prop("disabled", true);
+                $("#divEmployeeID").hide();
+            } else if (selectedValue == "ADMIN") {
+                $('#Pet_Branch').prop("disabled", true);
+                $("#divBranch").hide();
+
+                $('#Pet_EmployeeID').prop("disabled", false);
+                $("#divEmployeeID").show();
+            }
+            else if (selectedValue == "SALEADMIN") {
+                $('#Pet_Branch').prop("disabled", false);
+                $("#divBranch").show();
+
+                $('#Pet_EmployeeID').prop("disabled", true);
+                $("#divEmployeeID").hide();
+            }
+            else {
+                alert("Invalid Role.");
+            }
+        }
+
+        function btnSave_onclick(formId) {
+            if (!$(formId).valid()) {
+                return false;
+            }
+
+            if ($('#Pet_Username').val().length < 6) {
+                alert("โปรดระบุความยาว Username 6-20 ตัวอักษร");
+                return false;
+            }
+
+            if ($('#Pet_Username').val().length > 20) {
+                alert("โปรดระบุความยาว Username 6-20 ตัวอักษร");
+                return false;
+            }
+
+            var dataForm = $(formId).serialize();
+
+            var url1 = '@Url.Action("Do", "Usr", new { Area = "" })';
+
+            $(document.body).css({ 'cursor': 'wait' });
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                data: dataForm, //data: JSON.stringify(obj),
+                //processData: false,
+                //contentType: false,
+                dataType: "json", //dataType: "html",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //debugger;
+                    if (response.SuccessFlag) {
+                        if (response.Data.Mode == "Insert") {
+                            var msg = 'บันทึกสำเร็จ และ Password คือ ' + response.Data.Password;
+                            alert(msg);
+                        }
+                        else {
+                            alert('บันทึกสำเร็จ');
+                        }
+                        window.location = '@Url.Action("Search", "Usr", new { Area = "" })' + '?username=' + response.Data.Username;
+                    }
+                    else {
+                        alert(response.Msg);
+                    }
+                    $(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error occured!!")
+                    alert(response.responseText);
+
+                    $(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+    </script>
+}

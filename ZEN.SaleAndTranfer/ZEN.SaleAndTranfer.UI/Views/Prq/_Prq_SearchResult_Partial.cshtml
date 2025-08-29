@@ -1,0 +1,117 @@
+﻿@using ZEN.SaleAndTranfer.UI.Util
+@model ZEN.SaleAndTranfer.UI.VM2.Prq.SearchVM2
+
+
+@if (Model.Result != null && Model.Result.Count > 0)
+{
+    var index = 1;
+
+    <div class="alert alert-success" role="alert">พบ @Model.SearchCountAll รายการ</div>
+    @*<h5 class="text-success" style="padding-left:15px;">พบ @Model.SearchCountAll รายการ</h5>*@
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="text-right" style="width: 5%">#</th>
+                <th>เลขที่ใบสั่งซื้อ</th>
+                <th>Name 2</th>
+                <th>วันกำหนดส่ง</th>
+                <th class="text-right">รวมราคา</th>
+                <th style="width: 20%">หมายเหตุ</th>
+                <th>รายละเอียด</th>
+                <th style="color:red">Interface NAV</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var det in Model.Result)
+            {
+                var priceDisp = det.SumSalePrice != null && det.SumSalePrice.HasValue ? det.SumSalePrice.Value.ToString("N2") : null;
+                <tr>
+                    <th class="text-right" style="width: 5%">@det.RowNumber</th>
+                    <td>@det.PrCode</td>
+                    <td>@det.NAME_2</td>
+                    <td>@det.PlanDeliveryDate.Value.ToShortDateString()</td>
+                    <td class="text-right">@priceDisp</td>
+                    <td style="width: 20%">@det.PR_REMARK</td>
+                    <td>
+                        <a href='@Url.Action("Detail","Prq", new { id=det.PrCode })'>คลิก...</a>
+                    </td>
+                    @if (det.PR_STATUS_CODE == "7")
+                    {
+                        if (det.DELETE_FLAG == true)
+                        {
+                            <td style="color:red">Y</td>
+                            <td style="color:black">
+                                ยกเลิกแล้ว
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="color:red">Y</td>
+                            <td style="color:black">
+                            </td>
+                        }
+
+                    }
+                    else
+                    {
+                        if (det.DELETE_FLAG == true)
+                        {
+                            <td style="color:red">N</td>
+                            <td style="color:black">
+                                ยกเลิกแล้ว
+                            </td>
+                        }
+                        else
+                        {
+                            <td style="color:red">N</td>
+                            <td style="color:red">
+                                <a href='@Url.Action("Search", "Prq", new { id = det.PrCode })'>คลิกยกเลิก</a>
+                            </td>
+                        }
+
+                    }
+
+
+                </tr>
+
+                index++;
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-center" colspan="9">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li>
+                                <a onclick="return btnSearch_onclick(1);" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            @{
+                                var pageAmt = PagingHelper.GetPageAmount(Model.SearchCountAll, Model.Pet.PageSize);
+                            }
+                            @for (var i = 1; i <= pageAmt; i++)
+                            {
+                                var activePage = i == Model.Pet.CurrentPageId ? "active" : string.Empty;
+                                <li class="@activePage"><a onclick="return btnSearch_onclick(@i);">@i</a></li>
+                            }
+                            <li>
+                                <a onclick="return btnSearch_onclick(@pageAmt);" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">ไม่พบข้อมูล</div>
+}
+
+

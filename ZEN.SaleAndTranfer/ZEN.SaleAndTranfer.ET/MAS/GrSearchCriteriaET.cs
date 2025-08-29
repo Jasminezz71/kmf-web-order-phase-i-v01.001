@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ZEN.SaleAndTranfer.ET.MAS
+{
+    public class GrSearchCriteriaET : BaseET
+    {
+        // Pageination
+        public int PAGE_INDEX { get; set; }
+        public int ROW_PER_PAGE { get; set; }
+
+        //Search Criteria
+        public string ST_PR_CODE { get; set; }
+        public string ST_DO_CODE { get; set; }
+        public string ST_GR_CODE { get; set; }
+        public string REQUEST_BY_BRAND_CODE { get; set; }
+        public string REQUEST_BY_BRAND_NAME { get; set; }
+        public string REQUEST_BY_BRANCH_CODE { get; set; }
+        public string REQUEST_BY_BRANCH_NAME { get; set; }
+        public string REQUEST_TO_BRAND_CODE { get; set; }
+        public string REQUEST_TO_BRAND_NAME { get; set; }
+        public string REQUEST_TO_BRANCH_CODE { get; set; }
+        public string REQUEST_TO_BRANCH_NAME { get; set; }
+        public DateTime? PLAN_DELIVERY_DATE_FROM { get; set; }
+        public DateTime? PLAN_DELIVERY_DATE_TO { get; set; }
+    }
+}

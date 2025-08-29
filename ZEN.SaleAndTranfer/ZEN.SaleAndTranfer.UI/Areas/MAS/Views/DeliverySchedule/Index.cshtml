@@ -1,0 +1,152 @@
+﻿@model ZEN.SaleAndTranfer.VM.MAS.DeliveryScheduleVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>
+        หน้าจอรอบรถตลาด
+    </h2>
+    <hr />
+
+    @Html.Partial("_MessagePartial", Model.MessageList)
+    <form class="form-horizontal" id="form1">
+        <div class="panel panel-primary">
+            <div class="panel-heading">ระบุเงื่อนไขการค้นหา</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">แบรนด์</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.DSSearchCriteriaVM.BRAND_CODE, new { @maxlength = "20", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">สาขา</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(m => m.DSSearchCriteriaVM.BRANCH_CODE, new { @maxlength = "20", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Location</label>
+                        <div class="col-md-4">                            
+                            @*@if (Model.DSSearchCriteriaVM.locationList != null)
+                            {
+                                @Html.DropDownListFor(m => m.DSSearchCriteriaVM.LOCATION_CODE,
+                                          new SelectList(@Model.DSSearchCriteriaVM.LOCATION_CODE, "ITEM_VALUE", "ITEM_TEXT")
+                                , new { @class = "form-control" }
+                                )
+                            }*@
+                            @Html.TextBoxFor(m => m.DSSearchCriteriaVM.LOCATION_CODE, new { @maxlength = "20", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <input type="button" class="btn btn-primary" value="ค้นหา" onclick="gotoSearch();" />                            &nbsp;
+                            <input type="button" class="btn btn-default" value="ล้างหน้าจอ" onclick="gotoClear();" />                            &nbsp;
+                            <input type="button" class="btn btn-warning" value="แก้ไข" onclick="gotoEdit();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.DSResultVM != null)
+        {
+            if (Model.DSResultVM.resultList != null)
+            {
+                <div class="panel panel-default" id="divResult">
+                    <div class="panel-heading">
+                        ผลการค้นหา
+                        <span class="pull-right">
+                            ผลการค้นหา : @Model.DSResultVM.resultList.Count().ToString("#,###") รายการ
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table table-responsive">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th class="text-right">ลำดับ.</th>
+                                    <th>ร้านค้า</th>
+                                    <th>สาขา</th> 
+                                    <th>ชื่อสาขา</th>  
+                                    <th>Zone</th>
+                                    <th>Type</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Sun</th>
+                                    <th>Mom</th>
+                                    <th>Tue</th>
+                                    <th>Wed</th>
+                                    <th>Thu</th>
+                                    <th>Fri</th>
+                                    <th>Sat</th>
+                                    <th>Location</th>
+                                </tr>
+                                @for (int i = 0; i < Model.DSResultVM.resultList.Count; i++)
+                                {
+                                    var item = Model.DSResultVM.resultList[i];
+                                    var cnt = i + 1;
+                                    var flag = '0';
+                                    <tr>
+                                        <td class="text-right" style="width:20px;">@cnt.ToString("#,##0")</td>
+                                        <td>@item.BRAND_CODE</td>
+                                        <td>@item.BRANCH_CODE</td>
+                                        <td>@item.BRANCH_NAME</td>
+                                        <td>@item.ZONE</td>
+                                        <td>@item.SCHEDULE_TYPE</td>
+                                        <td>@item.START_TIME</td>
+                                        <td>@item.END_TIME</td>
+                                        <td>@if (item.SUN_FLAG) { flag = '1'; } else { flag = '0'; }@flag</td>
+                                        <td>@if (item.MON_FLAG) { flag = '1'; } else { flag = '0'; }@flag</td>
+                                        <td>@if (item.TUE_FLAG) { flag = '1'; } else { flag = '0'; }@flag</td>
+                                        <td>@if (item.WED_FLAG) { flag = '1'; } else { flag = '0'; }@flag</td>
+                                        <td>@if (item.THU_FLAG) { flag = '1'; } else { flag = '0'; }@flag</td>
+                                        <td>@if (item.FRI_FLAG) { flag = '1'; } else { flag = '0'; }@flag</td>
+                                        <td>@if (item.SAT_FLAG) { flag = '1'; } else { flag = '0'; }@flag</td>
+                                        <td>@item.LOCATION_CODE</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </form>
+</div>
+
+<script>
+    function gotoSearch() {
+        var url1 = '@Url.Action("Search")';
+        url1 = url1.substring(0, url1.lastIndexOf("Search")).concat("Search");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+    function gotoClear() {
+        var url1 = '@Url.Action("Index")';
+        url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+    function gotoEdit() {
+        var url1 = '@Url.Action("gotoEdit")';
+        url1 = url1.substring(0, url1.lastIndexOf("SearchEdit")).concat("SearchEdit");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    
+</script>

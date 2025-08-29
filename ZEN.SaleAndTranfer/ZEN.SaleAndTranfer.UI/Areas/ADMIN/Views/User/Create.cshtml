@@ -1,0 +1,133 @@
+﻿@model ZEN.SaleAndTranfer.VM.AUT.UserVM
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("_MessagePartial", Model.MessageList)
+
+<div class="container">
+    <h2>หน้าจอจัดการผู้ใช้งาน : <small>เพิ่มผู้ใช้งาน</small></h2>
+    <hr />
+    <div class="panel panel-default" id="divCreate">
+        <div class="panel-heading">เพิ่มผู้ใช้งาน</div>
+        <div class="panel-body">
+            <form id="form1" class="form-horizontal" autocomplete="off">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">*ชื่อผู้ใช้งาน</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.userVM_MA.USER_NAME, new { @maxlength = "50", @class = "form-control", @autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">*รหัสผ่าน</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.userVM_MA.PASSWORD, new { @maxlength = "50", @class = "form-control", @type = "password", @autocomplete = "off" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">รหัสพนักงาน</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.userVM_MA.EMPLOYEE_ID, new { @maxlength = "50", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">*ชื่อ (ภาษาไทย)</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.userVM_MA.FIRST_NAME_TH, new { @maxlength = "100", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">*นามสกุล (ภาษาไทย)</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.userVM_MA.LAST_NAME_TH, new { @maxlength = "100", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">ชื่อ (ภาษาอังกฤษ)</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.userVM_MA.FIRST_NAME_EN, new { @maxlength = "100", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">นามสกุล (ภาษาอังกฤษ)</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.userVM_MA.LAST_NAME_EN, new { @maxlength = "100", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">*อีเมล</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.userVM_MA.EMAIL, new { @maxlength = "256", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">เบอร์โทรศัพท์</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.userVM_MA.PHONE_NO, new { @maxlength = "11", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">เบอร์ต่อ</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.userVM_MA.PHONE_EXT, new { @maxlength = "4", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">เบอร์มือถือ</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.userVM_MA.MOBILE_NO, new { @maxlength = "13", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">*สถานะการใช้งาน</label>
+                        <div class="col-md-9">
+                            @if (Model != null)
+                            {
+                                if (Model.userVM_MA.activeFlagList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.userVM_MA.ACTIVE_FLAG,
+                                         new SelectList(@Model.userVM_MA.activeFlagList, "ITEM_VALUE", "ITEM_TEXT")
+                                              , new { @class = "form-control" }
+                                    )
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-9">
+                            <input type="button" value="บันทึก" class="btn btn-primary" onclick="gotoCreate();">
+                            &nbsp;
+                            <input type="button" value="ล้างหน้าจอ" class="btn btn-default" onclick="gotoClear();">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function gotoCreate() {
+        var url1 = '@Url.Action("CreateSave")';
+        url1 = url1.substring(0, url1.lastIndexOf("CreateSave")).concat("CreateSave");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+    function gotoClear() {
+        var url1 = '@Url.Action("Create")';
+        url1 = url1.substring(0, url1.lastIndexOf("Create")).concat("Create");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+</script>

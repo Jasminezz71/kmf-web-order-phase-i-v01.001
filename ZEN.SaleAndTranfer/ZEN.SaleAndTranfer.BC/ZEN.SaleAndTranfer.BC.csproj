@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E647C244-A3A2-43A5-83D7-2E1A5F2887EB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ZEN.SaleAndTranfer.BC</RootNamespace>
+    <AssemblyName>ZEN.SaleAndTranfer.BC</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\packages\NPOI.2.2.1\lib\net40\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>..\packages\NPOI.2.2.1\lib\net40\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>..\packages\NPOI.2.2.1\lib\net40\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>..\packages\NPOI.2.2.1\lib\net40\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Acc\EndDayDocBC.cs" />
+    <Compile Include="ADMIN\BatchBC.cs" />
+    <Compile Include="ADMIN\BatchHaviBC.cs" />
+    <Compile Include="ADMIN\UserBC.cs" />
+    <Compile Include="AUT\LoginBC.cs" />
+    <Compile Include="BaseBC.cs" />
+    <Compile Include="CNF\ConfigBC.cs" />
+    <Compile Include="CNF\PasswordHashBC.cs" />
+    <Compile Include="ConnectToSharedFolderBC.cs" />
+    <Compile Include="DDL\DDLBC.cs" />
+    <Compile Include="HomeBC.cs" />
+    <Compile Include="IMPORTANDEXPORT\BatchBC.cs" />
+    <Compile Include="IMPORTANDEXPORT\ImportFileBC.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndBrandCategoryBC.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndItemCategoryBC.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndLocationBC.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemCategoryBC.cs" />
+    <Compile Include="IMPORTANDEXPORT\LocationBC.cs" />
+    <Compile Include="IMPORTANDEXPORT\PrCategoryBC.cs" />
+    <Compile Include="IMPORTANDEXPORT\PrWhPickupBC.cs" />
+    <Compile Include="IMPORTANDEXPORT\UnitBC.cs" />
+    <Compile Include="IMPORTANDEXPORT\UnitConversionBC.cs" />
+    <Compile Include="LOG\LogBC.cs" />
+    <Compile Include="MAS\DashboardBC.cs" />
+    <Compile Include="MAS\DoBC.cs" />
+    <Compile Include="MAS\DownloadBC.cs" />
+    <Compile Include="MAS\GrBC.cs" />
+    <Compile Include="MAS\ItemStockBC.cs" />
+    <Compile Include="MAS\DeliveryScheduleBC.cs" />
+    <Compile Include="MAS\PrBC.cs" />
+    <Compile Include="MAS\RecTransferBC.cs" />
+    <Compile Include="MAS\SignatureBC.cs" />
+    <Compile Include="MAS\UnitConvertBC.cs" />
+    <Compile Include="MessageBC.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RPT\InvoiceBC.cs" />
+    <Compile Include="RPT\StockBC.cs" />
+    <Compile Include="TB_M_BRANCH_BC.cs" />
+    <Compile Include="TB_M_END_DAY_DOC_TYPE_BC.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ZEN.SaleAndTranfer.DC\ZEN.SaleAndTranfer.DC.csproj">
+      <Project>{a51cc911-13a6-40b4-861b-12278c2b0eab}</Project>
+      <Name>ZEN.SaleAndTranfer.DC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ZEN.SaleAndTranfer.ET\ZEN.SaleAndTranfer.ET.csproj">
+      <Project>{2489cc8d-d9d5-4205-a875-276c1d995427}</Project>
+      <Name>ZEN.SaleAndTranfer.ET</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ZEN.SaleAndTranfer.VM\ZEN.SaleAndTranfer.VM.csproj">
+      <Project>{83a0955d-9782-43a4-92b3-7ff2b45cb9a2}</Project>
+      <Name>ZEN.SaleAndTranfer.VM</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

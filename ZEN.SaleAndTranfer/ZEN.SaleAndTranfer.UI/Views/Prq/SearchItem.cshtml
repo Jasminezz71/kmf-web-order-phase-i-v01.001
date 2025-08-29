@@ -1,0 +1,165 @@
+﻿
+@model ZEN.SaleAndTranfer.UI.VM2.Prq.SearchItemVM2
+
+
+@{
+    ViewBag.Title = "หน้าจอเลือกสินค้า";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <h2>@ViewBag.Title <small></small></h2>
+</div>
+
+@*col-xm-12 col-md-9*@
+<div id="divSearchSection" class="col-xm-12 col-md-9" style="padding-left: 0px; padding-right: 0px;">
+    @* Section: เงื่อนไขค้นหา *@
+    <div class="panel panel-info">
+        <div class="panel-heading">เงื่อนไขค้นหา</div>
+        <div class="panel-body">
+            <form id="formSearch" class="form-horizontal">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.Pet.CurrentPageId)
+                @Html.HiddenFor(m => m.Pet.PageSize)
+                @Html.HiddenFor(m => m.Pet.OrderByList)
+                
+                <input type="hidden" id="Pet_DivSearchResultID" name="Pet.DivSearchResultID" value="#divSearchResult" />
+                <input type="hidden" id="Pet_FormID" name="Pet.FormID" value="#formSearch" />
+                <div class="form-group">
+                    <label class="col-md-2 control-label">ประเภท</label>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(m => m.Pet.StPrCateogryID, new SelectList(Model.CategoryDdl, "ST_PR_CATEGORY_ID", "ST_PR_CATEGORY_NAME"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Pet.StPrCateogryID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">รหัสสินค้า</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.Pet.ItemCode, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Pet.ItemCode, "", new { @class = "text-danger" })
+                    </div>
+                    <label class="col-md-2 control-label">ชื่อสินค้า</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(m => m.Pet.ItemName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Pet.ItemName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                @* Button *@
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" id="btnSearch" class="btn btn-primary" onclick="return searchItem('#formSearch',null,'#divSearchResult');">ค้นหา</button>
+                        <a href='@Request.Url.LocalPath' id="btnClear" class="btn btn-default" role="button">ล้างหน้าจอ</a>
+
+                        <button id="btnBasketOnRight" type="button" class="btn btn-link pull-right" aria-label="Close" s onclick="return showBasketOnRight('#btnBasketOnRight');" display-basket="true">
+                            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                            &raquo;&raquo;
+                        </button>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @* Section: ผลการค้นหา *@
+    <div id="divSearchResult">
+
+    </div>
+</div>
+
+@* Section: ตะกร้า *@
+@*hidden-xs col-md-3*@
+<div id="divBasketSection" class="hidden-xs col-md-3" style="padding-left: 15px; padding-right: 0px;">
+    <div class="panel panel-default" style="border-color: black;">
+        <div class="panel-body" id="divBasket">
+
+        </div>
+        <div class="panel-footer">
+            <button type="button" class="btn btn-sm btn-primary" style="width:100%;" onclick="return goToPrqSummary();">สรุปการสั่งซื้อ</button>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            searchItem('#formSearch', 1,'#divSearchResult');
+            showBasketOnRight('#btnBasketOnRight');
+        });
+
+        function showSearchResult() {
+            var formMode = '@Request.QueryString["md"]';
+            if (formMode != '1') {
+                searchItem('#formSearch',1);
+            }
+        }
+
+        function bindOrderQtyInBasket() {
+            $("form[id^='formAddItemToBasket']").each(function (index) {
+                //debugger;
+                var stMapWhItemID = $(this).attr('biz-key');
+                var formID = $(this).attr('id');
+                var url1 = '@Url.Action("GetOrderQtyInBasket", "Prq", new { Area = "" })';
+                url1 = url1 + '/' + stMapWhItemID;
+                //$(document.body).css({ 'cursor': 'wait' });
+                $.ajax({
+                    type: "POST",
+                    url: url1,
+                    //data: dataForm, //data: JSON.stringify(obj),
+                    //processData: false,
+                    //contentType: false,
+                    dataType: "json", //dataType: "html",
+                    contentType: 'application/json; charset=utf-8', // 'application/x-www-form-urlencoded; charset=UTF-8',
+                    success: function (response) {
+                        //debugger;
+                        if (response.SuccessFlag && response.Data > 0) {
+                            $("form[id='" + formID + "'] > div > input[id='OrderQty']").val(response.Data);
+                            //$("#" + formID + " > input[id='#StMapWhItemID']").val(response.Data);
+                        }
+                        $(document.body).css({ 'cursor': 'default' });
+                    },
+                    error: function (response) {
+                        alert("Error occured!!")
+                        alert(response.responseText);
+                        $(document.body).css({ 'cursor': 'default' });
+                    }
+                });
+            });
+        }
+
+        function showBasketOnRight(senderID) {
+            //debugger;
+            if ($(senderID).attr('display-basket') == 'true') {
+                //$('#spanBasketOnRight').html('&laquo;&laquo;');
+
+                $('#divSearchSection').addClass('col-xm-12');
+                $('#divSearchSection').addClass('col-md-9');
+
+                $('#divBasketSection').removeClass("hidden");
+                $('#divBasketSection').addClass('hidden-xs');
+                $('#divBasketSection').addClass('col-md-3');
+
+                $(senderID).attr('display-basket', 'false');
+                $(senderID).html('&laquo;&laquo; <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> ');
+
+                showBasketList();
+            }
+            else {
+                //$('#spanBasketOnRight').html('&raquo;&raquo;');
+
+                $('#divSearchSection').removeClass('col-xm-12');
+                $('#divSearchSection').removeClass('col-md-9');
+
+                $('#divSearchSection').removeClass('hidden-xs');
+                $('#divSearchSection').removeClass('col-md-3');
+                $('#divBasketSection').addClass("hidden");
+
+                $(senderID).attr('display-basket', 'true');
+                $(senderID).html('<span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>  &raquo;&raquo;');
+                                
+                $('#divBasket').empty();
+            }
+        }
+    </script>
+}

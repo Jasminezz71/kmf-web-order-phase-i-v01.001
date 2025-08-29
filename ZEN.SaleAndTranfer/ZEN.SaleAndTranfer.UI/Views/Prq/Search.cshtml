@@ -1,0 +1,132 @@
+﻿
+@using ZEN.SaleAndTranfer.UI.Util
+@model ZEN.SaleAndTranfer.UI.VM2.Prq.SearchVM2
+
+
+@{
+    ViewBag.Title = "ค้นหาใบสั่งซื้อ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <h2>@ViewBag.Title <small></small></h2>
+</div>
+
+@* Section: เงื่อนไขค้นหา *@
+<div class="panel panel-info">
+    <div class="panel-heading">เงื่อนไขค้นหา</div>
+    <div class="panel-body">
+        <form id="formSearch" class="form-horizontal">
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Pet.CurrentPageId)
+            @Html.HiddenFor(m => m.Pet.PageSize)
+            @Html.HiddenFor(m => m.Pet.OrderByList)
+            <div class="form-group">
+                <label class="col-md-2 control-label">เลขที่สั่งซื้อ</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(m => m.Pet.PrCode, new { @class = "form-control", @placeholder = "เลขที่สั่งซื้อ" })
+                    @Html.ValidationMessageFor(m => m.Pet.PrCode, "", new { @class = "text-danger" })
+                </div>
+                <label class="col-md-2 control-label">Name 2</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(m => m.Pet.Name_2, new { @class = "form-control", @placeholder = "ชื่อลูกค้า" })
+                    @Html.ValidationMessageFor(m => m.Pet.Name_2, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">วันกำหนดส่ง (จาก)</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(m => m.Pet.PlanDeliveryDateFrom, new { @class = "form-control", @type = "date" })
+                    @Html.ValidationMessageFor(m => m.Pet.PlanDeliveryDateFrom, "", new { @class = "text-danger", @type = "date" })
+                </div>
+                <label class="col-md-2 control-label">วันกำหนดส่ง (ถึง)</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(m => m.Pet.PlanDeliveryDateTo, new { @class = "form-control", @type = "date" })
+                    @Html.ValidationMessageFor(m => m.Pet.PlanDeliveryDateTo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">วันสร้างใบสั่งซื้อ (จาก)</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(m => m.Pet.CreateDateFrom, new { @class = "form-control", @type = "date" })
+                    @Html.ValidationMessageFor(m => m.Pet.PlanDeliveryDateFrom, "", new { @class = "text-danger", @type = "date" })
+                </div>
+                <label class="col-md-2 control-label">วันสร้างใบสั่งซื้อ (ถึง)</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(m => m.Pet.CreateDateTo, new { @class = "form-control", @type = "date" })
+                    @Html.ValidationMessageFor(m => m.Pet.PlanDeliveryDateTo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @* Button *@
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" id="btnSearch" class="btn btn-primary" onclick="return btnSearch_onclick();">ค้นหา</button>
+                    <a href='@Request.Url.LocalPath' id="btnClear" class="btn btn-default" role="button">ล้างหน้าจอ</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* Section: ผลการค้นหา *@
+<div id="divSearchResult">
+
+</div>
+
+
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+        $(document).keypress(function (e) {
+            if (e.which == 13) {
+                alert('You pressed Enter!');
+            }
+        });
+
+
+   
+
+        function btnSearch_onclick(pageId) {
+            if (!$('#formSearch').valid()) {
+                return false;
+            }
+
+            //debugger;
+            if (pageId != null) {
+                $('#Pet_CurrentPageId').val(pageId);
+            }
+
+            var dataForm = $('#formSearch').serialize();
+
+            var url1 = '@Url.Action("Search", "Prq", new { Area = "" })';
+
+            $(document.body).css({ 'cursor': 'wait' });
+
+            $.ajax({
+                type: "POST",
+                url: url1,
+                data: dataForm, //data: JSON.stringify(obj),
+                //processData: false,
+                //contentType: false,
+                dataType: "html", //dataType: "json",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', //contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    //debugger;
+                    $('#divSearchResult').empty();
+                    $('#divSearchResult').append(response);
+
+                    $(document.body).css({ 'cursor': 'default' });
+                },
+                error: function (response) {
+                    alert("Error occured!!")
+                    alert(response.responseText);
+
+                    $(document.body).css({ 'cursor': 'default' });
+                }
+            });
+        }
+    </script>
+}

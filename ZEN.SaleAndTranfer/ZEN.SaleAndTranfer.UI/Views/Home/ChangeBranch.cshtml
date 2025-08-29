@@ -1,0 +1,96 @@
+﻿@model ZEN.SaleAndTranfer.VM.AUT.UserVM
+
+@{
+    ViewBag.Title = "ChangeBranch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>เลือกสาขา</h2>
+    <hr />
+</div>
+
+@Html.Partial("_MessagePartial", Model.MessageList)
+
+<div class="container">
+    <div>
+        <div class="panel panel-info" id="divResetPassword">
+            <div class="panel-heading">เลือกสาขา</div>
+            <div class="panel-body">
+                <form id="form1" class="form-horizontal" method="post" action="/Home/ChangeBranchSave/">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">ร้าน:</label>
+                            <div class="col-md-9">
+                                @if (Model.userVM_MA.brandList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.userVM_MA.BRAND_CODE,
+                                         new SelectList(@Model.userVM_MA.brandList, "ITEM_VALUE", "ITEM_TEXT")
+                                        , new
+                                        {
+                                            @class = "form-control"
+                                          ,
+                                            @onchange = "gotoChangeBrand();"
+                                        }
+                                    )
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">สาขา:</label>
+                            <div class="col-md-9">
+                                @if (Model.userVM_MA.branchList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.userVM_MA.BRANCH_CODE,
+                                         new SelectList(@Model.userVM_MA.branchList, "ITEM_VALUE", "ITEM_TEXT")
+                                        , new { @class = "form-control" }
+                                    )
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-9">
+                                <input type="submit" value="บันทึก" class="btn btn-primary">
+                                &nbsp;
+                                <input type="reset" value="ล้างค่า" class="btn btn-default" onclick="gotoClear();">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        if ($('#userVM_MA_BRAND_CODE').val() == "" || $('#userVM_MA_BRAND_CODE').val() == null) {
+            $('#userVM_MA_BRANCH_CODE').prop('disabled', 'disabled');
+        }
+        else {
+            $('#userVM_MA_BRANCH_CODE').prop('disabled', null);
+        }
+    });
+
+    function gotoChangeBrand() {
+        var url1 = '@Url.Action("ChangeBrand")';
+        url1 = url1.substring(0, url1.lastIndexOf("ChangeBrand")).concat("ChangeBrand");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoClear() {
+        var url1 = '@Url.Action("ChangeBranch")';
+        url1 = url1.substring(0, url1.lastIndexOf("ChangeBranch")).concat("ChangeBranch");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+</script>

@@ -1,0 +1,15 @@
+﻿
+@using ZEN.SaleAndTranfer.UI.Util
+
+
+
+<ul class="nav navbar-nav">
+    <li><a href='@Url.Action("Index", "Prq", new { Area = "" })'>หน้าแรก</a></li>
+    <li><a href='@Url.Action("SearchItem", "Prq", new { Area = "", id = PrCategoryIDConst.All })'>เลือกสินค้า</a></li>
+    <li><a href='@Url.Action("SearchItem", "Prq", new { Area = "", id = PrCategoryIDConst.History  })'>รายการที่เคยสั่ง</a></li>
+    <li><a href='@Url.Action("SearchItem", "Prq", new { Area = "", id = PrCategoryIDConst.Promotion })'>โปรโมชั่น</a></li>
+    <li><a href='@Url.Action("Index", "Contact", new { Area = "" })'>ช่องทางการติดต่อ</a></li>
+    <li><a href='@Url.Action("Search", "Prq", new { Area = "" })'>ใบสั่งซื้อ</a></li>
+    <li><a style="color:#999999" href='@Url.Action("SearchCus", "Prq", new { Area = "" })'>เลือก Profile ลูกค้า</a> </li>
+    <li><a href='@Url.Action("Run","ManualBatch", new { Area="",  })'>ส่งข้อมูลใบสั่งซื้อไป NAV</a></li>
+</ul>

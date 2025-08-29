@@ -1,0 +1,150 @@
+﻿@model ZEN.SaleAndTranfer.VM.IMPORTANDEXPORT.PrWhPickupVM
+
+@{
+    ViewBag.Title = "จัดการ " + ViewBag.ImportAndExportTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>จัดการ @ViewBag.ImportAndExportTitle</h2>
+<hr />
+
+@Html.Partial("_MessagePartial", Model.MessageList)
+
+<form id="form1" class="form-horizontal">
+    <div class="container">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    <span><b>ขั้นตอนการ ดาวน์โหลด</b></span>
+                </div>
+                <div class="col-sm-12">
+                    <span style="padding-left: 20px;">1. ระบุ เงื่อนไขในการค้นหา</span>
+                    <br />
+                    <span style="padding-left: 20px;">2. คลิกปุ่ม "ดาวน์โหลด" เพื่อดาวน์โหลดข้อมูล ที่มีอยู่ในระบบ ออกมาในรูปแบบของไฟล์ Excel</span>
+                    <br />
+                    <span style="padding-left: 20px;">3. จบกระบวนการ</span>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        Download ข้อมูลมาสเตอร์ @ViewBag.ImportAndExportTitle
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">*วันที่ส่งสินค้า จาก :</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(m => m.prWhPickupVM_MA.PLAN_DELIVERY_DATE_FROM, Model.DT_SHORT_FORMAT, new { @class = "form-control datepicker" })
+                    </div>
+                    <label class="col-md-2 control-label">*ถึง :</label>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(m => m.prWhPickupVM_MA.PLAN_DELIVERY_DATE_TO, Model.DT_SHORT_FORMAT, new { @class = "form-control datepicker" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">แบรนด์ :</label>
+                    <div class="col-sm-3">
+                        @if (Model.prWhPickupVM_MA.brandList != null)
+                        {
+                            @Html.DropDownListFor(m => m.prWhPickupVM_MA.BRAND_CODE,
+                                               new SelectList(@Model.prWhPickupVM_MA.brandList, "ITEM_VALUE", "ITEM_TEXT")
+                                     , new
+                                     {
+                                         @class = "form-control"
+                                         ,
+                                         @onchange = "gotoChangeBrand();"
+                                     }
+                                )
+                        }
+                    </div>
+                    <label class="col-md-2 control-label">สาขา :</label>
+                    <div class="col-sm-3">
+                        @if (Model.prWhPickupVM_MA.branchList != null)
+                        {
+                            @Html.DropDownListFor(m => m.prWhPickupVM_MA.BRANCH_CODE,
+                                                    new SelectList(@Model.prWhPickupVM_MA.branchList, "ITEM_VALUE", "ITEM_TEXT")
+                                , new { @class = "form-control" }
+                                )
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">ประเภทใบตลาด :</label>
+                    <div class="col-sm-3">
+                        @if (Model.prWhPickupVM_MA.prWhCategoryList != null)
+                        {
+                            @Html.DropDownListFor(m => m.prWhPickupVM_MA.CATEGORY_ID,
+                                          new SelectList(@Model.prWhPickupVM_MA.prWhCategoryList, "ITEM_VALUE", "ITEM_TEXT")
+                                , new { @class = "form-control" }
+                                )
+                        }
+                    </div>
+                    <label class="col-md-2 control-label">Location :</label>
+                    <div class="col-sm-3">
+                        @if (Model.prWhPickupVM_MA.prWhLocationList != null)
+                        {
+                            @Html.DropDownListFor(m => m.prWhPickupVM_MA.LOCATION_CODE,
+                                          new SelectList(@Model.prWhPickupVM_MA.prWhLocationList, "ITEM_VALUE", "ITEM_TEXT")
+                                , new { @class = "form-control" }
+                                )
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <input type="button" class="btn btn-primary" value="ดาวน์โหลด Excel" onclick="gotoExport();" />
+                        &nbsp;&nbsp;
+                        <input type="button" class="btn btn-primary" value="ล้างหน้าจอ" onclick="gotoClear();" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script>
+
+    /////////////////////////////////////////////////////////////////////////
+    $(document).ready(function () {
+        var ExportFileFlag = '@ViewBag.ExportFileFlag';
+        if (ExportFileFlag == '1') {
+            var url1 = '@Url.Action("ExportFile")';
+            url1 = url1.substring(0, url1.lastIndexOf("ExportFile")).concat("ExportFile");
+
+            window.location = url1;
+        }
+    });
+
+    function gotoExport() {
+        var url1 = '@Url.Action("ExportFile")';
+        url1 = url1.substring(0, url1.lastIndexOf("ExportFile")).concat("ExportFile");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoClear() {
+        var url1 = '@Url.Action("Index")';
+        url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoChangeBrand() {
+        var url1 = '@Url.Action("OnChangeBrand")';
+        url1 = url1.substring(0, url1.lastIndexOf("OnChangeBrand")).concat("OnChangeBrand");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+</script>

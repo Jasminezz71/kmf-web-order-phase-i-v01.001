@@ -1,0 +1,67 @@
+﻿@model ZEN.SaleAndTranfer.VM.ADMIN.BatchHaviVM
+
+@{
+    ViewBag.Title = "BatchSO";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        var RunBatchSOFlag = '@ViewBag.RunBatchSOFlag';
+
+        if (RunBatchSOFlag == 1 || RunBatchSOFlag == '1') {
+            alert('run Batch SO Success')
+        }
+        else if ((RunBatchSOFlag == 0 || RunBatchSOFlag == "0") && RunBatchSOFlag != "")
+            alert('run Batch SO not Success')
+    });
+
+    function gotoRunBatchSO() {
+        if (confirm('@ViewBag.msgConfirmRunBatchHAVISO')) {
+            $('body').addClass('img-loading');
+
+            var url1 = '@Url.Action("RunBatchSO")';
+            url1 = url1.substring(0, url1.lastIndexOf("RunBatchSO")).concat("RunBatchSO");
+
+            var vform = $('#form1');
+            vform.attr("action", url1);
+            vform.attr("method", "post");
+            vform.submit();
+        }
+        else {
+            return false;
+        }
+    }
+</script>
+
+<form class="form-horizontal" id="form1">
+    <div class="container">
+        <h2>หน้าจอปรับปรุงข้อมูลใบตลาด (SO)</h2>
+        <hr />
+
+        @Html.Partial("_MessagePartial", Model.MessageList)
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">จัดการ Batch SO</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-sm-3">หมายเลข SO : </label>
+                        <div class="col-md-6">
+                            @Html.TextAreaFor(m => m.batchVM_MA.SEND_DATA, new { @class = "form-control", @rows = "6", @col = "20" })
+                            <p class="help-block">1 ใบต่อ 1 บรรทัด.</p>
+                            <p style="color: #ff0000;">ข้อควรระวัง - หากไม่ระบุหมายเลข จะเป็นการส่งข้อมูลไปยัง Navision ทั้งหมด</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <input type="button" class="btn btn-primary btn-sm btn-block" value="ปรับปรุงข้อมูลใบตลาด (SO)" onclick="gotoRunBatchSO();" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+

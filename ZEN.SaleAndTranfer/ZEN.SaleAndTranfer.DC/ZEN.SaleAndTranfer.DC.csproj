@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A51CC911-13A6-40B4-861B-12278C2B0EAB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ZEN.SaleAndTranfer.DC</RootNamespace>
+    <AssemblyName>ZEN.SaleAndTranfer.DC</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ADMIN\BatchDC.cs" />
+    <Compile Include="ADMIN\BatchHaviDC.cs" />
+    <Compile Include="AUT\UserInfoDC.cs" />
+    <Compile Include="BaseDC.cs" />
+    <Compile Include="CNF\ConfigDC.cs" />
+    <Compile Include="ConfigConst.cs" />
+    <Compile Include="DDL\CBXDC.cs" />
+    <Compile Include="DDL\DDLDC.cs" />
+    <Compile Include="IMPORTANDEXPORT\BatchDC.cs" />
+    <Compile Include="IMPORTANDEXPORT\ImportFileDC.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndBrandCategoryDC.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndItemCategoryDC.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemAndLocationDC.cs" />
+    <Compile Include="IMPORTANDEXPORT\ItemCategoryDC.cs" />
+    <Compile Include="IMPORTANDEXPORT\LocationDC.cs" />
+    <Compile Include="IMPORTANDEXPORT\PrCategoryDC.cs" />
+    <Compile Include="IMPORTANDEXPORT\PrWhPickupDC.cs" />
+    <Compile Include="IMPORTANDEXPORT\UnitConversionDC.cs" />
+    <Compile Include="IMPORTANDEXPORT\UnitDC.cs" />
+    <Compile Include="LOG\LogDC.cs" />
+    <Compile Include="MAS\DashBoardDC.cs" />
+    <Compile Include="MAS\DoDC.cs" />
+    <Compile Include="MAS\DownloadDC.cs" />
+    <Compile Include="MAS\GrDC.cs" />
+    <Compile Include="MAS\ItemStockDC.cs" />
+    <Compile Include="MAS\DeliveryScheduleDC.cs" />
+    <Compile Include="MAS\PrDC.cs" />
+    <Compile Include="MAS\RecTransferDC.cs" />
+    <Compile Include="MAS\SignatureDC.cs" />
+    <Compile Include="MAS\UnitConvertDC.cs" />
+    <Compile Include="MessageDC.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RPT\StockDC.cs" />
+    <Compile Include="StoreProcConst.cs" />
+    <Compile Include="TB_M_BRANCH_DC.cs" />
+    <Compile Include="TB_M_COMPLAIN_DC.cs" />
+    <Compile Include="TB_M_END_DAY_DOC_TYPE_DC.cs" />
+    <Compile Include="TB_R_END_DAY_DOC_DC.cs" />
+    <Compile Include="TB_R_ST_PR_D_DC.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ZEN.SaleAndTranfer.ET\ZEN.SaleAndTranfer.ET.csproj">
+      <Project>{2489cc8d-d9d5-4205-a875-276c1d995427}</Project>
+      <Name>ZEN.SaleAndTranfer.ET</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

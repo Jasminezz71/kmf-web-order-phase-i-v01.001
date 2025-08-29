@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "ช่องทางการติดต่อ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var email = "Admin.Group@kingmarinefoods.co.th";
+
+    var mobileNo = "094-582-6767,0666-080-6443,062-058-2929";
+}
+
+<div class="page-header">
+    <h2>@ViewBag.Title <small></small></h2>
+</div>
+
+<div class="row">
+    <dl class="dl-horizontal">
+        <dt>ชื่อบริษัท</dt>
+        <dd>King Marine Foods Co., Ltd.</dd>
+        <dd>&nbsp;</dd>
+
+        <dt>ที่อยู่</dt>
+        <dd>24 ซ.สุขาภิบาล5 ซ.5 แขวงท่าแร้ง เขตบางเขน กรุงเทพมหานคร 10220</dd>
+        <dd>&nbsp;</dd>
+
+        <dt>Email</dt>
+        <dd>@email</dd>
+        <dd>&nbsp;</dd>
+
+        <dt>เบอร์โทรติดต่อ</dt>
+        <dd>@mobileNo</dd>
+        <dd>&nbsp;</dd>
+    </dl>
+</div>

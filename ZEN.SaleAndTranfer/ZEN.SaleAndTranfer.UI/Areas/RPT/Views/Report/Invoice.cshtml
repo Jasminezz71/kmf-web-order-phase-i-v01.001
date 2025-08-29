@@ -1,0 +1,165 @@
+﻿@model ZEN.SaleAndTranfer.VM.RPT.InvoiceVM
+
+@{
+    ViewBag.Title = "Invoice";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("_MessagePartial", Model.MessageList)
+
+@Html.HiddenFor(m => m.invoiceVM_MA.REPORT_DATA)
+
+<div class="container">
+    <h2>รายงานใบแจ้งหนี้</h2>
+    <hr />
+    <form class="form-horizontal" id="form1">
+        <div class="panel panel-primary">
+            <div class="panel-heading">ระบุเงื่อนไขการค้นหา</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">*บริษัท:</label>
+                        <div class="col-md-4">
+                            @if (Model.invoiceSearchCriteriaVM != null)
+                            {
+                                if (Model.invoiceSearchCriteriaVM.companyList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.invoiceSearchCriteriaVM.COMPANY_CODE,
+                                    new SelectList(@Model.invoiceSearchCriteriaVM.companyList, "ITEM_VALUE", "ITEM_TEXT")
+                                    , new
+                                    {
+                                        @class = "form-control"
+                                    })
+                                }
+                            }
+                        </div>
+                        <label class="col-sm-2 control-label">เลขที่:</label>
+                        <div class="col-sm-4">
+                            @Html.TextBoxFor(m => m.invoiceSearchCriteriaVM.P_NO, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">วันที่ Post ตั้งแต่:</label>
+                        <div class="col-md-10">
+                            <div class="input-daterange input-group">
+                                @Html.TextBoxFor(m => m.invoiceSearchCriteriaVM.POSTING_DATE_FROM, Model.DT_SHORT_FORMAT, new { @class = "input-sm form-control datepicker" })
+                                <span class="input-group-addon">ถึง</span>
+                                @Html.TextBoxFor(m => m.invoiceSearchCriteriaVM.POSTING_DATE_TO, Model.DT_SHORT_FORMAT, new { @class = "input-sm form-control datepicker" })
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                        <label class="col-md-2 control-label">สาขา:</label>
+                        <div class="col-md-5">
+                            @if (Model.invoiceSearchCriteriaVM != null)
+                            {
+                                if (Model.invoiceSearchCriteriaVM.branchList != null)
+                                {
+                                    @Html.DropDownListFor(m => m.invoiceSearchCriteriaVM.BRANCH_CODE,
+                                                  new SelectList(@Model.invoiceSearchCriteriaVM.branchList, "ITEM_VALUE", "ITEM_TEXT")
+                                                  , new { @class = "form-control" }
+                                        )
+                                }
+                            }
+                        </div>
+                    </div>*@
+                    <div class="form-group">
+                        <div class="col-sm-2"></div>
+                        <div class="col-md-7">
+                            <input type="button" class="btn btn-primary" value="สร้างรายงาน" onclick="gotoViewReport();" />
+                            &nbsp;&nbsp;
+                            <input type="button" class="btn btn-default" value="ล้างหน้าจอ" onclick="gotoClear();" />
+                        </div>
+                        <div id="dialog-report" style="display: none">
+                            <input class="hide" id="btnCloseReport" type="button" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        // Start Show Report Viewer //
+
+        var ShowReportFlag = '@ViewBag.ShowReportFlag';
+        if (ShowReportFlag == 1 || ShowReportFlag == '1') {
+
+            ShowReport();
+
+        }
+
+        $(document).on("click", "#btnCloseReport", function (e) {
+
+            $("#dialog-report").dialog('close');
+
+        });
+
+        // End Show Report Viewer //
+    });
+
+    function ShowReport() {
+
+        var prmData = $('#invoiceVM_MA_REPORT_DATA').val();
+
+        var url1 = '@Url.Action("RPT_INVOICE", new { area = "RPT", controller = "Report" })';
+        url1 = url1 + '/' + prmData;
+
+        var weightDocument = ($(window).width() * 0.99);
+        var higghtDocument = ($(window).height() * 0.8);
+
+        var theDialog = $("#dialog-report").dialog({
+            title: 'ตัวอย่างก่อนพิมพ์',
+            autoOpen: false,
+            resizable: false,
+            height: higghtDocument,
+            width: weightDocument,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            open: function (event, ui) {
+                $(this).load(url1);
+            },
+            close: function (event, ui) {
+                $('#ifrReport').remove();
+                $(this).dialog('close');
+            },
+            buttons: [
+                 {
+                     text: "ปิด",
+                     "class": 'ClossButtonClass',
+                     click: function () {
+                         $('#ifrReport').remove();
+                         $(this).dialog('close');
+                     }
+                 }
+            ]
+        });
+
+        theDialog.dialog("open");
+        return false;
+    }
+
+    function gotoClear() {
+        var url1 = '@Url.Action("Invoice")';
+        url1 = url1.substring(0, url1.lastIndexOf("Invoice")).concat("Invoice");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+
+    function gotoViewReport() {
+        var url1 = '@Url.Action("ViewInvoice")';
+        url1 = url1.substring(0, url1.lastIndexOf("ViewInvoice")).concat("ViewInvoice");
+
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+</script>

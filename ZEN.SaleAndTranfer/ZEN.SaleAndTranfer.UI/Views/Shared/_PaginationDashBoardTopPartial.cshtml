@@ -1,0 +1,233 @@
+﻿@model ZEN.SaleAndTranfer.VM.PaginationVM
+
+@{
+    //########## Set paremeter ##########//
+    int firstPageT = 1;
+    int prvPageT = @Model.top_currentPage - 1;
+    if (prvPageT <= 0) prvPageT = 1;
+    int nextPageT = @Model.top_currentPage + 1;
+    if (nextPageT >= Model.top_pages) nextPageT = Model.top_pages;
+    int lastPageT = @Model.top_pages;
+
+    int p_currentPageT = Model.top_currentPage;
+    if (p_currentPageT > (Model.top_pages - Model.top_pagination + 1)) p_currentPageT = p_currentPageT - Model.top_pagination + 1;
+    if (p_currentPageT <= 0) p_currentPageT = 1;
+}
+
+<input id="ZenPagination_T_currentPage" name="ZenPagination.top_currentPage" type="hidden">
+<input id="ZenPagination_T_rowPerPage" name="ZenPagination.top_rowPerPage" type="hidden">
+<div style="overflow: auto; width: 100%;">
+    <input type="button" class="btn btn-danger hidden" id="hidbtnSearchT" value="ค้นหา" onclick="gotoSearchT();" />
+    <table class="table table-striped" style="width:100%; border:0px;">
+        <tbody>
+            <tr style="width:90px; text-align:center; vertical-align: middle; border:0px;">
+
+                @* Select Per Page List *@
+                <td style="width: 120px; text-align: center; vertical-align: middle; border: 0px;">
+                    <table style="width: 100%; border: 0px; vertical-align: middle;">
+                        <tbody>
+                            <tr>
+                                <td style="width: 40%; text-align: right; vertical-align: middle; border: 0px;">
+                                    @*<h5>
+                                            <span style="color:black; font-weight:bold;">หน้า :</span>
+                                        </h5>*@
+                                    <span style="color:black; font-weight:bold;">หน้า </span>
+                                </td>
+                                <td style="width: 60%; text-align: left; vertical-align: middle; border: 0px;">
+                                    @if (@Model.top_perPageList != null)
+                                    {
+                                        @Html.DropDownListFor(m => m.top_rowPerPage,
+                                        new SelectList(@Model.top_perPageList, "ITEM_VALUE", "ITEM_TEXT"),
+                                        new
+                                        {
+                                            @class = "dropdown",
+                                            @style = "height:32px;width:60px;",
+                                            @onchange = "onchangePerPageT();",
+                                            @id = "ddlChangePerPageTop"
+                                        })
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+
+                @* Page From to Page To *@
+                <td style="width: 30%; text-align: center; vertical-align: middle; border: 0px;">
+                    @*<h4>
+                            <span style="color: Black; font-weight: bold;">
+                                รายการ : @Model.top_pagesFrom
+                                ถึง @Model.top_pagesTo
+                                จากทั้งหมด @Model.top_countAll รายการ
+                            </span>
+                        </h4>*@
+                    <span style="color: Black; font-weight: bold;">
+                        รายการ @Model.top_pagesFrom
+                        ถึง @Model.top_pagesTo
+                        จากทั้งหมด @Model.top_countAll รายการ
+                    </span>
+                </td>
+
+                @* Current Page From Last Page *@
+                <td style="width: 25%; text-align: center; vertical-align: middle; border: 0px;">
+                    @*<h4>
+                            <span style="color:Black; font-weight:bold;">หน้า @Model.top_currentPage จาก @Model.top_pages</span>
+                        </h4>*@
+                    <span style="color:Black; font-weight:bold;">หน้า @Model.top_currentPage จาก @Model.top_pages</span>
+                </td>
+
+                @* Btn Change Page Number *@
+                <td style="width: 30%; text-align: center; vertical-align: middle; border: 0px;">
+                    <table style="width: 100%; border: 0px;">
+                        <tbody>
+                            <tr>
+                                <td style="width: 10%; border: 0px;">
+                                    <span class="form-inline">
+                                        @if (Model.top_currentPage == 1)
+                                        {
+                                            <span style="color: #C5DAEB;" class="glyphicon glyphicon-backward" aria-hidden="true" title=" หน้าแรก "></span>
+                                        }
+                                        else
+                                        {
+                                            <a title=" หน้าแรก " class="navigationEnabled" onclick="gotoPageT('@firstPageT');">
+                                                <span class="glyphicon glyphicon-backward" aria-hidden="true" title=" หน้าแรก "></span>
+                                            </a>
+                                        }
+                                    </span>
+                                </td>
+                                <td style="width: 10%; border: 0px;">
+                                    <span class="form-inline">
+                                        @if (Model.top_currentPage == 1)
+                                        {
+                                            <span style="color: #C5DAEB;" class="glyphicon glyphicon-step-backward" aria-hidden="true" title=" ก่อนหน้า "></span>
+                                        }
+                                        else
+                                        {
+                                            <a title=" หน้าถัดไป " class="navigationEnabled" onclick="gotoPageT('@prvPageT');">
+                                                <span class="glyphicon glyphicon-step-backward" aria-hidden="true" title=" ก่อนหน้า "></span>
+                                            </a>
+                                        }
+                                    </span>
+                                </td>
+                                @if (Model.top_pages == 1)
+                                {
+                                    <td style="width: 60%; border: 0px;">
+                                        <input type="text" value="@Model.top_currentPage" maxlength="4"
+                                               id="txtChangePageTop"
+                                               onchange="onchangePageT();"
+                                               onkeypress="return chkNumber(this);"
+                                               class="form-control SelectedPageNoPadding"
+                                               style="text-align:center;height:32px;width:100%;"
+                                               readonly="readonly">
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="width: 60%; border: 0px;">
+                                        <input type="text" value="@Model.top_currentPage" maxlength="4"
+                                               id="txtChangePageTop"
+                                               onchange="onchangePageT();"
+                                               onkeypress="return chkNumber(this);"
+                                               class="form-control SelectedPageNoPadding"
+                                               style="text-align:center;height:32px;width:100%;">
+                                    </td>
+                                }
+                                <td style="width: 10%; border: 0px;">
+                                    <span class="form-inline">
+                                        @if (Model.top_currentPage == lastPageT)
+                                        {
+                                            <span style="color: #C5DAEB;" class="glyphicon glyphicon-step-forward" aria-hidden="true" title=" หน้าถัดไป "></span>
+                                        }
+                                        else
+                                        {
+                                            <a title=" หน้าถัดไป " class="navigationEnabled" onclick="gotoPageT('@nextPageT');">
+                                                <span class="glyphicon glyphicon-step-forward" aria-hidden="true" title=" หน้าถัดไป "></span>
+                                            </a>
+                                        }
+                                    </span>
+                                </td>
+                                <td style="width: 10%; border: 0px;">
+                                    <span class="form-inline">
+                                        @if (Model.top_currentPage == lastPageT)
+                                        {
+                                            <span style="color: #C5DAEB;" class="glyphicon glyphicon-step-forward" aria-hidden="true" title=" หน้าถัดไป "></span>
+                                        }
+                                        else
+                                        {
+                                            <a title=" หน้าสุดท้าย " class="navigationEnabled" onclick="gotoPageT('@lastPageT');">
+                                                <span class="glyphicon glyphicon-forward" aria-hidden="true" title=" หน้าสุดท้าย "></span>
+                                            </a>
+                                        }
+                                        <input id="hdLastPageT" value="@lastPageT" type="hidden">
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<style>
+    a.navigationEnabled {
+        cursor: pointer;
+    }
+</style>
+<script language="javascript">
+
+    function gotoSearchT() {
+
+        var url1 = '@Url.Action("Index")';
+        var url1 = url1.substring(0, url1.lastIndexOf("Index")).concat("Index/");
+        var vform = $('#form1');
+        vform.attr("action", url1);
+        vform.attr("method", "post");
+        vform.submit();
+    }
+    function gotoPageT(pageNo, sender) {
+
+        //alert(pageNo);
+        var value = $('#ddlChangePerPageTop').val();
+        $('#ZenPagination_T_rowPerPage').val(value);
+        $('#ZenPagination_T_currentPage').val(pageNo);
+        document.getElementById('hidbtnSearchT').click();
+    }
+
+    function onchangePageT(sender) {
+
+        var _targetPage = $('#txtChangePageTop').val();
+        var i_targetPage = parseInt(_targetPage);
+        //alert("i_targetPage = " + i_targetPage);
+        //alert("type of i_targetPage = " + typeof(i_targetPage));
+
+        var _lastPage = $('#hdLastPageT').val();
+        var i_lastPage = parseInt(_lastPage);
+        //alert("i_lastPage = " + i_lastPage);
+        //alert("parseInt( type of i_lastPage = " + typeof(i_lastPage));
+
+        var txtValue = $('#txtChangePageTop').val();
+
+        if (i_targetPage > i_lastPage) {
+            alert("ต้องระบุ หน้าที่ต้องการ ไม่เกิน จำนวนหน้าสุดท้าย (หน้า " + _lastPage + ")");
+            txtValue = 1;
+            $('#txtChangePageTop').val('@Model.top_currentPage');
+            return false;
+        }
+        else {
+            var ddlValue = $('#ddlChangePerPageTop').val();
+            $('#ZenPagination_T_rowPerPage').val(ddlValue);
+            $('#ZenPagination_T_currentPage').val(txtValue);
+            document.getElementById('hidbtnSearchT').click();
+        }
+    }
+
+    function onchangePerPageT(sender) {
+
+        var value = $('#ddlChangePerPageTop').val();
+        $('#ZenPagination_T_rowPerPage').val(value);
+        $('#ZenPagination_T_currentPage').val('1');
+        document.getElementById('hidbtnSearchT').click();
+    }
+</script>
