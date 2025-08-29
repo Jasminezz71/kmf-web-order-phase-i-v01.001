@@ -708,7 +708,7 @@ namespace ZEN.SaleAndTranfer.UI.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("USP_M_USM_USER__SearchCountAll", usernameParameter, employeeIDParameter, firstNameParameter, lastNameParameter, emailParameter, activeFlagParameter, branchParameter, roleNameParameter, orderByListParameter, pageSizeParameter, currentPageIdParameter);
         }
     
-        public virtual int USP_R_BATCH_SEND_ST_PR_SALE_MANUAL_KMF(string pRNO, string pRPCESS_BY, string pROCESS_TYPE)
+        public virtual int USP_R_BATCH_SEND_ST_PR_SALE_MANUAL_KMF(string pRNO, string pRPCESS_BY, string pROCESS_TYPE,ObjectParameter resultFlag,ObjectParameter resultMsg)
         {
             var pRNOParameter = pRNO != null ?
                 new ObjectParameter("PRNO", pRNO) :
@@ -721,8 +721,15 @@ namespace ZEN.SaleAndTranfer.UI.Models
             var pROCESS_TYPEParameter = pROCESS_TYPE != null ?
                 new ObjectParameter("PROCESS_TYPE", pROCESS_TYPE) :
                 new ObjectParameter("PROCESS_TYPE", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("USP_R_BATCH_SEND_ST_PR_SALE_MANUAL_KMF", pRNOParameter, pRPCESS_BYParameter, pROCESS_TYPEParameter);
+
+			var resultFlagParameter = resultFlag != null ?
+				new ObjectParameter("ResultFlag", resultFlag) :
+				new ObjectParameter("ResultFlag", typeof(int));
+
+			var resultMsgParameter = resultMsg != null ?
+				new ObjectParameter("ResultMsg", resultMsg) :
+				new ObjectParameter("ResultMsg", typeof(string));
+			return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("USP_R_BATCH_SEND_ST_PR_SALE_MANUAL_KMF", pRNOParameter, pRPCESS_BYParameter, pROCESS_TYPEParameter, resultFlagParameter, resultMsgParameter);
         }
     }
 }

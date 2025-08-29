@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Web;
 using ZEN.SaleAndTranfer.UI.ET2;
@@ -37,7 +38,13 @@ namespace ZEN.SaleAndTranfer.UI.DC2
 				bool affected = false;
 				using (var db = new MainEntities())
 				{
-					int result = db.USP_R_BATCH_SEND_ST_PR_SALE_MANUAL_KMF(pRNO: pet.PRNo, pRPCESS_BY: pet.CreateBy, pROCESS_TYPE: pet.ProcessType);
+					var flagParam = new ObjectParameter("ResultFlag", typeof(int));
+					var msgParam = new ObjectParameter("ResultMsg", typeof(string));
+					var result = db.USP_R_BATCH_SEND_ST_PR_SALE_MANUAL_KMF(pRNO: pet.PRNo, pRPCESS_BY: pet.CreateBy, pROCESS_TYPE: pet.ProcessType, flagParam, msgParam);
+
+					int flag = (int)flagParam.Value;
+					string msg = (string)msgParam.Value;
+
 					if (result == 1)
 					{
 						affected = true;
