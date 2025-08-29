@@ -79,7 +79,7 @@ namespace ZEN.SaleAndTranfer.UI.BC2
             catch (Exception ex)
             {
 
-                throw ex;
+                throw;
             }
         }
 

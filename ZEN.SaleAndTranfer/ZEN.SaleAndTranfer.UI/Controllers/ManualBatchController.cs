@@ -29,7 +29,7 @@ namespace ZEN.SaleAndTranfer.UI.Controllers
             catch (Exception ex)
             {
 
-                throw ex;
+                throw;
             }
         }
 

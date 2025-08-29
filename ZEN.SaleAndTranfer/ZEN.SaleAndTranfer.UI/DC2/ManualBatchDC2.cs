@@ -68,7 +68,7 @@ namespace ZEN.SaleAndTranfer.UI.DC2
 			catch (Exception ex)
 			{
 
-				throw ex;
+				throw;
 			}
 		}
 
